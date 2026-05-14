@@ -71,19 +71,20 @@ const FooterStyles = () => (
       background: #0e5af0;
       transition: width .3s ease;
     }
+
+    /* ── Disabled Link — right after ft-link ── */
+    .ft-link-disabled {
+      opacity: 0.4;
+      cursor: default !important;
+      pointer-events: none !important;
+    }
+
     @media (hover: hover) {
       .ft-link:hover { color: #fff !important; transform: translateX(4px); }
       .ft-link:hover::after { width: 100%; }
     }
     @media (hover: none) {
       .ft-link:active { color: #60a5fa !important; }
-    }
-
-    /* ── Disabled Link ── */
-    .ft-link-disabled {
-      opacity: 0.4;
-      cursor: default !important;
-      pointer-events: none;
     }
 
     /* ── Social ── */
@@ -141,42 +142,56 @@ const FooterStyles = () => (
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .ft-section,.ft-accent-line,.ft-cta-glow,
-      .ft-link,.ft-social,.ft-contact,.ft-contact-icon,
-      .ft-cta-btn,.ft-cta-arrow {
-        animation: none !important; transition: none !important;
+      .ft-section, .ft-accent-line, .ft-cta-glow,
+      .ft-link, .ft-link-disabled, .ft-social,
+      .ft-contact, .ft-contact-icon,
+      .ft-cta-btn, .ft-cta-arrow {
+        animation: none !important;
+        transition: none !important;
       }
     }
   `}</style>
 );
 
+/* ─── Types ─────────────────────────────────────────────── */
+interface FooterLink {
+  label: string;
+  href: string;
+  disabled?: boolean;
+}
+
+interface FooterLinkGroup {
+  title: string;
+  links: FooterLink[];
+}
+
 /* ─── Data ───────────────────────────────────────────────── */
-const footerLinks = [
+const footerLinks: FooterLinkGroup[] = [
   {
     title: 'Company',
     links: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Portfolio', href: '/portfolio' },
+      { label: 'About Us',      href: '/about' },
+      { label: 'Portfolio',     href: '/portfolio' },
       { label: 'Our Expertise', href: '/expertise' },
-      { label: 'Blogs', href: '/blogs' },
-      { label: 'Contact Us', href: '/contact' },
+      { label: 'Blogs',         href: '/blogs' },
+      { label: 'Contact Us',    href: '/contact' },
     ],
   },
   {
     title: 'Top Services',
     links: [
-      { label: 'Website Development', href: '#', disabled: true },
+      { label: 'Website Development',   href: '#', disabled: true },
       { label: 'Social Media Marketing', href: '#', disabled: true },
-      { label: 'UI/UX Design', href: '#', disabled: true },
-      { label: 'SEO', href: '#', disabled: true },
-      { label: 'Zoho Development', href: '#', disabled: true },
+      { label: 'UI/UX Design',           href: '#', disabled: true },
+      { label: 'SEO',                    href: '#', disabled: true },
+      { label: 'Zoho Development',       href: '#', disabled: true },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { label: 'Privacy Policy', href: '/privacy-policy' },
-      { label: 'Refund Policy', href: '/refund-policy' },
+      { label: 'Privacy Policy',    href: '/privacy-policy' },
+      { label: 'Refund Policy',     href: '/refund-policy' },
       { label: 'Terms & Conditions', href: '/terms-and-conditions' },
     ],
   },
@@ -201,11 +216,49 @@ const contactInfo = [
 ];
 
 const socialLinks = [
-  { label: 'Facebook', icon: <Facebook sx={{ fontSize: 18 }} />, href: 'https://facebook.com' },
+  { label: 'Facebook',  icon: <Facebook  sx={{ fontSize: 18 }} />, href: 'https://facebook.com' },
   { label: 'Instagram', icon: <Instagram sx={{ fontSize: 18 }} />, href: 'https://instagram.com' },
-  { label: 'LinkedIn', icon: <LinkedIn sx={{ fontSize: 18 }} />, href: 'https://linkedin.com' },
-  { label: 'WhatsApp', icon: <WhatsApp sx={{ fontSize: 18 }} />, href: 'https://wa.me/971501234567' },
+  { label: 'LinkedIn',  icon: <LinkedIn  sx={{ fontSize: 18 }} />, href: 'https://linkedin.com' },
+  { label: 'WhatsApp',  icon: <WhatsApp  sx={{ fontSize: 18 }} />, href: 'https://wa.me/971501234567' },
 ];
+
+/* ─── Disabled Link Sub-component (avoids hydration diff) ── */
+const DisabledLink = ({ label }: { label: string }) => (
+  <Box
+    component="span"
+    sx={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 0.6,
+      fontFamily: "'Outfit', sans-serif",
+      fontSize: '.88rem',
+      color: 'rgba(255,255,255,.28)',
+      fontWeight: 400,
+      cursor: 'default',
+      userSelect: 'none',
+    }}
+  >
+    {label}
+    <Box
+      component="span"
+      sx={{
+        fontSize: '.55rem',
+        color: 'rgba(255,255,255,.2)',
+        fontWeight: 600,
+        px: 0.6,
+        py: 0.15,
+        borderRadius: '4px',
+        border: '1px solid rgba(255,255,255,.08)',
+        background: 'rgba(255,255,255,.03)',
+        letterSpacing: '.06em',
+        textTransform: 'uppercase',
+        lineHeight: 1.4,
+      }}
+    >
+      Soon
+    </Box>
+  </Box>
+);
 
 /* ─── Component ──────────────────────────────────────────── */
 const Footer: React.FC = () => {
@@ -234,7 +287,8 @@ const Footer: React.FC = () => {
             backgroundSize: { xs: '28px 28px', md: '44px 44px' },
             pointerEvents: 'none',
             zIndex: 0,
-            maskImage: 'radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 100%)',
+            maskImage:
+              'radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 100%)',
           }}
         />
 
@@ -249,12 +303,13 @@ const Footer: React.FC = () => {
           sx={{
             position: 'relative',
             zIndex: 1,
-            background: 'linear-gradient(100deg, #0a1628, #0f1f3d 40%, #0d1b35)',
+            background:
+              'linear-gradient(100deg, #0a1628, #0f1f3d 40%, #0d1b35)',
             borderBottom: '1px solid rgba(14,90,240,.1)',
             overflow: 'hidden',
           }}
         >
-          {/* CTA glow */}
+          {/* CTA glow blob */}
           <Box
             sx={{
               position: 'absolute',
@@ -262,7 +317,8 @@ const Footer: React.FC = () => {
               right: { xs: '5%', md: '15%' },
               width: { xs: 160, sm: 220, md: 280 },
               height: { xs: 160, sm: 220, md: 280 },
-              background: 'radial-gradient(circle, rgba(14,90,240,.18), transparent 65%)',
+              background:
+                'radial-gradient(circle, rgba(14,90,240,.18), transparent 65%)',
               pointerEvents: 'none',
               filter: 'blur(20px)',
             }}
@@ -274,7 +330,7 @@ const Footer: React.FC = () => {
               sx={{
                 display: 'flex',
                 flexDirection: { xs: 'column', sm: 'row' },
-                alignItems: { xs: 'center', sm: 'center' },
+                alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: { xs: 2.5, sm: 3 },
                 py: { xs: 3, sm: 3.5, md: 3.5 },
@@ -369,7 +425,10 @@ const Footer: React.FC = () => {
                   >
                     Get Quote
                   </Typography>
-                  <ArrowForwardRounded className="ft-cta-arrow" sx={{ fontSize: 18 }} />
+                  <ArrowForwardRounded
+                    className="ft-cta-arrow"
+                    sx={{ fontSize: 18 }}
+                  />
                 </Box>
               </Link>
             </Box>
@@ -423,7 +482,8 @@ const Footer: React.FC = () => {
                       fontWeight: 800,
                       fontSize: { xs: '1.2rem', md: '1.35rem' },
                       letterSpacing: '.1em',
-                      background: 'linear-gradient(135deg, #fff 40%, #90cdf4)',
+                      background:
+                        'linear-gradient(135deg, #fff 40%, #90cdf4)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                     }}
@@ -516,6 +576,7 @@ const Footer: React.FC = () => {
                   textAlign: { xs: 'center', sm: 'left' },
                 }}
               >
+                {/* Column heading */}
                 <Typography
                   sx={{
                     fontFamily: "'Bricolage Grotesque', sans-serif",
@@ -536,7 +597,8 @@ const Footer: React.FC = () => {
                       width: 20,
                       height: 2,
                       borderRadius: 99,
-                      background: 'linear-gradient(90deg, #0e5af0, transparent)',
+                      background:
+                        'linear-gradient(90deg, #0e5af0, transparent)',
                       opacity: 0.5,
                     },
                   }}
@@ -544,6 +606,7 @@ const Footer: React.FC = () => {
                   {col.title}
                 </Typography>
 
+                {/* Links list */}
                 <Box
                   component="ul"
                   sx={{
@@ -556,53 +619,14 @@ const Footer: React.FC = () => {
                     mt: 1,
                   }}
                 >
-                  {col.links.map((link) => {
-                    const isDisabled = 'disabled' in link && link.disabled;
-
-                    if (isDisabled) {
-                      return (
-                        <Box component="li" key={link.label}>
-                          <Typography
-                            component="span"
-                            className="ft-link ft-link-disabled"
-                            sx={{
-                              fontFamily: "'Outfit', sans-serif",
-                              fontSize: '.88rem',
-                              color: 'rgba(255,255,255,.35)',
-                              fontWeight: 400,
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: 0.5,
-                              cursor: 'default',
-                            }}
-                          >
-                            {link.label}
-                            <Typography
-                              component="span"
-                              sx={{
-                                fontFamily: "'Outfit', sans-serif",
-                                fontSize: '.55rem',
-                                color: 'rgba(255,255,255,.2)',
-                                fontWeight: 500,
-                                px: 0.6,
-                                py: 0.15,
-                                borderRadius: '4px',
-                                border: '1px solid rgba(255,255,255,.08)',
-                                background: 'rgba(255,255,255,.03)',
-                                letterSpacing: '.05em',
-                                textTransform: 'uppercase',
-                                lineHeight: 1,
-                                ml: 0.3,
-                              }}
-                            >
-                              Soon
-                            </Typography>
-                          </Typography>
-                        </Box>
-                      );
-                    }
-
-                    return (
+                  {col.links.map((link) =>
+                    link.disabled ? (
+                      /* Disabled — plain span, no <a>, no <Link> */
+                      <Box component="li" key={link.label}>
+                        <DisabledLink label={link.label} />
+                      </Box>
+                    ) : (
+                      /* Active — Next.js Link */
                       <Box component="li" key={link.label}>
                         <Link
                           href={link.href}
@@ -619,8 +643,8 @@ const Footer: React.FC = () => {
                           {link.label}
                         </Link>
                       </Box>
-                    );
-                  })}
+                    )
+                  )}
                 </Box>
               </Box>
             ))}
@@ -675,8 +699,14 @@ const Footer: React.FC = () => {
                     key={idx}
                     component="a"
                     href={info.href}
-                    target={info.href.startsWith('http') ? '_blank' : undefined}
-                    rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    target={
+                      info.href.startsWith('http') ? '_blank' : undefined
+                    }
+                    rel={
+                      info.href.startsWith('http')
+                        ? 'noopener noreferrer'
+                        : undefined
+                    }
                     className="ft-contact"
                     sx={{
                       display: 'flex',
@@ -722,7 +752,7 @@ const Footer: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Newsletter — below grid */}
+          {/* ── Newsletter strip ── */}
           <Box
             className="ft-section"
             sx={{
@@ -787,9 +817,7 @@ const Footer: React.FC = () => {
                   transform: 'translateY(-2px)',
                   boxShadow: '0 8px 24px rgba(14,90,240,.15)',
                 },
-                '&:active': {
-                  transform: 'scale(.97)',
-                },
+                '&:active': { transform: 'scale(.97)' },
               }}
             >
               <EmailOutlined sx={{ fontSize: 18 }} />
@@ -810,7 +838,8 @@ const Footer: React.FC = () => {
           <Box
             sx={{
               height: '1px',
-              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent)',
+              background:
+                'linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent)',
               position: 'relative',
               zIndex: 1,
             }}
@@ -842,49 +871,32 @@ const Footer: React.FC = () => {
             </Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Link
-                href="/privacy-policy"
-                className="ft-link"
-                style={{
-                  textDecoration: 'none',
-                  fontFamily: "'Outfit', sans-serif",
-                  fontSize: '.75rem',
-                  color: 'rgba(255,255,255,.3)',
-                  fontWeight: 400,
-                }}
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/refund-policy"
-                className="ft-link"
-                style={{
-                  textDecoration: 'none',
-                  fontFamily: "'Outfit', sans-serif",
-                  fontSize: '.75rem',
-                  color: 'rgba(255,255,255,.3)',
-                  fontWeight: 400,
-                }}
-              >
-                Refund
-              </Link>
-              <Link
-                href="/terms-and-conditions"
-                className="ft-link"
-                style={{
-                  textDecoration: 'none',
-                  fontFamily: "'Outfit', sans-serif",
-                  fontSize: '.75rem',
-                  color: 'rgba(255,255,255,.3)',
-                  fontWeight: 400,
-                }}
-              >
-                Terms
-              </Link>
+              {[
+                { label: 'Privacy', href: '/privacy-policy' },
+                { label: 'Refund',  href: '/refund-policy' },
+                { label: 'Terms',   href: '/terms-and-conditions' },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="ft-link"
+                  style={{
+                    textDecoration: 'none',
+                    fontFamily: "'Outfit', sans-serif",
+                    fontSize: '.75rem',
+                    color: 'rgba(255,255,255,.3)',
+                    fontWeight: 400,
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ))}
 
               {/* Back to top */}
               <IconButton
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                onClick={() =>
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }
                 aria-label="Back to top"
                 className="ft-social"
                 sx={{
@@ -896,7 +908,9 @@ const Footer: React.FC = () => {
                   background: 'rgba(255,255,255,.03)',
                 }}
               >
-                <NorthEast sx={{ fontSize: 14, transform: 'rotate(-45deg)' }} />
+                <NorthEast
+                  sx={{ fontSize: 14, transform: 'rotate(-45deg)' }}
+                />
               </IconButton>
             </Box>
           </Box>

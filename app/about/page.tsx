@@ -6,7 +6,6 @@ import {
   Button,
   Container,
   Typography,
-  Chip,
   IconButton,
 } from '@mui/material';
 import {
@@ -30,149 +29,38 @@ import {
   Public,
   WorkspacePremium,
 } from '@mui/icons-material';
+import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import {
+  keyValues,
+  timelineSteps,
+  testimonials,
+  stats,
+  services,
+} from '@/lib/aboutData';
 
-interface TimelineStep {
-  id: number;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  color: string;
-}
-
-interface TeamMember {
-  name: string;
-  role: string;
-  image: string;
-}
-
-interface Testimonial {
-  name: string;
-  role: string;
-  company: string;
-  text: string;
-  avatar: string;
-  rating: number;
-}
+// Icon mapper function
+const getIcon = (iconName: string, size: number = 28) => {
+  const icons: Record<string, React.ReactNode> = {
+    WorkspacePremium: <WorkspacePremium sx={{ fontSize: size }} />,
+    Brush: <Brush sx={{ fontSize: size }} />,
+    Handshake: <Handshake sx={{ fontSize: size }} />,
+    EmojiObjects: <EmojiObjects sx={{ fontSize: size }} />,
+    Assignment: <Assignment sx={{ fontSize: size }} />,
+    RocketLaunch: <RocketLaunch sx={{ fontSize: size }} />,
+    FreeBreakfast: <FreeBreakfast sx={{ fontSize: size }} />,
+    VerifiedUser: <VerifiedUser sx={{ fontSize: size }} />,
+    LocalShipping: <LocalShipping sx={{ fontSize: size }} />,
+    Groups: <Groups sx={{ fontSize: size }} />,
+    TrendingUp: <TrendingUp sx={{ fontSize: size }} />,
+    Public: <Public sx={{ fontSize: size }} />,
+  };
+  return icons[iconName] || <Lightbulb sx={{ fontSize: size }} />;
+};
 
 export default function AboutPage() {
   const [testimonialIndex, setTestimonialIndex] = useState<number>(0);
-
-  const keyValues = [
-    {
-      icon: <WorkspacePremium sx={{ fontSize: 40 }} />,
-      title: 'Quality',
-      description:
-        'We value quality in all aspects of our work. From the code we write for web and app development to the digital marketing services we provide, quality work is what we ensure.',
-      color: '#3b82f6',
-      gradient: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
-    },
-    {
-      icon: <Brush sx={{ fontSize: 40 }} />,
-      title: 'Creativity',
-      description:
-        'We value creativity and innovation, and we encourage our team to think outside the box and come up with unique and effective solutions for our clients.',
-      color: '#a855f7',
-      gradient: 'linear-gradient(135deg, #a855f7, #c084fc)',
-    },
-    {
-      icon: <Handshake sx={{ fontSize: 40 }} />,
-      title: 'Reliability',
-      description:
-        'We value reliability and trustworthiness, and we aim to build long-term relationships with our clients based on mutual respect and open communication.',
-      color: '#10b981',
-      gradient: 'linear-gradient(135deg, #10b981, #34d399)',
-    },
-  ];
-
-  const timelineSteps: TimelineStep[] = [
-    {
-      id: 1,
-      title: 'Thoughts Showering',
-      description:
-        "In this stage, the team at Bendra will brainstorm and share ideas about the project. We will discuss the client's goals, target audience, and any specific requirements or challenges to meet their goals. We also conduct research and gather data and discuss our approach with our clients.",
-      icon: <EmojiObjects sx={{ fontSize: 28 }} />,
-      color: '#f59e0b',
-    },
-    {
-      id: 2,
-      title: 'Project Planning',
-      description:
-        "Once the team has a clear understanding of the project's goals and requirements, we will begin to plan the best possible way to complete the job. This will involve defining the scope, timeline, budget, and deliverables, as well as assigning tasks and roles to team members along with a blueprint of the final outcome.",
-      icon: <Assignment sx={{ fontSize: 28 }} />,
-      color: '#3b82f6',
-    },
-    {
-      id: 3,
-      title: 'Initiation',
-      description:
-        'With the plan in place, the team will begin working on the project. This may involve designing and developing the website or app, creating content, and running digital marketing campaigns and PPC campaigns on various platforms. The team will collaborate and communicate regularly to ensure everyone is on track.',
-      icon: <RocketLaunch sx={{ fontSize: 28 }} />,
-      color: '#10b981',
-    },
-    {
-      id: 4,
-      title: 'Tea Breaks',
-      description:
-        'Yes, as we work hard, we also take regular breaks to recharge and refresh our minds. Breaks between work allow us to feel energized and prevent burnout while also maintaining focus and productivity.',
-      icon: <FreeBreakfast sx={{ fontSize: 28 }} />,
-      color: '#ec4899',
-    },
-    {
-      id: 5,
-      title: 'Quality Checks',
-      description:
-        "As the project nears completion, the team will conduct a thorough quality check to ensure everything is working properly and meets the client's requirements. This may involve testing the website or app for its features and functionalities, reviewing content, and analyzing data from digital marketing campaigns.",
-      icon: <VerifiedUser sx={{ fontSize: 28 }} />,
-      color: '#a855f7',
-    },
-    {
-      id: 6,
-      title: 'Project Delivery',
-      description:
-        'Once the quality check is complete and any necessary revisions or adjustments have been made, the project will be delivered to the client. The team will provide support and training as needed and ensure the client is satisfied with the final output.',
-      icon: <LocalShipping sx={{ fontSize: 28 }} />,
-      color: '#06b6d4',
-    },
-  ];
-
-  const stats = [
-    { number: '250+', label: 'Projects Delivered', icon: <RocketLaunch /> },
-    { number: '120+', label: 'Happy Clients', icon: <Groups /> },
-    { number: '8+', label: 'Years Experience', icon: <TrendingUp /> },
-    { number: '15+', label: 'Countries Served', icon: <Public /> },
-  ];
-
-  const testimonials: Testimonial[] = [
-    {
-      name: 'Exizenly Team',
-      role: 'Founder',
-      company: 'Exizenly',
-      text: 'Bendra transformed our entire online presence with their WordPress and LinkedIn marketing expertise. Our lead generation increased significantly and we now have a professional platform that truly represents our brand.',
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
-      rating: 5,
-    },
-    {
-      name: 'Dr. Robert Hernandez',
-      role: 'Thought Leader',
-      company: 'Personal Brand',
-      text: "The LinkedIn, social media, and podcast management by Bendra exceeded all expectations. My online presence grew tremendously and I'm now reaching audiences I never thought possible.",
-      avatar:
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
-      rating: 5,
-    },
-    {
-      name: 'Kenneth Hellem',
-      role: 'Podcaster',
-      company: 'Podcast Creator',
-      text: "Bendra's podcast management was outstanding. They streamlined distribution across Apple Podcasts, Spotify, and Google Podcasts, making my content reach a much wider audience effortlessly.",
-      avatar:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
-      rating: 5,
-    },
-  ];
 
   const nextTestimonial = () => {
     setTestimonialIndex((prev) =>
@@ -235,19 +123,6 @@ export default function AboutPage() {
             height: '450px',
             background:
               'radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)',
-            filter: 'blur(80px)',
-            pointerEvents: 'none',
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '5%',
-            right: '20%',
-            width: '400px',
-            height: '400px',
-            background:
-              'radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%)',
             filter: 'blur(80px)',
             pointerEvents: 'none',
           }}
@@ -327,11 +202,9 @@ export default function AboutPage() {
                     mb: 2,
                   }}
                 >
-                  Welcome to Bendra. Our goal is to help businesses stay ahead
-                  of the curve and succeed in the digital age by leveraging the
-                  power of technology. We are committed to delivering
-                  exceptional digital solutions to help businesses succeed in
-                  the online world.
+                  Welcome to Bendra. Our goal is to help businesses stay
+                  ahead of the curve and succeed in the digital age by
+                  leveraging the power of technology.
                 </Typography>
 
                 <Typography
@@ -345,13 +218,17 @@ export default function AboutPage() {
                 >
                   We specialize in website development, app development,
                   digital marketing, and SEO services to help businesses
-                  establish a strong online presence and reach their target
-                  audience effectively.
+                  establish a strong online presence.
                 </Typography>
 
                 {/* Quick Highlights */}
                 <Box
-                  sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 4 }}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1.5,
+                    mb: 4,
+                  }}
                 >
                   {[
                     'Exceptional digital solutions for businesses',
@@ -417,7 +294,6 @@ export default function AboutPage() {
                   display: { xs: 'none', lg: 'block' },
                 }}
               >
-                {/* Main Image Card */}
                 <Box
                   sx={{
                     position: 'relative',
@@ -453,8 +329,7 @@ export default function AboutPage() {
                       bottom: 24,
                       left: 24,
                       right: 24,
-                      background:
-                        'rgba(255,255,255,0.08)',
+                      background: 'rgba(255,255,255,0.08)',
                       backdropFilter: 'blur(20px)',
                       borderRadius: '16px',
                       p: 3,
@@ -468,7 +343,7 @@ export default function AboutPage() {
                         gap: 2,
                       }}
                     >
-                      {stats.slice(0, 4).map((stat, i) => (
+                      {stats.map((stat, i) => (
                         <Box key={i} sx={{ textAlign: 'center' }}>
                           <Typography
                             sx={{
@@ -518,9 +393,7 @@ export default function AboutPage() {
                     backdropFilter: 'blur(10px)',
                   }}
                 >
-                  <Lightbulb
-                    sx={{ color: '#3b82f6', fontSize: 40 }}
-                  />
+                  <Lightbulb sx={{ color: '#3b82f6', fontSize: 40 }} />
                 </Box>
               </Box>
             </Box>
@@ -561,7 +434,9 @@ export default function AboutPage() {
                     },
                   }}
                 >
-                  <Box sx={{ color: '#3b82f6', mb: 1 }}>{stat.icon}</Box>
+                  <Box sx={{ color: '#3b82f6', mb: 1 }}>
+                    {getIcon(stat.icon)}
+                  </Box>
                   <Typography
                     sx={{
                       fontFamily: "'Poppins', sans-serif",
@@ -708,7 +583,7 @@ export default function AboutPage() {
                       width: '80px',
                       height: '80px',
                       borderRadius: '20px',
-                      background: `${value.gradient}`,
+                      background: value.gradient,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -720,7 +595,7 @@ export default function AboutPage() {
                       position: 'relative',
                     }}
                   >
-                    {value.icon}
+                    {getIcon(value.icon, 40)}
                   </Box>
 
                   <Typography
@@ -743,10 +618,40 @@ export default function AboutPage() {
                       fontSize: '0.9rem',
                       lineHeight: 1.7,
                       position: 'relative',
+                      mb: 3,
                     }}
                   >
-                    {value.description}
+                    {value.shortDescription}
                   </Typography>
+
+                  {/* READ MORE BUTTON */}
+                  <Link
+                    href={`/about/${value.slug}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Button
+                      endIcon={<ArrowForward />}
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        color: value.color,
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        borderRadius: '10px',
+                        border: `1px solid ${value.color}40`,
+                        px: 3,
+                        py: 0.8,
+                        position: 'relative',
+                        '&:hover': {
+                          backgroundColor: `${value.color}15`,
+                          borderColor: value.color,
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      Read More
+                    </Button>
+                  </Link>
                 </Box>
               ))}
             </Box>
@@ -836,7 +741,10 @@ export default function AboutPage() {
                     key={step.id}
                     sx={{
                       display: 'flex',
-                      flexDirection: { xs: 'row', md: isLeft ? 'row' : 'row-reverse' },
+                      flexDirection: {
+                        xs: 'row',
+                        md: isLeft ? 'row' : 'row-reverse',
+                      },
                       alignItems: 'flex-start',
                       mb: 5,
                       position: 'relative',
@@ -911,7 +819,7 @@ export default function AboutPage() {
                               transition: 'all 0.3s ease',
                             }}
                           >
-                            {step.icon}
+                            {getIcon(step.icon)}
                           </Box>
                           <Box>
                             <Typography
@@ -945,15 +853,225 @@ export default function AboutPage() {
                             color: 'rgba(255,255,255,0.6)',
                             fontSize: '0.88rem',
                             lineHeight: 1.7,
+                            mb: 2,
                           }}
                         >
-                          {step.description}
+                          {step.shortDescription}
                         </Typography>
+
+                        {/* READ MORE BUTTON */}
+                        <Link
+                          href={`/about/${step.slug}`}
+                          style={{ textDecoration: 'none' }}
+                        >
+                          <Button
+                            endIcon={<ArrowForward />}
+                            sx={{
+                              fontFamily: "'Poppins', sans-serif",
+                              color: step.color,
+                              textTransform: 'none',
+                              fontWeight: 600,
+                              fontSize: '0.8rem',
+                              borderRadius: '8px',
+                              border: `1px solid ${step.color}40`,
+                              px: 2.5,
+                              py: 0.6,
+                              '&:hover': {
+                                backgroundColor: `${step.color}15`,
+                                borderColor: step.color,
+                              },
+                              transition: 'all 0.3s ease',
+                            }}
+                          >
+                            Read More
+                          </Button>
+                        </Link>
                       </Box>
                     </Box>
                   </Box>
                 );
               })}
+            </Box>
+          </Container>
+        </Box>
+
+        {/* ===== SERVICES OVERVIEW ===== */}
+        <Box
+          sx={{
+            position: 'relative',
+            zIndex: 1,
+            py: { xs: 8, md: 12 },
+          }}
+        >
+          <Container maxWidth="xl" sx={{ px: { xs: 3, md: 6 } }}>
+            <Box sx={{ textAlign: 'center', mb: { xs: 5, md: 7 } }}>
+              <Typography
+                sx={{
+                  fontFamily: "'Poppins', sans-serif",
+                  color: '#3b82f6',
+                  fontWeight: 600,
+                  fontSize: { xs: '0.8rem', md: '0.9rem' },
+                  letterSpacing: 2,
+                  mb: 2,
+                  textTransform: 'uppercase',
+                }}
+              >
+                Our Services
+              </Typography>
+              <Typography
+                variant="h2"
+                sx={{
+                  fontFamily: "'Poppins', sans-serif",
+                  color: '#fff',
+                  fontWeight: 700,
+                  fontSize: {
+                    xs: '1.8rem',
+                    sm: '2.2rem',
+                    md: '2.5rem',
+                  },
+                  lineHeight: 1.2,
+                }}
+              >
+                What We{' '}
+                <Box
+                  component="span"
+                  sx={{
+                    background:
+                      'linear-gradient(90deg, #3b82f6, #60a5fa)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  Offer
+                </Box>
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: '1fr',
+                  sm: 'repeat(2, 1fr)',
+                  lg: 'repeat(4, 1fr)',
+                },
+                gap: 3,
+              }}
+            >
+              {services.map((service, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    background:
+                      'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '20px',
+                    p: 3.5,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                      borderColor: `${service.color}40`,
+                      boxShadow: `0 20px 50px rgba(0,0,0,0.3)`,
+                    },
+                  }}
+                >
+                  {/* Service Image */}
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: '140px',
+                      borderRadius: '14px',
+                      overflow: 'hidden',
+                      mb: 2.5,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: '100%',
+                        height: '100%',
+                        backgroundImage: `url(${service.image})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        transition: 'transform 0.4s ease',
+                        '&:hover': {
+                          transform: 'scale(1.05)',
+                        },
+                      }}
+                    />
+                  </Box>
+
+                  <Typography
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      color: '#fff',
+                      fontWeight: 700,
+                      fontSize: '1.1rem',
+                      mb: 1.5,
+                    }}
+                  >
+                    {service.title}
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      color: 'rgba(255,255,255,0.6)',
+                      fontSize: '0.85rem',
+                      lineHeight: 1.7,
+                      mb: 2.5,
+                    }}
+                  >
+                    {service.shortDescription}
+                  </Typography>
+
+                  {/* Pricing */}
+                  <Typography
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      color: service.color,
+                      fontWeight: 600,
+                      fontSize: '0.8rem',
+                      mb: 2,
+                    }}
+                  >
+                    {service.pricing}
+                  </Typography>
+
+                  {/* READ MORE BUTTON */}
+                  <Link
+                    href={`/about/${service.slug}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Button
+                      endIcon={<ArrowForward />}
+                      fullWidth
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        color: '#fff',
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        borderRadius: '10px',
+                        background: service.gradient,
+                        px: 3,
+                        py: 1,
+                        boxShadow: `0 4px 15px ${service.color}30`,
+                        '&:hover': {
+                          boxShadow: `0 6px 25px ${service.color}50`,
+                          transform: 'translateY(-2px)',
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      Learn More
+                    </Button>
+                  </Link>
+                </Box>
+              ))}
             </Box>
           </Container>
         </Box>
@@ -1051,7 +1169,7 @@ export default function AboutPage() {
                     mx: 'auto',
                   }}
                 >
-                  &ldquo;{testimonials[testimonialIndex].text}&rdquo;
+                  &ldquo;{testimonials[testimonialIndex].shortText}&rdquo;
                 </Typography>
 
                 <Box
@@ -1105,11 +1223,41 @@ export default function AboutPage() {
                     color: 'rgba(255,255,255,0.5)',
                     fontSize: '0.85rem',
                     position: 'relative',
+                    mb: 2.5,
                   }}
                 >
                   {testimonials[testimonialIndex].role},{' '}
                   {testimonials[testimonialIndex].company}
                 </Typography>
+
+                {/* READ FULL STORY BUTTON */}
+                <Link
+                  href={`/about/${testimonials[testimonialIndex].slug}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Button
+                    endIcon={<ArrowForward />}
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      color: '#3b82f6',
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      fontSize: '0.85rem',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(59,130,246,0.4)',
+                      px: 3,
+                      py: 0.8,
+                      position: 'relative',
+                      '&:hover': {
+                        backgroundColor: 'rgba(59,130,246,0.15)',
+                        borderColor: '#3b82f6',
+                      },
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    Read Full Story
+                  </Button>
+                </Link>
               </Box>
 
               {/* Nav Arrows */}
@@ -1192,7 +1340,8 @@ export default function AboutPage() {
           <Container maxWidth="xl" sx={{ px: { xs: 3, md: 6 } }}>
             <Box
               sx={{
-                background: 'linear-gradient(135deg, #1a2f5c, #0f1f3d)',
+                background:
+                  'linear-gradient(135deg, #1a2f5c, #0f1f3d)',
                 borderRadius: '24px',
                 p: { xs: 4, md: 6 },
                 textAlign: 'center',
@@ -1210,19 +1359,6 @@ export default function AboutPage() {
                   height: '400px',
                   background:
                     'radial-gradient(circle, rgba(59,130,246,0.25), transparent 70%)',
-                  filter: 'blur(50px)',
-                  pointerEvents: 'none',
-                }}
-              />
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: '-30%',
-                  left: '-10%',
-                  width: '300px',
-                  height: '300px',
-                  background:
-                    'radial-gradient(circle, rgba(168,85,247,0.15), transparent 70%)',
                   filter: 'blur(50px)',
                   pointerEvents: 'none',
                 }}
@@ -1253,8 +1389,8 @@ export default function AboutPage() {
                   position: 'relative',
                 }}
               >
-                Let&apos;s discuss how we can bring your ideas to life and
-                deliver results that matter for your business.
+                Let&apos;s discuss how we can bring your ideas to life
+                and deliver results that matter.
               </Typography>
               <Box
                 sx={{

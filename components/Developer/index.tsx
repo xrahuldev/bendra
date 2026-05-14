@@ -119,16 +119,6 @@ const Styles = () => (
 /* ─── Logo data ──────────────────────────────────────────────── */
 const logos = [
   {
-    name: 'Zoho',
-    featured: true,
-    icon: (
-      <svg viewBox="0 0 160 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="50" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="58" fill="#E42527">Z</text>
-        <text x="44" y="50" fontFamily="'Arial Black',sans-serif" fontWeight="700" fontSize="44" fill="#1A1A1A">oho</text>
-      </svg>
-    ),
-  },
-  {
     name: 'Salesforce',
     featured: true,
     icon: (
@@ -138,6 +128,16 @@ const logos = [
         <ellipse cx="140" cy="35" rx="44"  ry="42" fill="#00A1E0"/>
         <ellipse cx="108" cy="27" rx="34"  ry="32" fill="#00A1E0"/>
         <text x="40" y="62" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="25" fill="#fff">salesforce</text>
+      </svg>
+    ),
+  },
+  {
+    name: 'Zoho',
+    featured: true,
+    icon: (
+      <svg viewBox="0 0 160 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="50" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="58" fill="#E42527">Z</text>
+        <text x="44" y="50" fontFamily="'Arial Black',sans-serif" fontWeight="700" fontSize="44" fill="#1A1A1A">oho</text>
       </svg>
     ),
   },
@@ -339,7 +339,7 @@ const Developer: React.FC = () => {
             </Typography>
           </Box>
 
-          {/* ── Featured duo (Zoho + Salesforce) ─────────────── */}
+          {/* ── Featured duo (Salesforce + Zoho) ─────────────── */}
           <Box className="dev-strip" sx={{
             display: 'flex', gap: { xs: 2, md: 3 },
             justifyContent: 'center', mb: { xs: 4, md: 5 },
@@ -386,7 +386,7 @@ const Developer: React.FC = () => {
                     color: '#0e5af0', letterSpacing: '.06em',
                     textTransform: 'uppercase',
                   }}>
-                    Primary Partner
+                    {logo.name === 'Salesforce' ? 'Platinum Partner' : 'Primary Partner'}
                   </Typography>
                 </Box>
               </Box>
