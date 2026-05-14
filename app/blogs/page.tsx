@@ -70,7 +70,7 @@ export default function BlogPage() {
   };
 
   const handleReadMore = (slug: string) => {
-    router.push(`/blog/${slug}`);
+    router.push(`/blogs/${slug}`);
   };
 
   return (

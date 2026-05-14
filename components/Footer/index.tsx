@@ -24,7 +24,7 @@ import Link from 'next/link';
 /* ─── Styles ──────────────────────────────────────────────── */
 const FooterStyles = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
 
     @keyframes fadeUpFooter {
       from { opacity: 0; transform: translateY(18px); }
@@ -37,8 +37,24 @@ const FooterStyles = () => (
     }
 
     @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 20px rgba(14,90,240,.3); }
-      50%      { box-shadow: 0 0 36px rgba(14,90,240,.55); }
+      0%, 100% { box-shadow: 0 0 20px rgba(59,130,246,.3); }
+      50%      { box-shadow: 0 0 36px rgba(59,130,246,.55); }
+    }
+
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.3; }
+      50%       { opacity: 0.8; }
+    }
+
+    @keyframes nodePulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50%       { opacity: 0.8; transform: scale(1.5); }
+    }
+
+    @keyframes dataFlow {
+      0%   { transform: translateX(0); opacity: 0; }
+      50%  { opacity: 1; }
+      100% { transform: translateX(50px); opacity: 0; }
     }
 
     .ft-section {
@@ -47,7 +63,7 @@ const FooterStyles = () => (
 
     .ft-accent-line {
       background-image: linear-gradient(
-        90deg, transparent, #0e5af0 30%, #60a5fa 50%, #0e5af0 70%, transparent
+        90deg, transparent, #3b82f6 30%, #60a5fa 50%, #3b82f6 70%, transparent
       );
       background-size: 200% auto;
       animation: shimmerLine 4s linear infinite;
@@ -68,7 +84,7 @@ const FooterStyles = () => (
       position: absolute;
       bottom: -2px; left: 0;
       width: 0; height: 1px;
-      background: #0e5af0;
+      background: #3b82f6;
       transition: width .3s ease;
     }
 
@@ -94,11 +110,11 @@ const FooterStyles = () => (
     }
     @media (hover: hover) {
       .ft-social:hover {
-        background: #0e5af0 !important;
-        border-color: #0e5af0 !important;
+        background: #3b82f6 !important;
+        border-color: #3b82f6 !important;
         color: #fff !important;
         transform: translateY(-4px) !important;
-        box-shadow: 0 8px 20px rgba(14,90,240,.4) !important;
+        box-shadow: 0 8px 20px rgba(59,130,246,.4) !important;
       }
     }
     @media (hover: none) {
@@ -116,8 +132,8 @@ const FooterStyles = () => (
     @media (hover: hover) {
       .ft-contact:hover { color: #60a5fa !important; }
       .ft-contact:hover .ft-contact-icon {
-        background: rgba(14,90,240,.18) !important;
-        border-color: rgba(14,90,240,.4) !important;
+        background: rgba(59,130,246,.18) !important;
+        border-color: rgba(59,130,246,.4) !important;
         transform: scale(1.05);
       }
     }
@@ -133,7 +149,7 @@ const FooterStyles = () => (
     @media (hover: hover) {
       .ft-cta-btn:hover {
         transform: translateY(-3px) scale(1.02) !important;
-        box-shadow: 0 10px 32px rgba(14,90,240,.5) !important;
+        box-shadow: 0 10px 32px rgba(59,130,246,.5) !important;
       }
       .ft-cta-btn:hover .ft-cta-arrow { transform: translateX(4px); }
     }
@@ -199,17 +215,17 @@ const footerLinks: FooterLinkGroup[] = [
 
 const contactInfo = [
   {
-    icon: <LocationOnOutlined sx={{ fontSize: 16, color: '#0e5af0' }} />,
+    icon: <LocationOnOutlined sx={{ fontSize: 16, color: '#3b82f6' }} />,
     text: 'RNA RESOURCES BUILDING, Al Qouz Third 104-0 – Dubai',
     href: 'https://maps.google.com/?q=RNA+RESOURCES+BUILDING+Al+Qouz+Third+Dubai',
   },
   {
-    icon: <PhoneOutlined sx={{ fontSize: 16, color: '#0e5af0' }} />,
+    icon: <PhoneOutlined sx={{ fontSize: 16, color: '#3b82f6' }} />,
     text: '+971 50 123 4567',
     href: 'tel:+971501234567',
   },
   {
-    icon: <EmailOutlined sx={{ fontSize: 16, color: '#0e5af0' }} />,
+    icon: <EmailOutlined sx={{ fontSize: 16, color: '#3b82f6' }} />,
     text: 'marketing@acasa.ae',
     href: 'mailto:marketing@acasa.ae',
   },
@@ -230,7 +246,7 @@ const DisabledLink = ({ label }: { label: string }) => (
       display: 'inline-flex',
       alignItems: 'center',
       gap: 0.6,
-      fontFamily: "'Outfit', sans-serif",
+      fontFamily: "'DM Sans', sans-serif",
       fontSize: '.88rem',
       color: 'rgba(255,255,255,.28)',
       fontWeight: 400,
@@ -262,6 +278,16 @@ const DisabledLink = ({ label }: { label: string }) => (
 
 /* ─── Component ──────────────────────────────────────────── */
 const Footer: React.FC = () => {
+  // Generate stars for background
+  const stars = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    size: Math.random() * 2 + 1,
+    delay: Math.random() * 3,
+    duration: Math.random() * 3 + 2,
+  }));
+
   return (
     <>
       <FooterStyles />
@@ -269,20 +295,72 @@ const Footer: React.FC = () => {
       <Box
         component="footer"
         sx={{
-          background: '#050d1a',
+          background: 'linear-gradient(135deg, #0a0e27 0%, #0d1b3e 30%, #0a1628 60%, #0c1a34 100%)',
           position: 'relative',
           overflow: 'hidden',
           color: '#fff',
         }}
       >
+        {/* Space Background with Stars */}
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            overflow: 'hidden',
+          }}
+        >
+          {/* Twinkling Stars */}
+          {stars.map((star) => (
+            <Box
+              key={star.id}
+              sx={{
+                position: 'absolute',
+                left: star.left,
+                top: star.top,
+                width: `${star.size}px`,
+                height: `${star.size}px`,
+                background: 'white',
+                borderRadius: '50%',
+                animation: `starTwinkle ${star.duration}s ease-in-out ${star.delay}s infinite`,
+                boxShadow: `0 0 ${star.size * 2}px rgba(255,255,255,0.8)`,
+              }}
+            />
+          ))}
+
+          {/* Nebula effects */}
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '0%',
+              left: '0%',
+              width: '50%',
+              height: '70%',
+              background: 'radial-gradient(ellipse, rgba(59,130,246,0.06) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+            }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '0%',
+              right: '10%',
+              width: '40%',
+              height: '60%',
+              background: 'radial-gradient(ellipse, rgba(99,179,237,0.04) 0%, transparent 70%)',
+              filter: 'blur(50px)',
+            }}
+          />
+        </Box>
+
         {/* Grid texture */}
         <Box
           sx={{
             position: 'absolute',
             inset: 0,
             backgroundImage: `
-              linear-gradient(rgba(14,90,240,.04) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(14,90,240,.04) 1px, transparent 1px)
+              linear-gradient(rgba(59,130,246,.04) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59,130,246,.04) 1px, transparent 1px)
             `,
             backgroundSize: { xs: '28px 28px', md: '44px 44px' },
             pointerEvents: 'none',
@@ -291,6 +369,39 @@ const Footer: React.FC = () => {
               'radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 100%)',
           }}
         />
+
+        {/* Network nodes (decorative) */}
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            pointerEvents: 'none',
+          }}
+        >
+          {[
+            { x: '10%', y: '20%' },
+            { x: '90%', y: '30%' },
+            { x: '50%', y: '80%' },
+            { x: '30%', y: '60%' },
+            { x: '70%', y: '40%' },
+          ].map((node, i) => (
+            <Box
+              key={i}
+              sx={{
+                position: 'absolute',
+                left: node.x,
+                top: node.y,
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: 'rgba(59,130,246,0.4)',
+                animation: `nodePulse ${3 + i * 0.5}s ease-in-out infinite`,
+                boxShadow: '0 0 10px rgba(59,130,246,0.3)',
+              }}
+            />
+          ))}
+        </Box>
 
         {/* Top accent line */}
         <Box
@@ -304,9 +415,10 @@ const Footer: React.FC = () => {
             position: 'relative',
             zIndex: 1,
             background:
-              'linear-gradient(100deg, #0a1628, #0f1f3d 40%, #0d1b35)',
-            borderBottom: '1px solid rgba(14,90,240,.1)',
+              'linear-gradient(100deg, rgba(10,14,39,0.9), rgba(13,27,62,0.8) 40%, rgba(10,22,40,0.9))',
+            borderBottom: '1px solid rgba(59,130,246,.1)',
             overflow: 'hidden',
+            backdropFilter: 'blur(10px)',
           }}
         >
           {/* CTA glow blob */}
@@ -318,7 +430,7 @@ const Footer: React.FC = () => {
               width: { xs: 160, sm: 220, md: 280 },
               height: { xs: 160, sm: 220, md: 280 },
               background:
-                'radial-gradient(circle, rgba(14,90,240,.18), transparent 65%)',
+                'radial-gradient(circle, rgba(59,130,246,.18), transparent 65%)',
               pointerEvents: 'none',
               filter: 'blur(20px)',
             }}
@@ -353,7 +465,7 @@ const Footer: React.FC = () => {
                     width: { xs: 48, md: 56 },
                     height: { xs: 48, md: 56 },
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #0e5af0, #60a5fa)',
+                    background: 'linear-gradient(135deg, #1a4fd8, #3b82f6)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -372,7 +484,7 @@ const Footer: React.FC = () => {
                 <Box>
                   <Typography
                     sx={{
-                      fontFamily: "'Bricolage Grotesque', sans-serif",
+                      fontFamily: "'Sora', sans-serif",
                       fontSize: { xs: '1rem', sm: '1.15rem', md: '1.25rem' },
                       fontWeight: 700,
                       color: '#fff',
@@ -384,7 +496,7 @@ const Footer: React.FC = () => {
                   </Typography>
                   <Typography
                     sx={{
-                      fontFamily: "'Outfit', sans-serif",
+                      fontFamily: "'DM Sans', sans-serif",
                       fontSize: { xs: '.82rem', md: '.88rem' },
                       color: 'rgba(255,255,255,.5)',
                       fontWeight: 400,
@@ -406,10 +518,10 @@ const Footer: React.FC = () => {
                     px: { xs: 2.8, md: 3.2 },
                     py: { xs: 1.2, md: 1.3 },
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #0e5af0, #0a4ad4)',
+                    background: 'linear-gradient(135deg, #1a4fd8, #3b82f6)',
                     color: '#fff',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 20px rgba(14,90,240,.35)',
+                    boxShadow: '0 4px 20px rgba(59,130,246,.35)',
                     whiteSpace: 'nowrap',
                     width: { xs: '100%', sm: 'auto' },
                     justifyContent: 'center',
@@ -417,7 +529,7 @@ const Footer: React.FC = () => {
                 >
                   <Typography
                     sx={{
-                      fontFamily: "'Bricolage Grotesque', sans-serif",
+                      fontFamily: "'Sora', sans-serif",
                       fontWeight: 700,
                       fontSize: { xs: '.84rem', md: '.9rem' },
                       color: 'inherit',
@@ -474,11 +586,15 @@ const Footer: React.FC = () => {
                     component="img"
                     src="/logo.png"
                     alt="Bendra Logo"
-                    sx={{ height: { xs: 28, md: 32 }, width: 'auto' }}
+                    sx={{ 
+                      height: { xs: 32, md: 38 }, 
+                      width: 'auto',
+                      filter: 'drop-shadow(0 0 20px rgba(59,130,246,0.5))',
+                    }}
                   />
                   <Typography
                     sx={{
-                      fontFamily: "'Bricolage Grotesque', sans-serif",
+                      fontFamily: "'Sora', sans-serif",
                       fontWeight: 800,
                       fontSize: { xs: '1.2rem', md: '1.35rem' },
                       letterSpacing: '.1em',
@@ -495,7 +611,7 @@ const Footer: React.FC = () => {
 
               <Typography
                 sx={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontFamily: "'Sora', sans-serif",
                   fontSize: '.72rem',
                   color: 'rgba(255,255,255,.35)',
                   fontWeight: 600,
@@ -509,7 +625,7 @@ const Footer: React.FC = () => {
 
               <Typography
                 sx={{
-                  fontFamily: "'Outfit', sans-serif",
+                  fontFamily: "'DM Sans', sans-serif",
                   fontSize: { xs: '.84rem', md: '.88rem' },
                   color: 'rgba(255,255,255,.45)',
                   lineHeight: 1.7,
@@ -525,7 +641,7 @@ const Footer: React.FC = () => {
 
               <Typography
                 sx={{
-                  fontFamily: "'Outfit', sans-serif",
+                  fontFamily: "'DM Sans', sans-serif",
                   fontSize: '.78rem',
                   color: 'rgba(255,255,255,.4)',
                   fontWeight: 500,
@@ -579,7 +695,7 @@ const Footer: React.FC = () => {
                 {/* Column heading */}
                 <Typography
                   sx={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontFamily: "'Sora', sans-serif",
                     fontSize: '.74rem',
                     fontWeight: 700,
                     color: 'rgba(255,255,255,.3)',
@@ -598,7 +714,7 @@ const Footer: React.FC = () => {
                       height: 2,
                       borderRadius: 99,
                       background:
-                        'linear-gradient(90deg, #0e5af0, transparent)',
+                        'linear-gradient(90deg, #3b82f6, transparent)',
                       opacity: 0.5,
                     },
                   }}
@@ -633,7 +749,7 @@ const Footer: React.FC = () => {
                           className="ft-link"
                           style={{
                             textDecoration: 'none',
-                            fontFamily: "'Outfit', sans-serif",
+                            fontFamily: "'DM Sans', sans-serif",
                             fontSize: '.88rem',
                             color: 'rgba(255,255,255,.55)',
                             fontWeight: 400,
@@ -660,7 +776,7 @@ const Footer: React.FC = () => {
             >
               <Typography
                 sx={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontFamily: "'Sora', sans-serif",
                   fontSize: '.74rem',
                   fontWeight: 700,
                   color: 'rgba(255,255,255,.3)',
@@ -678,7 +794,7 @@ const Footer: React.FC = () => {
                     width: 20,
                     height: 2,
                     borderRadius: 99,
-                    background: 'linear-gradient(90deg, #0e5af0, transparent)',
+                    background: 'linear-gradient(90deg, #3b82f6, transparent)',
                     opacity: 0.5,
                   },
                 }}
@@ -724,8 +840,8 @@ const Footer: React.FC = () => {
                         width: 34,
                         height: 34,
                         borderRadius: '10px',
-                        background: 'rgba(14,90,240,.08)',
-                        border: '1px solid rgba(14,90,240,.18)',
+                        background: 'rgba(59,130,246,.08)',
+                        border: '1px solid rgba(59,130,246,.18)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -736,7 +852,7 @@ const Footer: React.FC = () => {
                     </Box>
                     <Typography
                       sx={{
-                        fontFamily: "'Outfit', sans-serif",
+                        fontFamily: "'DM Sans', sans-serif",
                         fontSize: { xs: '.82rem', md: '.85rem' },
                         fontWeight: 400,
                         color: 'inherit',
@@ -772,7 +888,7 @@ const Footer: React.FC = () => {
             <Box>
               <Typography
                 sx={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontFamily: "'Sora', sans-serif",
                   fontWeight: 700,
                   fontSize: { xs: '.95rem', md: '1.05rem' },
                   color: '#fff',
@@ -783,7 +899,7 @@ const Footer: React.FC = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "'Outfit', sans-serif",
+                  fontFamily: "'DM Sans', sans-serif",
                   fontSize: { xs: '.82rem', md: '.86rem' },
                   color: 'rgba(255,255,255,.45)',
                   fontWeight: 400,
@@ -803,8 +919,8 @@ const Footer: React.FC = () => {
                 px: { xs: 2.5, md: 3 },
                 py: { xs: 1.1, md: 1.2 },
                 borderRadius: '12px',
-                border: '1.5px solid rgba(14,90,240,.2)',
-                background: 'rgba(14,90,240,.06)',
+                border: '1.5px solid rgba(59,130,246,.2)',
+                background: 'rgba(59,130,246,.06)',
                 color: '#60a5fa',
                 textDecoration: 'none',
                 cursor: 'pointer',
@@ -812,10 +928,10 @@ const Footer: React.FC = () => {
                 width: { xs: '100%', sm: 'auto' },
                 justifyContent: 'center',
                 '&:hover': {
-                  background: 'rgba(14,90,240,.12)',
-                  borderColor: 'rgba(14,90,240,.4)',
+                  background: 'rgba(59,130,246,.12)',
+                  borderColor: 'rgba(59,130,246,.4)',
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 8px 24px rgba(14,90,240,.15)',
+                  boxShadow: '0 8px 24px rgba(59,130,246,.15)',
                 },
                 '&:active': { transform: 'scale(.97)' },
               }}
@@ -823,7 +939,7 @@ const Footer: React.FC = () => {
               <EmailOutlined sx={{ fontSize: 18 }} />
               <Typography
                 sx={{
-                  fontFamily: "'Outfit', sans-serif",
+                  fontFamily: "'DM Sans', sans-serif",
                   fontWeight: 600,
                   fontSize: { xs: '.82rem', md: '.88rem' },
                   color: 'inherit',
@@ -839,7 +955,7 @@ const Footer: React.FC = () => {
             sx={{
               height: '1px',
               background:
-                'linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent)',
+                'linear-gradient(90deg, transparent, rgba(59,130,246,.15), transparent)',
               position: 'relative',
               zIndex: 1,
             }}
@@ -860,7 +976,7 @@ const Footer: React.FC = () => {
           >
             <Typography
               sx={{
-                fontFamily: "'Outfit', sans-serif",
+                fontFamily: "'DM Sans', sans-serif",
                 fontSize: { xs: '.72rem', md: '.78rem' },
                 color: 'rgba(255,255,255,.25)',
                 fontWeight: 400,
@@ -882,7 +998,7 @@ const Footer: React.FC = () => {
                   className="ft-link"
                   style={{
                     textDecoration: 'none',
-                    fontFamily: "'Outfit', sans-serif",
+                    fontFamily: "'DM Sans', sans-serif",
                     fontSize: '.75rem',
                     color: 'rgba(255,255,255,.3)',
                     fontWeight: 400,
@@ -920,7 +1036,7 @@ const Footer: React.FC = () => {
         <Box
           sx={{
             height: 'env(safe-area-inset-bottom, 0px)',
-            background: '#050d1a',
+            background: 'linear-gradient(135deg, #0a0e27 0%, #0d1b3e 30%, #0a1628 60%, #0c1a34 100%)',
           }}
         />
       </Box>
