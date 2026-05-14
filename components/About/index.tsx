@@ -38,9 +38,9 @@ const AboutStyles = () => (
       50%       { opacity: .8;  transform: scale(1.06); }
     }
 
-    @keyframes dotDrift {
-      0%, 100% { transform: translateY(0); opacity: .18; }
-      50%       { transform: translateY(-7px); opacity: .32; }
+    @keyframes imgZoom {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.04); }
     }
 
     @keyframes chipIn {
@@ -53,7 +53,7 @@ const AboutStyles = () => (
     .ab-chip  { animation: chipIn .55s cubic-bezier(.16,1,.3,1) both; }
 
     .ab-glow  { animation: glowPulse 5s ease-in-out infinite; }
-    .ab-dots  { animation: dotDrift 7s ease-in-out infinite; }
+    .ab-img   { animation: imgZoom 12s ease-in-out infinite; }
 
     /* ── Stat card ── */
     .sc2 {
@@ -101,7 +101,7 @@ const AboutStyles = () => (
 
     @media (hover: none) { .sc2:active { transform: scale(.97); } }
 
-    /* ── About-us CTA button ── */
+    /* ── CTA button ── */
     .ab-btn {
       transition: transform .28s cubic-bezier(.34,1.4,.64,1),
                   background .25s ease,
@@ -110,15 +110,15 @@ const AboutStyles = () => (
     }
     .ab-btn:hover {
       transform: translateY(-2px) !important;
-      background: rgba(14,90,240,.1) !important;
-      box-shadow: 0 8px 24px rgba(14,90,240,.15) !important;
+      background: rgba(255,255,255,.12) !important;
+      box-shadow: 0 8px 24px rgba(14,90,240,.2) !important;
     }
     .ab-btn:hover .ab-btn-arrow { transform: translateX(3px) translateY(-3px); }
     .ab-btn-arrow { transition: transform .28s cubic-bezier(.34,1.4,.64,1); }
 
     @media (prefers-reduced-motion: reduce) {
       .ab-left,.ab-right,.ab-chip,.sc2,.sc2-icon,.sc2-bar,
-      .sc2-num,.sc2-arrow,.sc2-glow,.ab-btn,.ab-glow,.ab-dots {
+      .sc2-num,.sc2-arrow,.sc2-glow,.ab-btn,.ab-glow,.ab-img {
         animation: none !important; transition: none !important;
       }
     }
@@ -175,158 +175,274 @@ const chips = ['Scalable systems', 'Business-first approach', 'Long-term support
 const About: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isSmall  = useMediaQuery('(max-width:360px)');
+  const isSmall = useMediaQuery('(max-width:360px)');
 
   return (
     <>
       <AboutStyles />
 
-      <Box sx={{
-        position: 'relative',
-        py: { xs: 7, md: 10 },
-        background: 'linear-gradient(170deg, #f0f5ff 0%, #f6f9ff 35%, #ffffff 100%)',
-        overflow: 'hidden',
-        borderTop: '1px solid rgba(14,31,64,.06)',
-        borderBottom: '1px solid rgba(14,31,64,.06)',
-      }}>
-
+      <Box
+        sx={{
+          position: 'relative',
+          py: { xs: 7, md: 10 },
+          background:
+            'linear-gradient(170deg, #f0f5ff 0%, #f6f9ff 35%, #ffffff 100%)',
+          overflow: 'hidden',
+          borderTop: '1px solid rgba(14,31,64,.06)',
+          borderBottom: '1px solid rgba(14,31,64,.06)',
+        }}
+      >
         {/* Dot grid */}
-        <Box sx={{
-          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
-          backgroundImage: 'radial-gradient(circle, rgba(14,31,64,.042) 1px, transparent 1px)',
-          backgroundSize: '34px 34px',
-          maskImage: 'radial-gradient(ellipse 90% 70% at 50% 50%, black 20%, transparent 100%)',
-        }}/>
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 0,
+            backgroundImage:
+              'radial-gradient(circle, rgba(14,31,64,.042) 1px, transparent 1px)',
+            backgroundSize: '34px 34px',
+            maskImage:
+              'radial-gradient(ellipse 90% 70% at 50% 50%, black 20%, transparent 100%)',
+          }}
+        />
 
         {/* Blobs */}
-        <Box className="ab-glow" sx={{
-          position: 'absolute', top: '-8%', left: '-5%',
-          width: 380, height: 380, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(14,90,240,.08), transparent 68%)',
-          filter: 'blur(55px)', pointerEvents: 'none', zIndex: 0,
-        }}/>
-        <Box className="ab-glow" sx={{
-          position: 'absolute', bottom: '-6%', right: '-5%',
-          width: 320, height: 320, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,161,224,.07), transparent 68%)',
-          filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
-          animationDelay: '1.6s',
-        }}/>
+        <Box
+          className="ab-glow"
+          sx={{
+            position: 'absolute',
+            top: '-8%',
+            left: '-5%',
+            width: { xs: 240, sm: 300, md: 380 },
+            height: { xs: 240, sm: 300, md: 380 },
+            borderRadius: '50%',
+            background:
+              'radial-gradient(circle, rgba(14,90,240,.08), transparent 68%)',
+            filter: 'blur(55px)',
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
+        />
+        <Box
+          className="ab-glow"
+          sx={{
+            position: 'absolute',
+            bottom: '-6%',
+            right: '-5%',
+            width: { xs: 200, sm: 260, md: 320 },
+            height: { xs: 200, sm: 260, md: 320 },
+            borderRadius: '50%',
+            background:
+              'radial-gradient(circle, rgba(0,161,224,.07), transparent 68%)',
+            filter: 'blur(50px)',
+            pointerEvents: 'none',
+            zIndex: 0,
+            animationDelay: '1.6s',
+          }}
+        />
 
-        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2, px: { xs: 2, sm: 3, md: 5 } }}>
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-            gap: { xs: 3, md: 3.5, lg: 4 },
-            alignItems: 'stretch',
-          }}>
-
+        <Container
+          maxWidth="xl"
+          sx={{
+            position: 'relative',
+            zIndex: 2,
+            px: { xs: 2, sm: 3, md: 5 },
+          }}
+        >
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+              gap: { xs: 3, md: 3.5, lg: 4 },
+              alignItems: 'stretch',
+            }}
+          >
             {/* ── LEFT: Brand panel ───────────────────── */}
-            <Box className="ab-left" sx={{
-              position: 'relative',
-              borderRadius: { xs: '22px', md: '26px' },
-              overflow: 'hidden',
-              background: 'linear-gradient(145deg, #060f25 0%, #0b1a3e 55%, #081530 100%)',
-              p: { xs: 3, sm: 4, md: 4.5, lg: 5 },
-              minHeight: { xs: 360, md: 'auto' },
-              display: 'flex', flexDirection: 'column', justifyContent: 'center',
-              border: '1px solid rgba(255,255,255,.06)',
-              boxShadow: '0 24px 60px rgba(6,15,37,.2)',
-              textAlign: { xs: 'center', md: 'left' },
-            }}>
+            <Box
+              className="ab-left"
+              sx={{
+                position: 'relative',
+                borderRadius: { xs: '22px', md: '26px' },
+                overflow: 'hidden',
+                background: '#060f25',
+                minHeight: { xs: 400, sm: 420, md: 'auto' },
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                border: '1px solid rgba(255,255,255,.06)',
+                boxShadow: '0 24px 60px rgba(6,15,37,.2)',
+                textAlign: { xs: 'center', md: 'left' },
+              }}
+            >
+              {/* ── Background image ── */}
+              <Box
+                className="ab-img"
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  zIndex: 0,
+                  backgroundImage:
+                    'url(https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: 'brightness(.45) saturate(1.2)',
+                }}
+              />
 
-              {/* Animated dot overlay */}
-              <Box className="ab-dots" sx={{
-                position: 'absolute', top: 0, right: 0,
-                width: '65%', height: '100%', zIndex: 1,
-                backgroundImage: 'radial-gradient(circle, rgba(99,179,237,.55) 1px, transparent 1px)',
-                backgroundSize: '16px 16px',
-                maskImage: 'radial-gradient(ellipse at right center, black 15%, transparent 65%)',
-                WebkitMaskImage: 'radial-gradient(ellipse at right center, black 15%, transparent 65%)',
-                opacity: .18,
-              }}/>
+              {/* Dark gradient overlay — keeps text readable */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  zIndex: 1,
+                  background: `
+                    linear-gradient(180deg,
+                      rgba(6,15,37,.88) 0%,
+                      rgba(6,15,37,.72) 40%,
+                      rgba(6,15,37,.85) 100%
+                    )
+                  `,
+                }}
+              />
 
-              {/* Gradient glow spheres */}
-              <Box sx={{
-                position: 'absolute', bottom: '-18%', right: '-8%',
-                width: 320, height: 320, borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(14,90,240,.22), transparent 68%)',
-                filter: 'blur(45px)', zIndex: 1, pointerEvents: 'none',
-              }}/>
-              <Box sx={{
-                position: 'absolute', top: '-12%', left: '-6%',
-                width: 260, height: 260, borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(0,161,224,.12), transparent 68%)',
-                filter: 'blur(40px)', zIndex: 1, pointerEvents: 'none',
-              }}/>
-
-              {/* Overlay to darken edges */}
-              <Box sx={{
-                position: 'absolute', inset: 0, zIndex: 1,
-                background: 'linear-gradient(120deg, rgba(6,15,37,.92) 0%, rgba(6,15,37,.78) 55%, rgba(6,15,37,.6) 100%)',
-              }}/>
+              {/* Side accent glow — still visible over image */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: '-18%',
+                  right: '-8%',
+                  width: { xs: 220, sm: 280, md: 320 },
+                  height: { xs: 220, sm: 280, md: 320 },
+                  borderRadius: '50%',
+                  background:
+                    'radial-gradient(circle, rgba(14,90,240,.22), transparent 68%)',
+                  filter: 'blur(45px)',
+                  zIndex: 1,
+                  pointerEvents: 'none',
+                }}
+              />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '-12%',
+                  left: '-6%',
+                  width: { xs: 180, sm: 220, md: 260 },
+                  height: { xs: 180, sm: 220, md: 260 },
+                  borderRadius: '50%',
+                  background:
+                    'radial-gradient(circle, rgba(0,161,224,.12), transparent 68%)',
+                  filter: 'blur(40px)',
+                  zIndex: 1,
+                  pointerEvents: 'none',
+                }}
+              />
 
               {/* Content */}
-              <Box sx={{ position: 'relative', zIndex: 2 }}>
-
+              <Box
+                sx={{
+                  position: 'relative',
+                  zIndex: 2,
+                  p: { xs: 3, sm: 4, md: 4.5, lg: 5 },
+                }}
+              >
                 {/* Pill */}
-                <Box sx={{
-                  display: 'inline-flex', alignItems: 'center', gap: 1,
-                  mb: { xs: 2.5, md: 3 }, px: 1.8, py: .7,
-                  borderRadius: '999px',
-                  border: '1px solid rgba(99,179,237,.22)',
-                  background: 'rgba(14,90,240,.1)',
-                  backdropFilter: 'blur(8px)',
-                }}>
-                  <Box sx={{
-                    width: 7, height: 7, borderRadius: '50%',
-                    background: '#63b3ed',
-                    boxShadow: '0 0 10px rgba(99,179,237,.9)',
-                  }}/>
-                  <Typography sx={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
-                    fontWeight: 700, fontSize: '.7rem',
-                    color: '#90cdf4',
-                    textTransform: 'uppercase', letterSpacing: '.15em',
-                  }}>
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    mb: { xs: 2.5, md: 3 },
+                    px: 1.8,
+                    py: 0.7,
+                    borderRadius: '999px',
+                    border: '1px solid rgba(99,179,237,.22)',
+                    background: 'rgba(14,90,240,.1)',
+                    backdropFilter: 'blur(8px)',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 7,
+                      height: 7,
+                      borderRadius: '50%',
+                      background: '#63b3ed',
+                      boxShadow: '0 0 10px rgba(99,179,237,.9)',
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: "'Bricolage Grotesque', sans-serif",
+                      fontWeight: 700,
+                      fontSize: '.7rem',
+                      color: '#90cdf4',
+                      textTransform: 'uppercase',
+                      letterSpacing: '.15em',
+                    }}
+                  >
                     About Bendra
                   </Typography>
                 </Box>
 
                 {/* Heading */}
-                <Typography component="h2" sx={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontWeight: 800,
-                  fontSize: {
-                    xs: isSmall ? '1.55rem' : '1.75rem',
-                    sm: '2rem', md: '2.1rem', lg: '2.5rem',
-                  },
-                  lineHeight: 1.13, letterSpacing: '-.032em',
-                  color: '#fff', mb: 2,
-                }}>
+                <Typography
+                  component="h2"
+                  sx={{
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontWeight: 800,
+                    fontSize: {
+                      xs: isSmall ? '1.55rem' : '1.75rem',
+                      sm: '2rem',
+                      md: '2.1rem',
+                      lg: '2.5rem',
+                    },
+                    lineHeight: 1.13,
+                    letterSpacing: '-.032em',
+                    color: '#fff',
+                    mb: 2,
+                  }}
+                >
                   Your growth is
-                  <br />our mission
-                  <Box component="span" sx={{
-                    background: 'linear-gradient(90deg, #0e5af0, #63b3ed)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  }}>.</Box>
+                  <br />
+                  our mission
+                  <Box
+                    component="span"
+                    sx={{
+                      background:
+                        'linear-gradient(90deg, #0e5af0, #63b3ed)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    .
+                  </Box>
                 </Typography>
 
                 {/* Divider */}
-                <Box sx={{
-                  width: 48, height: 2, borderRadius: 99,
-                  background: 'linear-gradient(90deg, #0e5af0, #90cdf4)',
-                  mb: 2.4, mx: { xs: 'auto', md: 0 },
-                }}/>
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 2,
+                    borderRadius: 99,
+                    background: 'linear-gradient(90deg, #0e5af0, #90cdf4)',
+                    mb: 2.4,
+                    mx: { xs: 'auto', md: 0 },
+                  }}
+                />
 
                 {/* Body */}
-                <Typography sx={{
-                  fontFamily: "'Outfit', sans-serif",
-                  fontWeight: 400,
-                  fontSize: { xs: '.88rem', sm: '.92rem', md: '.96rem' },
-                  color: 'rgba(255,255,255,.65)', lineHeight: 1.82,
-                  mb: 3, maxWidth: 520, mx: { xs: 'auto', md: 0 },
-                }}>
+                <Typography
+                  sx={{
+                    fontFamily: "'Outfit', sans-serif",
+                    fontWeight: 400,
+                    fontSize: { xs: '.88rem', sm: '.92rem', md: '.96rem' },
+                    color: 'rgba(255,255,255,.65)',
+                    lineHeight: 1.82,
+                    mb: 3,
+                    maxWidth: 520,
+                    mx: { xs: 'auto', md: 0 },
+                  }}
+                >
                   Bendra is a team of passionate technologists, problem solvers,
                   and business thinkers. We partner with organisations of all sizes
                   to build digital systems that create value, drive efficiency, and
@@ -334,23 +450,40 @@ const About: React.FC = () => {
                 </Typography>
 
                 {/* Chips */}
-                <Box sx={{
-                  display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3.5,
-                  justifyContent: { xs: 'center', md: 'flex-start' },
-                }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    mb: 3.5,
+                    justifyContent: { xs: 'center', md: 'flex-start' },
+                  }}
+                >
                   {chips.map((c, i) => (
-                    <Box key={c} className="ab-chip" sx={{
-                      animationDelay: `${.28 + i * .08}s`,
-                      px: 1.5, py: .7, borderRadius: '999px',
-                      background: 'rgba(255,255,255,.06)',
-                      border: '1px solid rgba(255,255,255,.1)',
-                      backdropFilter: 'blur(8px)',
-                    }}>
-                      <Typography sx={{
-                        fontFamily: "'Outfit', sans-serif",
-                        fontWeight: 500, fontSize: '.78rem',
-                        color: 'rgba(255,255,255,.78)', lineHeight: 1,
-                      }}>{c}</Typography>
+                    <Box
+                      key={c}
+                      className="ab-chip"
+                      sx={{
+                        animationDelay: `${0.28 + i * 0.08}s`,
+                        px: 1.5,
+                        py: 0.7,
+                        borderRadius: '999px',
+                        background: 'rgba(255,255,255,.06)',
+                        border: '1px solid rgba(255,255,255,.1)',
+                        backdropFilter: 'blur(8px)',
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontFamily: "'Outfit', sans-serif",
+                          fontWeight: 500,
+                          fontSize: '.78rem',
+                          color: 'rgba(255,255,255,.78)',
+                          lineHeight: 1,
+                        }}
+                      >
+                        {c}
+                      </Typography>
                     </Box>
                   ))}
                 </Box>
@@ -360,19 +493,26 @@ const About: React.FC = () => {
                   <Button
                     variant="outlined"
                     fullWidth={isMobile}
-                    endIcon={<NorthEast className="ab-btn-arrow" sx={{ fontSize: '1rem !important' }} />}
+                    endIcon={
+                      <NorthEast
+                        className="ab-btn-arrow"
+                        sx={{ fontSize: '1rem !important' }}
+                      />
+                    }
                     className="ab-btn"
                     sx={{
                       fontFamily: "'Bricolage Grotesque', sans-serif",
-                      fontWeight: 700, fontSize: { xs: '.84rem', md: '.88rem' },
+                      fontWeight: 700,
+                      fontSize: { xs: '.84rem', md: '.88rem' },
                       color: '#fff',
                       borderColor: 'rgba(255,255,255,.22)',
                       textTransform: 'none',
                       letterSpacing: '.02em',
-                      px: { xs: 2.8, md: 3.2 }, py: { xs: 1.15, md: 1.2 },
+                      px: { xs: 2.8, md: 3.2 },
+                      py: { xs: 1.15, md: 1.2 },
                       borderRadius: '12px',
                       backdropFilter: 'blur(8px)',
-                      background: 'rgba(14,90,240,.08)',
+                      background: 'rgba(255,255,255,.08)',
                       maxWidth: { xs: '100%', sm: 'fit-content' },
                     }}
                   >
@@ -383,141 +523,242 @@ const About: React.FC = () => {
             </Box>
 
             {/* ── RIGHT: Stats ────────────────────────── */}
-            <Box className="ab-right" sx={{
-              background: 'rgba(255,255,255,.85)',
-              backdropFilter: 'blur(12px)',
-              borderRadius: { xs: '22px', md: '26px' },
-              p: { xs: 2.5, sm: 3, md: 3.5, lg: 4 },
-              border: '1.5px solid rgba(14,31,64,.08)',
-              boxShadow: '0 8px 32px rgba(14,31,64,.06)',
-              display: 'flex', flexDirection: 'column',
-              position: 'relative', overflow: 'hidden',
-            }}>
-
+            <Box
+              className="ab-right"
+              sx={{
+                background: 'rgba(255,255,255,.85)',
+                backdropFilter: 'blur(12px)',
+                borderRadius: { xs: '22px', md: '26px' },
+                p: { xs: 2.5, sm: 3, md: 3.5, lg: 4 },
+                border: '1.5px solid rgba(14,31,64,.08)',
+                boxShadow: '0 8px 32px rgba(14,31,64,.06)',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
               {/* Faint dot texture */}
-              <Box sx={{
-                position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
-                backgroundImage: 'radial-gradient(circle, rgba(14,31,64,.035) 1px, transparent 1px)',
-                backgroundSize: '28px 28px',
-              }}/>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  pointerEvents: 'none',
+                  zIndex: 0,
+                  backgroundImage:
+                    'radial-gradient(circle, rgba(14,31,64,.035) 1px, transparent 1px)',
+                  backgroundSize: '28px 28px',
+                }}
+              />
 
               {/* Right header */}
-              <Box sx={{ position: 'relative', zIndex: 1, mb: { xs: 2.5, md: 3 }, textAlign: { xs: 'center', md: 'left' } }}>
-                <Typography sx={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontWeight: 800,
-                  fontSize: { xs: '1.2rem', sm: '1.35rem', md: '1.5rem', lg: '1.65rem' },
-                  letterSpacing: '-.022em', color: '#0b1836', mb: 1,
-                }}>
+              <Box
+                sx={{
+                  position: 'relative',
+                  zIndex: 1,
+                  mb: { xs: 2.5, md: 3 },
+                  textAlign: { xs: 'center', md: 'left' },
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontWeight: 800,
+                    fontSize: {
+                      xs: '1.2rem',
+                      sm: '1.35rem',
+                      md: '1.5rem',
+                      lg: '1.65rem',
+                    },
+                    letterSpacing: '-.022em',
+                    color: '#0b1836',
+                    mb: 1,
+                  }}
+                >
                   Trusted outcomes.{' '}
-                  <Box component="span" sx={{
-                    background: 'linear-gradient(90deg, #0e5af0, #00a1e0)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  }}>
+                  <Box
+                    component="span"
+                    sx={{
+                      background:
+                        'linear-gradient(90deg, #0e5af0, #00a1e0)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
                     Measurable impact.
                   </Box>
                 </Typography>
-                <Typography sx={{
-                  fontFamily: "'Outfit', sans-serif",
-                  fontWeight: 400, fontSize: { xs: '.86rem', md: '.94rem' },
-                  color: 'rgba(11,24,54,.52)', lineHeight: 1.78,
-                  maxWidth: 520, mx: { xs: 'auto', md: 0 },
-                }}>
-                  Long-term relationships, quality delivery, and practical solutions
-                  that help businesses move faster with confidence.
+                <Typography
+                  sx={{
+                    fontFamily: "'Outfit', sans-serif",
+                    fontWeight: 400,
+                    fontSize: { xs: '.86rem', md: '.94rem' },
+                    color: 'rgba(11,24,54,.52)',
+                    lineHeight: 1.78,
+                    maxWidth: 520,
+                    mx: { xs: 'auto', md: 0 },
+                  }}
+                >
+                  Long-term relationships, quality delivery, and practical
+                  solutions that help businesses move faster with confidence.
                 </Typography>
               </Box>
 
               {/* Stat cards grid */}
-              <Box sx={{
-                position: 'relative', zIndex: 1,
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
-                gap: { xs: 1.8, sm: 2 },
-                flex: 1,
-              }}>
+              <Box
+                sx={{
+                  position: 'relative',
+                  zIndex: 1,
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+                  gap: { xs: 1.8, sm: 2 },
+                  flex: 1,
+                }}
+              >
                 {stats.map((s, i) => (
-                  <Box key={i} className="sc2" sx={{
-                    '--sc2-border': s.border,
-                    '--sc2-shadow': s.shadow,
-                    p: { xs: 2.2, md: 2.6 },
-                    display: 'flex', flexDirection: 'column',
-                    animation: `fadeUp .65s cubic-bezier(.16,1,.3,1) ${.2 + i * .07}s both`,
-                  }}>
-
+                  <Box
+                    key={i}
+                    className="sc2"
+                    sx={{
+                      '--sc2-border': s.border,
+                      '--sc2-shadow': s.shadow,
+                      p: { xs: 2.2, md: 2.6 },
+                      display: 'flex',
+                      flexDirection: 'column',
+                      animation: `fadeUp .65s cubic-bezier(.16,1,.3,1) ${0.2 + i * 0.07}s both`,
+                    }}
+                  >
                     {/* Top accent bar */}
-                    <Box className="sc2-bar" sx={{
-                      position: 'absolute', top: 0, left: 0, right: 0,
-                      height: '3px', background: s.bar,
-                      borderRadius: '20px 20px 0 0', zIndex: 2,
-                    }}/>
+                    <Box
+                      className="sc2-bar"
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '3px',
+                        background: s.bar,
+                        borderRadius: '20px 20px 0 0',
+                        zIndex: 2,
+                      }}
+                    />
 
                     {/* Hover glow */}
-                    <Box className="sc2-glow" sx={{
-                      position: 'absolute', top: '-20%',
-                      left: '15%', right: '15%', height: '50%',
-                      borderRadius: '50%',
-                      background: `radial-gradient(ellipse, ${s.accent}0b, transparent 70%)`,
-                      filter: 'blur(24px)', opacity: 0,
-                      pointerEvents: 'none', zIndex: 0,
-                    }}/>
+                    <Box
+                      className="sc2-glow"
+                      sx={{
+                        position: 'absolute',
+                        top: '-20%',
+                        left: '15%',
+                        right: '15%',
+                        height: '50%',
+                        borderRadius: '50%',
+                        background: `radial-gradient(ellipse, ${s.accent}0b, transparent 70%)`,
+                        filter: 'blur(24px)',
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        zIndex: 0,
+                      }}
+                    />
 
                     {/* Icon */}
-                    <Box className="sc2-icon" sx={{
-                      width: { xs: 46, md: 50 }, height: { xs: 46, md: 50 },
-                      borderRadius: '13px', background: s.iconBg,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      mb: 1.8, mt: .6,
-                      boxShadow: `0 5px 16px ${s.shadow}`,
-                      position: 'relative', zIndex: 1,
-                      '& .MuiSvgIcon-root': { fontSize: { xs: 21, md: 23 }, color: s.iconColor },
-                    }}>
+                    <Box
+                      className="sc2-icon"
+                      sx={{
+                        width: { xs: 46, md: 50 },
+                        height: { xs: 46, md: 50 },
+                        borderRadius: '13px',
+                        background: s.iconBg,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 1.8,
+                        mt: 0.6,
+                        boxShadow: `0 5px 16px ${s.shadow}`,
+                        position: 'relative',
+                        zIndex: 1,
+                        '& .MuiSvgIcon-root': {
+                          fontSize: { xs: 21, md: 23 },
+                          color: s.iconColor,
+                        },
+                      }}
+                    >
                       {s.icon}
                     </Box>
 
                     {/* Number */}
-                    <Typography className="sc2-num" sx={{
-                      fontFamily: "'Bricolage Grotesque', sans-serif",
-                      fontWeight: 800,
-                      fontSize: { xs: '1.75rem', md: '2rem' },
-                      lineHeight: 1, letterSpacing: '-.03em',
-                      color: s.accent, mb: .6,
-                      position: 'relative', zIndex: 1,
-                    }}>
+                    <Typography
+                      className="sc2-num"
+                      sx={{
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
+                        fontWeight: 800,
+                        fontSize: { xs: '1.75rem', md: '2rem' },
+                        lineHeight: 1,
+                        letterSpacing: '-.03em',
+                        color: s.accent,
+                        mb: 0.6,
+                        position: 'relative',
+                        zIndex: 1,
+                      }}
+                    >
                       {s.num}
                     </Typography>
 
                     {/* Title */}
-                    <Typography sx={{
-                      fontFamily: "'Bricolage Grotesque', sans-serif",
-                      fontWeight: 700, fontSize: { xs: '.92rem', md: '.98rem' },
-                      letterSpacing: '-.012em', color: '#0b1836', mb: .7,
-                      position: 'relative', zIndex: 1,
-                    }}>
+                    <Typography
+                      sx={{
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
+                        fontWeight: 700,
+                        fontSize: { xs: '.92rem', md: '.98rem' },
+                        letterSpacing: '-.012em',
+                        color: '#0b1836',
+                        mb: 0.7,
+                        position: 'relative',
+                        zIndex: 1,
+                      }}
+                    >
                       {s.title}
                     </Typography>
 
                     {/* Desc */}
-                    <Typography sx={{
-                      fontFamily: "'Outfit', sans-serif",
-                      fontWeight: 400, fontSize: { xs: '.8rem', md: '.84rem' },
-                      color: 'rgba(11,24,54,.48)', lineHeight: 1.65,
-                      flex: 1, position: 'relative', zIndex: 1,
-                    }}>
+                    <Typography
+                      sx={{
+                        fontFamily: "'Outfit', sans-serif",
+                        fontWeight: 400,
+                        fontSize: { xs: '.8rem', md: '.84rem' },
+                        color: 'rgba(11,24,54,.48)',
+                        lineHeight: 1.65,
+                        flex: 1,
+                        position: 'relative',
+                        zIndex: 1,
+                      }}
+                    >
                       {s.desc}
                     </Typography>
 
                     {/* Arrow */}
-                    <Box className="sc2-arrow" sx={{
-                      display: 'flex', alignItems: 'center',
-                      gap: '5px', mt: 1.8, opacity: .3,
-                      color: s.accent, position: 'relative', zIndex: 1,
-                    }}>
-                      <Typography sx={{
-                        fontFamily: "'Outfit', sans-serif",
-                        fontWeight: 600, fontSize: '.78rem',
-                        letterSpacing: '.03em', color: 'inherit',
-                      }}>
+                    <Box
+                      className="sc2-arrow"
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        mt: 1.8,
+                        opacity: 0.3,
+                        color: s.accent,
+                        position: 'relative',
+                        zIndex: 1,
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontFamily: "'Outfit', sans-serif",
+                          fontWeight: 600,
+                          fontSize: '.78rem',
+                          letterSpacing: '.03em',
+                          color: 'inherit',
+                        }}
+                      >
                         Trusted metric
                       </Typography>
                       <NorthEast sx={{ fontSize: 13, color: 'inherit' }} />
@@ -526,7 +767,6 @@ const About: React.FC = () => {
                 ))}
               </Box>
             </Box>
-
           </Box>
         </Container>
       </Box>

@@ -41,6 +41,16 @@ const TestimonialStyles = () => (
       50%       { box-shadow: 0 6px 22px rgba(14,90,240,.6),  0 0 0 9px rgba(14,90,240,0); }
     }
 
+    @keyframes playPulse2 {
+      0%, 100% { box-shadow: 0 4px 16px rgba(124,58,237,.45), 0 0 0 0 rgba(124,58,237,.4); }
+      50%       { box-shadow: 0 6px 22px rgba(124,58,237,.6),  0 0 0 9px rgba(124,58,237,0); }
+    }
+
+    @keyframes playPulse3 {
+      0%, 100% { box-shadow: 0 4px 16px rgba(16,185,129,.45), 0 0 0 0 rgba(16,185,129,.4); }
+      50%       { box-shadow: 0 6px 22px rgba(16,185,129,.6),  0 0 0 9px rgba(16,185,129,0); }
+    }
+
     @keyframes dotBlink {
       0%, 100% { opacity: 1; }
       50%       { opacity: .4; }
@@ -67,7 +77,7 @@ const TestimonialStyles = () => (
                   border-color .3s ease;
     }
     .tc video { transition: transform .55s ease, filter .4s ease; }
-    .tc-play  { animation: playPulse 2.2s ease-in-out infinite; transition: transform .3s cubic-bezier(.34,1.4,.64,1) !important; }
+    .tc-play  { transition: transform .3s cubic-bezier(.34,1.4,.64,1) !important; }
     .tc-quote { animation: floatQ 4s ease-in-out infinite; }
     .tc-watch { transition: opacity .3s ease, transform .3s ease; }
 
@@ -83,9 +93,17 @@ const TestimonialStyles = () => (
     .sc-track { scrollbar-width: none; -ms-overflow-style: none; }
     .sc-track::-webkit-scrollbar { display: none; }
 
+    /* scroll arrows */
+    .ts-arrow {
+      transition: background .25s ease, border-color .25s ease, color .25s ease, transform .25s ease;
+    }
+    .ts-arrow:hover { transform: scale(1.08); }
+
     @media (prefers-reduced-motion: reduce) {
       .ts-header,.tc,.tc-play,.tc-quote,.ts-glow,
-      .tc video,.tc-watch { animation: none !important; transition: none !important; }
+      .tc video,.tc-watch,.ts-arrow {
+        animation: none !important; transition: none !important;
+      }
     }
   `}</style>
 );
@@ -108,14 +126,40 @@ const testimonials: Testimonial[] = [
     name: 'Doolittle Team',
     role: 'Founder',
     company: 'Doolittle',
-    quote: 'Bendra transformed our digital presence completely. Their CRM integration saved us 20+ hours every week.',
+    quote:
+      'Bendra transformed our digital presence completely. Their CRM integration saved us 20+ hours every week.',
     videoSrc: '/testimonial/Digital Emantra Testimonial Doolittle.mov',
     accent: '#0e5af0',
     bar: 'linear-gradient(90deg, #0e5af0, #60a5fa)',
   },
+  {
+    id: 2,
+    name: 'Growth Partners',
+    role: 'Marketing Director',
+    company: 'GrowthScale',
+    quote:
+      'The team at Bendra understood our vision from day one. Our lead generation increased by 3x within the first quarter.',
+    videoSrc: '/testimonial/testimonials-12.mp4',
+    accent: '#7c3aed',
+    bar: 'linear-gradient(90deg, #7c3aed, #c4b5fd)',
+  },
+  {
+    id: 3,
+    name: 'Tech Ventures',
+    role: 'CEO',
+    company: 'TechVentures',
+    quote:
+      'Working with Bendra was a game-changer. Their automation solutions streamlined our entire sales pipeline seamlessly.',
+    videoSrc: '/testimonial/testimonials-13.mp4',
+    accent: '#10b981',
+    bar: 'linear-gradient(90deg, #10b981, #6ee7b7)',
+  },
 ];
 
 const PREVIEW_DUR = 5;
+
+/* pulse animation per card index */
+const PULSE = ['playPulse', 'playPulse2', 'playPulse3'];
 
 /* ─── Card ───────────────────────────────────────────────── */
 const TCard: React.FC<{
@@ -157,11 +201,12 @@ const TCard: React.FC<{
         border: '1.5px solid rgba(14,31,64,.09)',
         boxShadow:
           '0 4px 6px rgba(14,31,64,.02), 0 12px 28px rgba(14,31,64,.07)',
-        animation: `cardIn .7s cubic-bezier(.16,1,.3,1) ${.1 + index * .12}s both`,
+        animation: `cardIn .7s cubic-bezier(.16,1,.3,1) ${0.1 + index * 0.12}s both`,
         cursor: 'pointer',
-        width: { xs: 300, sm: 340, md: 380 },
-        minWidth: { xs: 300, sm: 340, md: 380 },
+        width: { xs: 280, sm: 310, md: 320, lg: 340, xl: 380 },
+        minWidth: { xs: 280, sm: 310, md: 320, lg: 340, xl: 380 },
         flexShrink: 0,
+        scrollSnapAlign: 'start',
         '&:hover': {
           borderColor: `${t.accent}30`,
           boxShadow: `0 8px 16px rgba(14,31,64,.03), 0 24px 48px rgba(14,31,64,.10), 0 0 0 1px ${t.accent}18`,
@@ -201,7 +246,7 @@ const TCard: React.FC<{
             right: 0,
             height: '42%',
             background:
-              'linear-gradient(180deg, transparent 0%, rgba(0,0,0,.6) 100%)',
+              'linear-gradient(180deg, transparent, rgba(0,0,0,.6))',
             zIndex: 1,
             pointerEvents: 'none',
           }}
@@ -224,13 +269,13 @@ const TCard: React.FC<{
         <Box
           sx={{
             position: 'absolute',
-            top: 12,
-            left: 12,
+            top: 10,
+            left: 10,
             display: 'inline-flex',
             alignItems: 'center',
             gap: 0.7,
-            px: 1.2,
-            py: 0.45,
+            px: 1.1,
+            py: 0.4,
             borderRadius: '8px',
             background: 'rgba(0,0,0,.55)',
             backdropFilter: 'blur(10px)',
@@ -251,7 +296,7 @@ const TCard: React.FC<{
           <Typography
             sx={{
               fontFamily: "'Bricolage Grotesque', sans-serif",
-              fontSize: '.6rem',
+              fontSize: '.58rem',
               color: '#fff',
               fontWeight: 700,
               letterSpacing: '.1em',
@@ -266,31 +311,31 @@ const TCard: React.FC<{
         <Box
           sx={{
             position: 'absolute',
-            bottom: 12,
-            right: 12,
+            bottom: 10,
+            right: 10,
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
+            gap: 0.8,
             zIndex: 3,
           }}
         >
           <Box
             className="tc-watch"
             sx={{
-              px: 1.3,
-              py: 0.6,
+              px: 1.2,
+              py: 0.5,
               borderRadius: '8px',
               background: 'rgba(0,0,0,.65)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255,255,255,.12)',
-              opacity: { xs: 1, md: 0.85 },
-              transform: { xs: 'translateY(0)', md: 'translateY(4px)' },
+              opacity: { xs: 1, lg: 0.85 },
+              transform: { xs: 'translateY(0)', lg: 'translateY(4px)' },
             }}
           >
             <Typography
               sx={{
                 fontFamily: "'Outfit', sans-serif",
-                fontSize: '.7rem',
+                fontSize: '.65rem',
                 color: '#fff',
                 fontWeight: 600,
                 whiteSpace: 'nowrap',
@@ -304,8 +349,8 @@ const TCard: React.FC<{
           <Box
             className="tc-play"
             sx={{
-              width: 42,
-              height: 42,
+              width: { xs: 38, lg: 42 },
+              height: { xs: 38, lg: 42 },
               borderRadius: '50%',
               background: `linear-gradient(135deg, ${t.accent}, ${t.accent}dd)`,
               display: 'flex',
@@ -313,22 +358,25 @@ const TCard: React.FC<{
               justifyContent: 'center',
               border: '2px solid rgba(255,255,255,.95)',
               flexShrink: 0,
+              animation: `${PULSE[index % 3]} 2.2s ease-in-out infinite`,
             }}
           >
-            <PlayArrowRounded sx={{ fontSize: 22, color: '#fff', ml: 0.2 }} />
+            <PlayArrowRounded
+              sx={{ fontSize: { xs: 18, lg: 22 }, color: '#fff', ml: 0.2 }}
+            />
           </Box>
         </Box>
       </Box>
 
       {/* Info */}
-      <Box sx={{ p: { xs: 2.5, md: 3 }, position: 'relative' }}>
+      <Box sx={{ p: { xs: 2, sm: 2.5, md: 3 }, position: 'relative' }}>
         <FormatQuoteRounded
           className="tc-quote"
           sx={{
             position: 'absolute',
             top: -14,
-            right: 16,
-            fontSize: 38,
+            right: 14,
+            fontSize: 36,
             color: `${t.accent}14`,
             transform: 'rotate(-8deg)',
           }}
@@ -338,10 +386,10 @@ const TCard: React.FC<{
           sx={{
             fontFamily: "'Outfit', sans-serif",
             fontWeight: 400,
-            fontSize: { xs: '.86rem', md: '.9rem' },
+            fontSize: { xs: '.82rem', md: '.88rem' },
             color: 'rgba(11,24,54,.55)',
             lineHeight: 1.68,
-            mb: 2.4,
+            mb: 2.2,
             fontStyle: 'italic',
             position: 'relative',
             zIndex: 1,
@@ -351,11 +399,10 @@ const TCard: React.FC<{
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          {/* Avatar */}
           <Box
             sx={{
-              width: 40,
-              height: 40,
+              width: 38,
+              height: 38,
               borderRadius: '12px',
               background: `linear-gradient(135deg, ${t.accent}18, ${t.accent}08)`,
               border: `1.5px solid ${t.accent}22`,
@@ -369,7 +416,7 @@ const TCard: React.FC<{
               sx={{
                 fontFamily: "'Bricolage Grotesque', sans-serif",
                 fontWeight: 800,
-                fontSize: '.88rem',
+                fontSize: '.84rem',
                 color: t.accent,
               }}
             >
@@ -382,7 +429,7 @@ const TCard: React.FC<{
               sx={{
                 fontFamily: "'Bricolage Grotesque', sans-serif",
                 fontWeight: 700,
-                fontSize: '.9rem',
+                fontSize: { xs: '.84rem', md: '.9rem' },
                 color: '#0b1836',
                 lineHeight: 1.2,
               }}
@@ -393,7 +440,7 @@ const TCard: React.FC<{
               sx={{
                 fontFamily: "'Outfit', sans-serif",
                 fontWeight: 400,
-                fontSize: '.76rem',
+                fontSize: { xs: '.72rem', md: '.76rem' },
                 color: 'rgba(11,24,54,.42)',
               }}
             >
@@ -448,13 +495,7 @@ const VideoDialog: React.FC<{
   const togglePlay = () => {
     const v = vRef.current;
     if (!v) return;
-    if (v.paused) {
-      v.play();
-      setPlaying(true);
-    } else {
-      v.pause();
-      setPlaying(false);
-    }
+    v.paused ? (v.play(), setPlaying(true)) : (v.pause(), setPlaying(false));
   };
 
   const toggleMute = () => {
@@ -499,7 +540,6 @@ const VideoDialog: React.FC<{
         },
       }}
     >
-      {/* Close button */}
       <IconButton
         onClick={onClose}
         sx={{
@@ -517,7 +557,6 @@ const VideoDialog: React.FC<{
         <CloseRounded sx={{ fontSize: 22 }} />
       </IconButton>
 
-      {/* Video */}
       <Box
         sx={{
           position: 'relative',
@@ -543,8 +582,6 @@ const VideoDialog: React.FC<{
             display: 'block',
           }}
         />
-
-        {/* Paused overlay */}
         {!playing && (
           <Box
             sx={{
@@ -575,7 +612,6 @@ const VideoDialog: React.FC<{
         )}
       </Box>
 
-      {/* Controls */}
       <Box
         sx={{
           px: { xs: 1.5, sm: 2 },
@@ -586,7 +622,6 @@ const VideoDialog: React.FC<{
           gap: 1,
         }}
       >
-        {/* Progress bar */}
         <Box
           onClick={seek}
           sx={{
@@ -615,7 +650,6 @@ const VideoDialog: React.FC<{
           />
         </Box>
 
-        {/* Bottom row */}
         <Box
           sx={{
             display: 'flex',
@@ -623,36 +657,23 @@ const VideoDialog: React.FC<{
             justifyContent: 'space-between',
           }}
         >
-          {/* Left controls */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                togglePlay();
-              }}
+              onClick={(e) => { e.stopPropagation(); togglePlay(); }}
               sx={{ color: '#fff', p: 0.8 }}
             >
-              {playing ? (
-                <PauseRounded sx={{ fontSize: 22 }} />
-              ) : (
-                <PlayArrowRounded sx={{ fontSize: 22 }} />
-              )}
+              {playing
+                ? <PauseRounded sx={{ fontSize: 22 }} />
+                : <PlayArrowRounded sx={{ fontSize: 22 }} />}
             </IconButton>
-
             <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleMute();
-              }}
+              onClick={(e) => { e.stopPropagation(); toggleMute(); }}
               sx={{ color: '#fff', p: 0.8 }}
             >
-              {muted ? (
-                <VolumeOffRounded sx={{ fontSize: 20 }} />
-              ) : (
-                <VolumeUpRounded sx={{ fontSize: 20 }} />
-              )}
+              {muted
+                ? <VolumeOffRounded sx={{ fontSize: 20 }} />
+                : <VolumeUpRounded sx={{ fontSize: 20 }} />}
             </IconButton>
-
             <Typography
               sx={{
                 fontFamily: "'Outfit', sans-serif",
@@ -665,7 +686,6 @@ const VideoDialog: React.FC<{
             </Typography>
           </Box>
 
-          {/* Right — name/company */}
           <Box
             sx={{
               display: { xs: 'none', sm: 'flex' },
@@ -711,22 +731,36 @@ const VideoDialog: React.FC<{
 const Testimonials: React.FC = () => {
   const [activeVideo, setActiveVideo] = useState<Testimonial | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  /* lg+ = all 3 cards visible & centered; below = horizontal scroll */
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
+
+  useEffect(() => { setMounted(true); }, []);
 
   const scroll = (dir: 'left' | 'right') => {
-    scrollRef.current?.scrollBy({
-      left: dir === 'left' ? -380 : 380,
-      behavior: 'smooth',
-    });
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === 'left' ? -380 : 380, behavior: 'smooth' });
+  };
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    if (max > 0) setScrollProgress(el.scrollLeft / max);
   };
 
   const single = testimonials.length === 1;
+  const multi = testimonials.length > 1;
+  const center = single || isDesktop;
+
+  /* active dot */
+  const activeDot = multi
+    ? Math.round(scrollProgress * (testimonials.length - 1))
+    : 0;
 
   return (
     <>
@@ -735,7 +769,7 @@ const Testimonials: React.FC = () => {
       <Box
         sx={{
           position: 'relative',
-          py: { xs: 7, md: 10 },
+          py: { xs: 7, sm: 8, md: 10 },
           background: '#ffffff',
           overflow: 'hidden',
           borderTop: '1px solid rgba(14,31,64,.06)',
@@ -763,11 +797,10 @@ const Testimonials: React.FC = () => {
             position: 'absolute',
             top: '-8%',
             left: '-5%',
-            width: 360,
-            height: 360,
+            width: { xs: 200, sm: 280, md: 360 },
+            height: { xs: 200, sm: 280, md: 360 },
             borderRadius: '50%',
-            background:
-              'radial-gradient(circle, rgba(14,90,240,.07), transparent 68%)',
+            background: 'radial-gradient(circle, rgba(14,90,240,.07), transparent 68%)',
             filter: 'blur(55px)',
             pointerEvents: 'none',
             zIndex: 0,
@@ -781,15 +814,32 @@ const Testimonials: React.FC = () => {
             position: 'absolute',
             bottom: '-6%',
             right: '-5%',
-            width: 300,
-            height: 300,
+            width: { xs: 170, sm: 230, md: 300 },
+            height: { xs: 170, sm: 230, md: 300 },
             borderRadius: '50%',
-            background:
-              'radial-gradient(circle, rgba(0,161,224,.06), transparent 68%)',
+            background: 'radial-gradient(circle, rgba(0,161,224,.06), transparent 68%)',
             filter: 'blur(48px)',
             pointerEvents: 'none',
             zIndex: 0,
             animationDelay: '1.8s',
+          }}
+        />
+
+        {/* Blob 3 */}
+        <Box
+          className="ts-glow"
+          sx={{
+            position: 'absolute',
+            top: '40%',
+            left: '30%',
+            width: { xs: 140, sm: 200, md: 260 },
+            height: { xs: 140, sm: 200, md: 260 },
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(124,58,237,.04), transparent 68%)',
+            filter: 'blur(50px)',
+            pointerEvents: 'none',
+            zIndex: 0,
+            animationDelay: '3s',
           }}
         />
 
@@ -806,12 +856,11 @@ const Testimonials: React.FC = () => {
             className="ts-header"
             sx={{
               textAlign: 'center',
-              mb: { xs: 5, md: 7 },
+              mb: { xs: 5, sm: 5.5, md: 7 },
               maxWidth: 700,
               mx: 'auto',
             }}
           >
-            {/* Pill */}
             <Box
               sx={{
                 display: 'inline-flex',
@@ -848,7 +897,6 @@ const Testimonials: React.FC = () => {
               </Typography>
             </Box>
 
-            {/* Heading */}
             <Typography
               component="h2"
               sx={{
@@ -879,16 +927,16 @@ const Testimonials: React.FC = () => {
               </Box>
             </Typography>
 
-            {/* Subtitle */}
             <Typography
               sx={{
                 fontFamily: "'Outfit', sans-serif",
                 fontWeight: 400,
-                fontSize: { xs: '.9rem', md: '1rem' },
+                fontSize: { xs: '.88rem', sm: '.92rem', md: '1rem' },
                 color: 'rgba(11,24,54,.52)',
                 lineHeight: 1.8,
                 maxWidth: 520,
                 mx: 'auto',
+                px: { xs: 1, sm: 0 },
               }}
             >
               Real stories from real clients — watch how Bendra helped
@@ -899,20 +947,21 @@ const Testimonials: React.FC = () => {
 
           {/* ── Cards ── */}
           <Box sx={{ position: 'relative' }}>
-            {/* Nav arrows */}
-            {mounted && !single && !isMobile && (
+            {/* Nav arrows — only when scrolling (not desktop, multi) */}
+            {mounted && multi && !center && (
               <>
                 {(['left', 'right'] as const).map((dir) => (
                   <IconButton
                     key={dir}
+                    className="ts-arrow"
                     onClick={() => scroll(dir)}
                     sx={{
                       position: 'absolute',
-                      [dir]: -22,
-                      top: '38%',
+                      [dir]: { xs: -8, sm: -16, md: -20 },
+                      top: '36%',
                       zIndex: 3,
-                      width: 44,
-                      height: 44,
+                      width: { xs: 36, sm: 40, md: 44 },
+                      height: { xs: 36, sm: 40, md: 44 },
                       background: '#fff',
                       border: '1.5px solid rgba(14,31,64,.1)',
                       boxShadow: '0 4px 16px rgba(14,31,64,.08)',
@@ -924,11 +973,9 @@ const Testimonials: React.FC = () => {
                       },
                     }}
                   >
-                    {dir === 'left' ? (
-                      <ArrowBackRounded sx={{ fontSize: 20 }} />
-                    ) : (
-                      <ArrowForwardRounded sx={{ fontSize: 20 }} />
-                    )}
+                    {dir === 'left'
+                      ? <ArrowBackRounded sx={{ fontSize: { xs: 18, md: 20 } }} />
+                      : <ArrowForwardRounded sx={{ fontSize: { xs: 18, md: 20 } }} />}
                   </IconButton>
                 ))}
               </>
@@ -938,27 +985,26 @@ const Testimonials: React.FC = () => {
             <Box
               ref={scrollRef}
               className="sc-track"
+              onScroll={handleScroll}
               sx={{
                 display: 'flex',
                 gap: { xs: 2, sm: 2.5, md: 3 },
-                overflowX: single ? 'visible' : 'auto',
+                overflowX: center ? 'visible' : 'auto',
                 overflowY: 'hidden',
-                scrollSnapType: 'x mandatory',
+                scrollSnapType: center ? 'none' : 'x mandatory',
                 WebkitOverflowScrolling: 'touch',
                 pb: 2,
-                justifyContent: single ? 'center' : 'flex-start',
-                px: single ? 0 : { xs: 0, md: 2 },
+                justifyContent: center ? 'center' : 'flex-start',
+                px: center ? 0 : { xs: 1, sm: 2, md: 3 },
               }}
             >
               {testimonials.map((t, i) => (
-                <Box key={t.id} sx={{ scrollSnapAlign: 'start' }}>
-                  <TCard t={t} index={i} onPlay={setActiveVideo} />
-                </Box>
+                <TCard key={t.id} t={t} index={i} onPlay={setActiveVideo} />
               ))}
             </Box>
 
-            {/* Mobile dots */}
-            {mounted && !single && isMobile && (
+            {/* Dot indicators — only when scrolling */}
+            {mounted && multi && !center && (
               <Box
                 sx={{
                   display: 'flex',
@@ -971,11 +1017,11 @@ const Testimonials: React.FC = () => {
                   <Box
                     key={t.id}
                     sx={{
-                      width: i === 0 ? 18 : 6,
+                      width: i === activeDot ? 20 : 6,
                       height: 6,
                       borderRadius: 99,
                       background:
-                        i === 0 ? t.accent : 'rgba(14,31,64,.15)',
+                        i === activeDot ? t.accent : 'rgba(14,31,64,.15)',
                       transition: 'all .3s ease',
                     }}
                   />

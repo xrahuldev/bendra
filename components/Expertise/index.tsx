@@ -20,9 +20,9 @@ import {
   CloudOutlined,
   IntegrationInstructionsOutlined,
   Inventory2Outlined,
-  ArrowForwardRounded,
   NorthEast,
   CheckCircleRounded,
+  ArrowForwardRounded,
 } from '@mui/icons-material';
 import Link from 'next/link';
 
@@ -49,6 +49,22 @@ const ExpertiseSectionStyles = () => (
     @keyframes glowPulse {
       0%, 100% { opacity: .45; transform: scale(1); }
       50%       { opacity: .8;  transform: scale(1.05); }
+    }
+
+    @keyframes btnShimmer {
+      0%   { transform: translateX(-100%) skewX(-20deg); }
+      100% { transform: translateX(300%) skewX(-20deg); }
+    }
+
+    @keyframes btnGlow {
+      0%, 100% { box-shadow: 0 4px 20px rgba(14,90,240,.3), 0 0 0 0 rgba(14,90,240,.2); }
+      50%       { box-shadow: 0 6px 28px rgba(14,90,240,.45), 0 0 0 8px rgba(14,90,240,0); }
+    }
+
+    @keyframes borderFlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .exp-pill  { animation: textIn .55s cubic-bezier(.16,1,.3,1) both; }
@@ -91,6 +107,7 @@ const ExpertiseSectionStyles = () => (
     .esc-title   { transition: color .25s ease; }
     .esc-arrow   { transition: opacity .25s ease, gap .25s ease, transform .25s ease; }
     .esc-chip    { transition: background .25s ease, transform .25s ease; }
+    .esc-img     { transition: opacity .4s ease, transform .6s ease; }
 
     @media (hover: hover) {
       .esc:hover {
@@ -109,16 +126,92 @@ const ExpertiseSectionStyles = () => (
       .esc:hover .esc-arrow { opacity: 1 !important; gap: 10px !important; }
       .esc:hover .esc-glow  { opacity: 1; }
       .esc:hover .esc-chip  { background: var(--esc-accent-soft) !important; transform: translateY(-1px); }
+      .esc:hover .esc-img   { opacity: .12 !important; transform: scale(1.08) !important; }
     }
 
     @media (hover: none) {
       .esc:active { transform: scale(.97); }
     }
 
+    /* ── CTA Button ── */
+    .exp-cta {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 36px;
+      background: linear-gradient(135deg, #0e5af0, #0a4ad4);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(14,90,240,.3);
+      transition: all .35s cubic-bezier(.34,1.4,.64,1);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .exp-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+      transform: translateX(-100%) skewX(-20deg);
+      pointer-events: none;
+    }
+
+    .exp-cta::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 18px;
+      background: linear-gradient(90deg, #0e5af0, #60a5fa, #00a1e0, #0e5af0);
+      background-size: 300% 100%;
+      animation: borderFlow 4s linear infinite;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    .exp-cta-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.18);
+      transition: all .3s cubic-bezier(.34,1.4,.64,1);
+    }
+
+    @media (hover: hover) {
+      .exp-cta:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 10px 32px rgba(14,90,240,.5);
+      }
+      .exp-cta:hover::before {
+        animation: btnShimmer .7s ease-out forwards;
+      }
+      .exp-cta:hover::after {
+        opacity: 1;
+      }
+      .exp-cta:hover .exp-cta-arrow {
+        background: rgba(255,255,255,.3);
+        transform: translateX(3px);
+      }
+    }
+
+    @media (hover: none) {
+      .exp-cta:active {
+        transform: scale(.97) !important;
+        box-shadow: 0 4px 16px rgba(14,90,240,.35) !important;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .exp-pill,.exp-h2,.exp-sub,.exp-glow,
       .esc,.esc-bar,.esc-icon,.esc-num,.esc-title,
-      .esc-arrow,.esc-chip {
+      .esc-arrow,.esc-chip,.esc-img,.exp-cta,.exp-cta-arrow {
         animation: none !important; transition: none !important;
       }
     }
@@ -141,6 +234,7 @@ const services = [
     shadowStrong: 'rgba(16,185,129,.14)',
     iconBg: 'linear-gradient(135deg, #10b981, #059669)',
     bar: 'linear-gradient(90deg, #10b981, #34d399)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(16,185,129,.06), transparent 50%)',
   },
   {
     icon: <CampaignRounded />,
@@ -156,6 +250,7 @@ const services = [
     shadowStrong: 'rgba(236,72,153,.14)',
     iconBg: 'linear-gradient(135deg, #ec4899, #db2777)',
     bar: 'linear-gradient(90deg, #ec4899, #f472b6)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(236,72,153,.05), transparent 50%)',
   },
   {
     icon: <CodeRounded />,
@@ -171,6 +266,7 @@ const services = [
     shadowStrong: 'rgba(59,130,246,.14)',
     iconBg: 'linear-gradient(135deg, #3b82f6, #2563eb)',
     bar: 'linear-gradient(90deg, #3b82f6, #60a5fa)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(59,130,246,.05), transparent 50%)',
   },
   {
     icon: <GroupAddRounded />,
@@ -186,6 +282,7 @@ const services = [
     shadowStrong: 'rgba(14,165,233,.14)',
     iconBg: 'linear-gradient(135deg, #0ea5e9, #0284c7)',
     bar: 'linear-gradient(90deg, #0ea5e9, #38bdf8)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(14,165,233,.05), transparent 50%)',
   },
   {
     icon: <FilterAltRounded />,
@@ -201,6 +298,7 @@ const services = [
     shadowStrong: 'rgba(245,158,11,.14)',
     iconBg: 'linear-gradient(135deg, #f59e0b, #d97706)',
     bar: 'linear-gradient(90deg, #f59e0b, #fbbf24)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(245,158,11,.05), transparent 50%)',
   },
   {
     icon: <StorageRounded />,
@@ -216,6 +314,7 @@ const services = [
     shadowStrong: 'rgba(239,68,68,.14)',
     iconBg: 'linear-gradient(135deg, #ef4444, #dc2626)',
     bar: 'linear-gradient(90deg, #ef4444, #f87171)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(239,68,68,.05), transparent 50%)',
   },
   {
     icon: <PhoneIphoneRounded />,
@@ -231,6 +330,7 @@ const services = [
     shadowStrong: 'rgba(168,85,247,.14)',
     iconBg: 'linear-gradient(135deg, #a855f7, #9333ea)',
     bar: 'linear-gradient(90deg, #a855f7, #c084fc)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(168,85,247,.05), transparent 50%)',
   },
   {
     icon: <AppShortcutRounded />,
@@ -246,6 +346,7 @@ const services = [
     shadowStrong: 'rgba(6,182,212,.14)',
     iconBg: 'linear-gradient(135deg, #06b6d4, #0891b2)',
     bar: 'linear-gradient(90deg, #06b6d4, #22d3ee)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(6,182,212,.05), transparent 50%)',
   },
   {
     icon: <Inventory2Outlined />,
@@ -261,6 +362,7 @@ const services = [
     shadowStrong: 'rgba(37,99,235,.14)',
     iconBg: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
     bar: 'linear-gradient(90deg, #2563eb, #60a5fa)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(37,99,235,.05), transparent 50%)',
   },
   {
     icon: <IntegrationInstructionsOutlined />,
@@ -276,6 +378,7 @@ const services = [
     shadowStrong: 'rgba(124,58,237,.14)',
     iconBg: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
     bar: 'linear-gradient(90deg, #7c3aed, #a78bfa)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(124,58,237,.05), transparent 50%)',
   },
   {
     icon: <CloudOutlined />,
@@ -291,6 +394,7 @@ const services = [
     shadowStrong: 'rgba(20,184,166,.14)',
     iconBg: 'linear-gradient(135deg, #14b8a6, #0d9488)',
     bar: 'linear-gradient(90deg, #14b8a6, #2dd4bf)',
+    bg: 'radial-gradient(circle at 80% 20%, rgba(20,184,166,.05), transparent 50%)',
   },
 ];
 
@@ -462,8 +566,7 @@ const HomeExpertiseSection: React.FC = () => {
               <Box
                 component="span"
                 sx={{
-                  background:
-                    'linear-gradient(90deg, #0e5af0, #00a1e0)',
+                  background: 'linear-gradient(90deg, #0e5af0, #00a1e0)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
@@ -520,7 +623,7 @@ const HomeExpertiseSection: React.FC = () => {
                     '--esc-accent-soft': svc.accentSoft,
                     '--esc-shadow-strong': svc.shadowStrong,
                     height: '100%',
-                    animation: `cardIn .65s cubic-bezier(.16,1,.3,1) ${.08 + i * .06}s both`,
+                    animation: `cardIn .65s cubic-bezier(.16,1,.3,1) ${0.08 + i * 0.06}s both`,
                   }}
                 >
                   {/* Top colour bar */}
@@ -535,6 +638,23 @@ const HomeExpertiseSection: React.FC = () => {
                       background: svc.bar,
                       borderRadius: '22px 22px 0 0',
                       zIndex: 2,
+                    }}
+                  />
+
+                  {/* Corner accent image overlay */}
+                  <Box
+                    className="esc-img"
+                    sx={{
+                      position: 'absolute',
+                      bottom: '-10%',
+                      right: '-10%',
+                      width: '55%',
+                      height: '55%',
+                      borderRadius: '50%',
+                      background: svc.bg,
+                      opacity: 0.08,
+                      pointerEvents: 'none',
+                      zIndex: 0,
                     }}
                   />
 
@@ -744,56 +864,87 @@ const HomeExpertiseSection: React.FC = () => {
             sx={{
               display: 'flex',
               justifyContent: 'center',
-              mt: { xs: 5, sm: 5.5, md: 6 },
-              animation:
-                'textIn .7s cubic-bezier(.16,1,.3,1) .5s both',
+              mt: { xs: 6, sm: 6.5, md: 7 },
+              animation: 'textIn .7s cubic-bezier(.16,1,.3,1) .5s both',
             }}
           >
-            <Link href="/expertise" style={{ textDecoration: 'none' }}>
-              <Box
+            <Link
+              href="/expertise"
+              className="exp-cta"
+              style={{ textDecoration: 'none' }}
+            >
+              <Typography
                 sx={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 1.2,
-                  px: { xs: 2.8, md: 3.2 },
-                  py: { xs: 1.2, md: 1.4 },
-                  borderRadius: '14px',
-                  border: '1.5px solid rgba(14,90,240,.2)',
-                  background: 'rgba(14,90,240,.04)',
-                  color: '#0e5af0',
-                  cursor: 'pointer',
-                  transition:
-                    'all .3s cubic-bezier(.34,1.4,.64,1)',
-                  '&:hover': {
-                    background: 'rgba(14,90,240,.08)',
-                    borderColor: 'rgba(14,90,240,.35)',
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 24px rgba(14,90,240,.12)',
-                  },
-                  '&:active': {
-                    transform: 'scale(.97)',
-                  },
+                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontWeight: 700,
+                  fontSize: { xs: '.9rem', md: '.96rem' },
+                  color: '#fff',
+                  letterSpacing: '.01em',
+                  lineHeight: 1,
+                  position: 'relative',
+                  zIndex: 1,
                 }}
               >
-                <Typography
-                  sx={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
-                    fontWeight: 700,
-                    fontSize: { xs: '.84rem', md: '.9rem' },
-                    color: 'inherit',
-                    letterSpacing: '.01em',
-                  }}
-                >
-                  Explore All Services
-                </Typography>
+                Explore All Services
+              </Typography>
+
+              <Box className="exp-cta-arrow">
                 <ArrowForwardRounded
                   sx={{
-                    fontSize: { xs: 18, md: 20 },
-                    color: 'inherit',
+                    fontSize: { xs: 16, md: 18 },
+                    color: '#fff',
                   }}
                 />
               </Box>
             </Link>
+          </Box>
+
+          {/* Trust line */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: { xs: 1.5, sm: 2 },
+              mt: { xs: 3.5, md: 4 },
+              flexWrap: 'wrap',
+              animation: 'textIn .7s cubic-bezier(.16,1,.3,1) .6s both',
+            }}
+          >
+            {['120+ Clients', '250+ Projects', '8+ Years'].map((item, i) => (
+              <Box
+                key={item}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.6,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 5,
+                    height: 5,
+                    borderRadius: '50%',
+                    background: i === 0
+                      ? '#0e5af0'
+                      : i === 1
+                      ? '#0d9488'
+                      : '#7c3aed',
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontFamily: "'Outfit', sans-serif",
+                    fontWeight: 500,
+                    fontSize: { xs: '.72rem', md: '.78rem' },
+                    color: 'rgba(11,24,54,.42)',
+                    letterSpacing: '.01em',
+                  }}
+                >
+                  {item}
+                </Typography>
+              </Box>
+            ))}
           </Box>
         </Container>
       </Box>
