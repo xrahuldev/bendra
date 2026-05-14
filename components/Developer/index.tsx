@@ -1,528 +1,484 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box, Container, Typography } from '@mui/material';
 
-const DeveloperStyles = () => (
+/* ─── Fonts & Keyframes ─────────────────────────────────────── */
+const Styles = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap');
 
-    @keyframes marqueeSmooth {
-      from {
-        transform: translate3d(0, 0, 0);
-      }
-      to {
-        transform: translate3d(-50%, 0, 0);
-      }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes pulseRing {
+      0%, 100% { transform: scale(1);   opacity: .5; }
+      50%       { transform: scale(1.2); opacity: 1;  }
     }
 
-    @keyframes softGlow {
-      0%, 100% {
-        opacity: 0.45;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.8;
-        transform: scale(1.06);
-      }
-    }
+    @keyframes driftLeft  { from { transform: translateX(0); }    to { transform: translateX(-50%); } }
+    @keyframes slideTrack { from { transform: translateX(var(--offset, 0px)); } to { transform: translateX(calc(var(--offset, 0px) - 50%)); } }
 
-    .ecosystem-pill {
-      animation: fadeUp 0.55s cubic-bezier(0.16,1,0.3,1) both;
-    }
+    .dev-pill    { animation: fadeSlideUp .5s cubic-bezier(.16,1,.3,1) both; }
+    .dev-heading { animation: fadeSlideUp .65s cubic-bezier(.16,1,.3,1) .07s both; }
+    .dev-copy    { animation: fadeSlideUp .65s cubic-bezier(.16,1,.3,1) .14s both; }
+    .dev-strip   { animation: fadeSlideUp .7s  cubic-bezier(.16,1,.3,1) .22s both; }
 
-    .ecosystem-heading {
-      animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.08s both;
-    }
+    .dot-pulse { animation: pulseRing 2.4s ease-in-out infinite; }
 
-    .ecosystem-copy {
-      animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.16s both;
-    }
-
-    .marquee-shell {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .partner-track {
+    /* ── Carousel track ── */
+    .track-wrap  { overflow: hidden; width: 100%; cursor: grab; user-select: none; }
+    .track-wrap:active { cursor: grabbing; }
+    .logo-track  {
       display: flex;
       align-items: center;
       width: max-content;
       will-change: transform;
-      transform: translate3d(0, 0, 0);
       backface-visibility: hidden;
-      animation: marqueeSmooth 34s linear infinite;
+      animation: driftLeft 28s linear infinite;
     }
+    .logo-track.paused { animation-play-state: paused; }
 
-    .logo-card {
+    /* ── Logo card ── */
+    .lcard {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 1.5px solid rgba(14,31,64,.09);
+      border-radius: 20px;
+      padding: 22px 36px;
+      margin: 0 12px;
+      min-width: 200px;
+      height: 100px;
+      box-shadow: 0 2px 14px rgba(14,31,64,.055);
+      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
       position: relative;
       overflow: hidden;
-      transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease,
-        border-color 0.3s ease,
-        background 0.3s ease;
-      animation: fadeUp 0.55s cubic-bezier(0.16,1,0.3,1) both;
-      -webkit-tap-highlight-color: transparent;
-      flex-shrink: 0;
     }
-
-    .logo-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 18%;
-      right: 18%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(59,130,246,0.28), transparent);
-      opacity: 0.75;
-    }
-
-    .logo-card::after {
+    .lcard::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at top, rgba(59,130,246,0.08), transparent 58%);
+      background: radial-gradient(circle at 50% 0%, rgba(14,90,240,.07), transparent 65%);
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity .28s ease;
+    }
+    .lcard:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 36px rgba(14,31,64,.10);
+      border-color: rgba(14,90,240,.2);
+    }
+    .lcard:hover::before { opacity: 1; }
+
+    /* Focus / featured cards */
+    .lcard.featured {
+      border-color: rgba(14,90,240,.18);
+      background: linear-gradient(160deg, #f7f9ff 0%, #fff 100%);
+      box-shadow: 0 4px 22px rgba(14,90,240,.08);
+    }
+
+    /* Edge fades */
+    .fade-l, .fade-r {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 90px;
+      z-index: 3;
       pointer-events: none;
     }
+    .fade-l { left: 0;  background: linear-gradient(to right, rgba(246,249,255,1), rgba(246,249,255,0)); }
+    .fade-r { right: 0; background: linear-gradient(to left,  rgba(246,249,255,1), rgba(246,249,255,0)); }
 
-    .logo-shell {
-      transition: transform 0.3s ease, filter 0.3s ease;
-      line-height: 0;
+    /* Stat chips */
+    .stat-chip {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 14px 28px;
+      background: #fff;
+      border: 1.5px solid rgba(14,31,64,.08);
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(14,31,64,.05);
+      transition: transform .22s ease;
     }
+    .stat-chip:hover { transform: translateY(-3px); }
 
-    .logo-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 14px 32px rgba(15,23,42,0.08);
-      border-color: rgba(59,130,246,0.18) !important;
-      background: rgba(255,255,255,0.92) !important;
-    }
-
-    .logo-card:hover::after {
-      opacity: 1;
-    }
-
-    .logo-card:hover .logo-shell {
-      transform: scale(1.04);
-      filter: saturate(1.05);
-    }
-
-    .ambient-glow {
-      animation: softGlow 5s ease-in-out infinite;
-    }
-
-    @media (max-width: 900px) {
-      .partner-track {
-        animation-duration: 26s;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      .logo-track { animation: none !important; }
+      .lcard, .stat-chip { transition: none !important; }
     }
 
     @media (max-width: 600px) {
-      .partner-track {
-        animation-duration: 22s;
-      }
-
-      .logo-card:hover {
-        transform: none;
-      }
-    }
-
-    @media (hover: none) {
-      .logo-card:active {
-        transform: scale(0.98);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .partner-track {
-        animation: none !important;
-        transform: translateX(0) !important;
-      }
-
-      .logo-card,
-      .logo-shell,
-      .ambient-glow {
-        animation: none !important;
-        transition: none !important;
-      }
+      .lcard { min-width: 160px; height: 82px; padding: 16px 24px; }
+      .fade-l, .fade-r { width: 40px; }
     }
   `}</style>
 );
 
+/* ─── Logo data ──────────────────────────────────────────────── */
 const logos = [
   {
     name: 'Zoho',
+    featured: true,
     icon: (
-      <svg width="90" height="48" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="48" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="52" fill="#E42527">Z</text>
-        <text x="38" y="48" fontFamily="Arial Black,sans-serif" fontWeight="700" fontSize="38" fill="#1A1A1A">oho</text>
+      <svg viewBox="0 0 160 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="50" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="58" fill="#E42527">Z</text>
+        <text x="44" y="50" fontFamily="'Arial Black',sans-serif" fontWeight="700" fontSize="44" fill="#1A1A1A">oho</text>
       </svg>
     ),
   },
   {
     name: 'Salesforce',
+    featured: true,
     icon: (
-      <svg width="125" height="48" viewBox="0 0 220 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="110" cy="52" rx="92" ry="24" fill="#00A1E0"/>
-        <ellipse cx="72" cy="44" rx="38" ry="38" fill="#00A1E0"/>
-        <ellipse cx="138" cy="36" rx="44" ry="44" fill="#00A1E0"/>
-        <ellipse cx="108" cy="28" rx="34" ry="34" fill="#00A1E0"/>
-        <text x="42" y="62" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="26" fill="white">salesforce</text>
+      <svg viewBox="0 0 220 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="110" cy="52" rx="93" ry="20" fill="#00A1E0"/>
+        <ellipse cx="70"  cy="44" rx="38"  ry="36" fill="#00A1E0"/>
+        <ellipse cx="140" cy="35" rx="44"  ry="42" fill="#00A1E0"/>
+        <ellipse cx="108" cy="27" rx="34"  ry="32" fill="#00A1E0"/>
+        <text x="40" y="62" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="25" fill="#fff">salesforce</text>
       </svg>
     ),
   },
   {
     name: 'AWS',
+    featured: false,
     icon: (
-      <svg width="82" height="48" viewBox="0 0 130 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="38" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="42" fill="#232F3E">aws</text>
-        <path d="M8 50 Q65 68 122 50" stroke="#FF9900" strokeWidth="5" fill="none" strokeLinecap="round"/>
-        <polygon points="114,44 124,50 114,56" fill="#FF9900"/>
+      <svg viewBox="0 0 130 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="40" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="44" fill="#232F3E">aws</text>
+        <path d="M6 52 Q65 70 124 52" stroke="#FF9900" strokeWidth="5" fill="none" strokeLinecap="round"/>
+        <polygon points="116,46 126,52 116,58" fill="#FF9900"/>
       </svg>
     ),
   },
   {
     name: 'Azure',
+    featured: false,
     icon: (
-      <svg width="135" height="48" viewBox="0 0 260 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="0,72 28,0 56,72" fill="#0078D4"/>
-        <polygon points="28,0 72,72 44,72 56,36" fill="#50B0F0"/>
-        <text x="68" y="56" fontFamily="'Segoe UI',Arial,sans-serif" fontWeight="600" fontSize="30" fill="#0078D4">Azure</text>
+      <svg viewBox="0 0 240 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,66 28,0 56,66" fill="#0078D4"/>
+        <polygon points="28,0 72,66 44,66 56,33" fill="#50B0F0"/>
+        <text x="66" y="52" fontFamily="'Segoe UI',Arial,sans-serif" fontWeight="600" fontSize="30" fill="#0078D4">Azure</text>
       </svg>
     ),
   },
   {
     name: 'Google Cloud',
+    featured: false,
     icon: (
-      <svg width="175" height="48" viewBox="0 0 340 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="34" cy="36" r="28" fill="none" stroke="#E0E0E0" strokeWidth="2"/>
-        <path d="M34 12 A24 24 0 0 1 58 36 L34 36 Z" fill="#4285F4"/>
-        <path d="M34 36 L58 36 A24 24 0 0 1 22 58 Z" fill="#34A853"/>
-        <path d="M22 58 A24 24 0 0 1 10 14 Z" fill="#FBBC05"/>
-        <path d="M10 14 A24 24 0 0 1 34 12 L22 58 Z" fill="#EA4335"/>
-        <rect x="34" y="28" width="24" height="16" rx="2" fill="white"/>
-        <text x="72" y="50" fontFamily="'Google Sans',Arial,sans-serif" fontWeight="400" fontSize="27" fill="#5F6368">Google Cloud</text>
+      <svg viewBox="0 0 310 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="33" r="26" fill="none" stroke="#ddd" strokeWidth="2"/>
+        <path d="M32 9 A23 23 0 0 1 55 33 L32 33 Z" fill="#4285F4"/>
+        <path d="M32 33 L55 33 A23 23 0 0 1 20 54 Z" fill="#34A853"/>
+        <path d="M20 54 A23 23 0 0 1 9 13 Z" fill="#FBBC05"/>
+        <path d="M9 13 A23 23 0 0 1 32 9 L20 54 Z" fill="#EA4335"/>
+        <rect x="32" y="26" width="23" height="14" rx="2" fill="#fff"/>
+        <text x="68" y="46" fontFamily="'Google Sans',Arial,sans-serif" fontWeight="400" fontSize="25" fill="#5F6368">Google Cloud</text>
       </svg>
     ),
   },
   {
     name: 'HubSpot',
+    featured: false,
     icon: (
-      <svg width="135" height="48" viewBox="0 0 270 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="36" cy="36" r="12" fill="#FF7A59"/>
-        <rect x="30" y="4" width="12" height="14" rx="4" fill="#FF7A59"/>
-        <rect x="30" y="54" width="12" height="14" rx="4" fill="#FF7A59"/>
-        <rect x="4" y="30" width="14" height="12" rx="4" fill="#FF7A59"/>
-        <rect x="54" y="30" width="14" height="12" rx="4" fill="#FF7A59"/>
-        <circle cx="36" cy="36" r="6" fill="white"/>
-        <text x="80" y="50" fontFamily="'Lexend Deca',Arial,sans-serif" fontWeight="700" fontSize="29" fill="#1C1C1C">HubSpot</text>
-      </svg>
-    ),
-  },
-  {
-    name: 'Docker',
-    icon: (
-      <svg width="125" height="48" viewBox="0 0 240 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="20" width="16" height="16" rx="2" fill="#2496ED"/>
-        <rect x="20" y="20" width="16" height="16" rx="2" fill="#2496ED"/>
-        <rect x="38" y="20" width="16" height="16" rx="2" fill="#2496ED"/>
-        <rect x="20" y="2" width="16" height="16" rx="2" fill="#2496ED"/>
-        <rect x="38" y="2" width="16" height="16" rx="2" fill="#2496ED"/>
-        <rect x="56" y="20" width="16" height="16" rx="2" fill="#2496ED"/>
-        <path d="M2 44 Q35 60 68 44" stroke="#2496ED" strokeWidth="4" fill="none" strokeLinecap="round"/>
-        <circle cx="64" cy="30" r="6" fill="#2496ED"/>
-        <text x="84" y="46" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="28" fill="#2496ED">Docker</text>
+      <svg viewBox="0 0 240 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="33" cy="33" r="11"  fill="#FF7A59"/>
+        <rect x="28" y="3"  width="10" height="13" rx="4" fill="#FF7A59"/>
+        <rect x="28" y="50" width="10" height="13" rx="4" fill="#FF7A59"/>
+        <rect x="3"  y="28" width="13" height="10" rx="4" fill="#FF7A59"/>
+        <rect x="50" y="28" width="13" height="10" rx="4" fill="#FF7A59"/>
+        <circle cx="33" cy="33" r="5.5" fill="#fff"/>
+        <text x="74" y="46" fontFamily="'Lexend Deca',Arial,sans-serif" fontWeight="700" fontSize="27" fill="#1C1C1C">HubSpot</text>
       </svg>
     ),
   },
   {
     name: 'Microsoft',
+    featured: false,
     icon: (
-      <svg width="150" height="48" viewBox="0 0 280 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="2" width="28" height="28" fill="#F25022"/>
-        <rect x="30" y="2" width="28" height="28" fill="#7FBA00"/>
-        <rect x="0" y="32" width="28" height="28" fill="#00A4EF"/>
+      <svg viewBox="0 0 260 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0"  y="2"  width="28" height="28" fill="#F25022"/>
+        <rect x="30" y="2"  width="28" height="28" fill="#7FBA00"/>
+        <rect x="0"  y="32" width="28" height="28" fill="#00A4EF"/>
         <rect x="30" y="32" width="28" height="28" fill="#FFB900"/>
-        <text x="70" y="44" fontFamily="'Segoe UI',Arial,sans-serif" fontWeight="400" fontSize="26" fill="#1A1A1A">Microsoft</text>
+        <text x="68" y="42" fontFamily="'Segoe UI',Arial,sans-serif" fontWeight="400" fontSize="25" fill="#1A1A1A">Microsoft</text>
+      </svg>
+    ),
+  },
+  {
+    name: 'Docker',
+    featured: false,
+    icon: (
+      <svg viewBox="0 0 220 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2"  y="20" width="15" height="15" rx="2" fill="#2496ED"/>
+        <rect x="19" y="20" width="15" height="15" rx="2" fill="#2496ED"/>
+        <rect x="36" y="20" width="15" height="15" rx="2" fill="#2496ED"/>
+        <rect x="19" y="3"  width="15" height="15" rx="2" fill="#2496ED"/>
+        <rect x="36" y="3"  width="15" height="15" rx="2" fill="#2496ED"/>
+        <rect x="53" y="20" width="15" height="15" rx="2" fill="#2496ED"/>
+        <path d="M2 44 Q35 58 66 44" stroke="#2496ED" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+        <circle cx="62" cy="28" r="5.5" fill="#2496ED"/>
+        <text x="78" y="42" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="26" fill="#2496ED">Docker</text>
       </svg>
     ),
   },
 ];
 
-const marqueeLogos = [...logos, ...logos];
+/* Double for seamless loop */
+const track = [...logos, ...logos];
 
+/* ─── Stats ─────────────────────────────────────────────────── */
+const stats = [
+  { value: '8+', label: 'Platforms' },
+  { value: '200+', label: 'Projects Delivered' },
+  { value: '50+', label: 'Certified Experts' },
+];
+
+/* ─── Component ─────────────────────────────────────────────── */
 const Developer: React.FC = () => {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(false);
+
+  /* Pause on hover/touch */
+  const pause = () => setPaused(true);
+  const play  = () => setPaused(false);
+
   return (
     <>
-      <DeveloperStyles />
+      <Styles />
 
       <Box
         sx={{
           position: 'relative',
+          py: { xs: 7, md: 10 },
+          background: 'linear-gradient(170deg, #f0f5ff 0%, #f6f9ff 40%, #ffffff 100%)',
+          borderTop: '1px solid rgba(14,31,64,.07)',
+          borderBottom: '1px solid rgba(14,31,64,.07)',
           overflow: 'hidden',
-          py: { xs: 6, sm: 7, md: 8 },
-          background:
-            'linear-gradient(180deg, #f7fbff 0%, #ffffff 45%, #f8fbff 100%)',
-          borderTop: '1px solid rgba(15,23,42,0.06)',
-          borderBottom: '1px solid rgba(15,23,42,0.06)',
         }}
       >
-        {/* ambient glow */}
-        <Box
-          className="ambient-glow"
-          sx={{
-            position: 'absolute',
-            left: '-8%',
-            top: '12%',
-            width: { xs: 180, md: 320 },
-            height: { xs: 180, md: 320 },
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(59,130,246,0.10), transparent 70%)',
-            filter: 'blur(34px)',
-            pointerEvents: 'none',
-          }}
-        />
-        <Box
-          className="ambient-glow"
-          sx={{
-            position: 'absolute',
-            right: '-10%',
-            bottom: '8%',
-            width: { xs: 180, md: 300 },
-            height: { xs: 180, md: 300 },
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(14,165,233,0.08), transparent 70%)',
-            filter: 'blur(40px)',
-            pointerEvents: 'none',
-            animationDelay: '1.4s',
-          }}
-        />
+        {/* Background grid dots */}
+        <Box sx={{
+          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
+          backgroundImage: 'radial-gradient(circle, rgba(14,90,240,.07) 1px, transparent 1px)',
+          backgroundSize: '36px 36px',
+          maskImage: 'radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%)',
+        }}/>
 
-        <Container
-          maxWidth="xl"
-          sx={{
-            position: 'relative',
-            zIndex: 2,
-            px: { xs: 2, sm: 3, md: 5, lg: 6 },
-          }}
-        >
-          {/* Header */}
-          <Box
-            sx={{
-              maxWidth: 760,
-              mx: 'auto',
-              textAlign: 'center',
-              mb: { xs: 4, md: 5 },
-            }}
-          >
-            <Box
-              className="ecosystem-pill"
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 1,
-                px: 1.6,
-                py: 0.7,
-                mb: 2,
-                borderRadius: '999px',
-                border: '1px solid rgba(59,130,246,0.16)',
-                background: 'rgba(59,130,246,0.05)',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <Box
-                sx={{
-                  width: 7,
-                  height: 7,
-                  borderRadius: '50%',
-                  background: '#3b82f6',
-                  boxShadow: '0 0 12px rgba(59,130,246,0.55)',
-                }}
-              />
-              <Typography
-                sx={{
-                  fontFamily: "'Sora', sans-serif",
-                  fontWeight: 700,
-                  color: '#2563eb',
-                  fontSize: { xs: '0.68rem', sm: '0.72rem' },
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.14em',
-                }}
-              >
+        {/* Soft blobs */}
+        <Box sx={{
+          position: 'absolute', left: '-5%', top: '10%', width: 380, height: 380,
+          borderRadius: '50%', pointerEvents: 'none', zIndex: 0,
+          background: 'radial-gradient(circle, rgba(14,90,240,.09), transparent 68%)',
+          filter: 'blur(50px)',
+        }}/>
+        <Box sx={{
+          position: 'absolute', right: '-6%', bottom: '5%', width: 320, height: 320,
+          borderRadius: '50%', pointerEvents: 'none', zIndex: 0,
+          background: 'radial-gradient(circle, rgba(0,161,224,.08), transparent 68%)',
+          filter: 'blur(44px)',
+        }}/>
+
+        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2, px: { xs: 2, sm: 3, md: 5 } }}>
+
+          {/* ── Header ───────────────────────────────────────── */}
+          <Box sx={{ textAlign: 'center', mb: { xs: 5, md: 7 } }}>
+
+            {/* Pill */}
+            <Box className="dev-pill" sx={{
+              display: 'inline-flex', alignItems: 'center', gap: 1,
+              px: 1.8, py: 0.75, mb: 2.5,
+              borderRadius: '999px',
+              border: '1.5px solid rgba(14,90,240,.18)',
+              background: 'rgba(14,90,240,.06)',
+              backdropFilter: 'blur(10px)',
+            }}>
+              <Box className="dot-pulse" sx={{
+                width: 8, height: 8, borderRadius: '50%',
+                background: '#0e5af0',
+                boxShadow: '0 0 0 3px rgba(14,90,240,.2)',
+              }}/>
+              <Typography sx={{
+                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontWeight: 700, fontSize: '.7rem',
+                color: '#0e5af0',
+                textTransform: 'uppercase', letterSpacing: '.15em',
+              }}>
                 Our Ecosystem
               </Typography>
             </Box>
 
-            <Typography
-              className="ecosystem-heading"
-              component="h2"
-              sx={{
-                fontFamily: "'Sora', sans-serif",
-                color: '#0f172a',
-                fontWeight: 800,
-                fontSize: {
-                  xs: '1.45rem',
-                  sm: '1.8rem',
-                  md: '2.2rem',
-                  lg: '2.5rem',
-                },
-                lineHeight: 1.18,
-                letterSpacing: '-0.03em',
-                mb: 1.5,
-              }}
-            >
-              Platforms we build, connect
-              <br />
-              and scale with
+            {/* Heading */}
+            <Typography className="dev-heading" component="h2" sx={{
+              fontFamily: "'Bricolage Grotesque', sans-serif",
+              fontWeight: 800,
+              fontSize: { xs: '1.7rem', sm: '2.1rem', md: '2.7rem', lg: '3rem' },
+              lineHeight: 1.15, letterSpacing: '-.035em',
+              color: '#0b1836', mb: 1.8,
+            }}>
+              Platforms we build, connect{' '}
+              <Box component="span" sx={{
+                background: 'linear-gradient(90deg, #0e5af0, #00a1e0)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}>
+                &amp; scale with
+              </Box>
             </Typography>
 
-            <Typography
-              className="ecosystem-copy"
-              sx={{
-                fontFamily: "'DM Sans', sans-serif",
-                color: 'rgba(15,23,42,0.62)',
-                fontSize: { xs: '0.9rem', md: '1rem' },
-                lineHeight: 1.75,
-                maxWidth: 640,
-                mx: 'auto',
-              }}
-            >
-              From CRM and cloud to automation and DevOps, we work across
-              trusted technology ecosystems to build fast, reliable and
-              scalable business solutions.
+            {/* Copy */}
+            <Typography className="dev-copy" sx={{
+              fontFamily: "'Outfit', sans-serif",
+              fontWeight: 400, fontSize: { xs: '.92rem', md: '1.05rem' },
+              color: 'rgba(11,24,54,.58)', lineHeight: 1.8,
+              maxWidth: 580, mx: 'auto',
+            }}>
+              From CRM and cloud to automation and DevOps — we work across
+              the world's most trusted platforms to ship fast, reliable, and
+              scalable solutions.
             </Typography>
           </Box>
 
-          {/* Single marquee */}
-          <Box
-            className="marquee-shell"
-            sx={{
-              position: 'relative',
-              overflow: 'hidden',
-              borderRadius: { xs: '22px', md: '28px' },
-              border: '1px solid rgba(15,23,42,0.07)',
-              background:
-                'linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(248,250,252,0.94) 100%)',
-              boxShadow: '0 18px 40px rgba(15,23,42,0.05)',
-              backdropFilter: 'blur(14px)',
-              py: { xs: 2.4, sm: 2.8, md: 3.2 },
-            }}
-          >
-            {/* top glow line */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: '12%',
-                right: '12%',
-                height: '1px',
-                background:
-                  'linear-gradient(90deg, transparent, rgba(59,130,246,0.25), transparent)',
-                zIndex: 2,
-              }}
-            />
+          {/* ── Featured duo (Zoho + Salesforce) ─────────────── */}
+          <Box className="dev-strip" sx={{
+            display: 'flex', gap: { xs: 2, md: 3 },
+            justifyContent: 'center', mb: { xs: 4, md: 5 },
+            flexWrap: 'wrap',
+          }}>
+            {logos.filter(l => l.featured).map(logo => (
+              <Box key={logo.name} sx={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.4,
+                background: '#fff',
+                border: '2px solid rgba(14,90,240,.15)',
+                borderRadius: '24px',
+                px: { xs: 4, md: 6 }, py: { xs: 2.5, md: 3.2 },
+                boxShadow: '0 6px 28px rgba(14,31,64,.09)',
+                minWidth: { xs: 180, md: 240 },
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'transform .25s ease, box-shadow .25s ease',
+                '&:hover': {
+                  transform: 'translateY(-6px)',
+                  boxShadow: '0 18px 42px rgba(14,31,64,.13)',
+                },
+                '&::before': {
+                  content: '""', position: 'absolute',
+                  top: 0, left: '15%', right: '15%', height: '2px',
+                  background: 'linear-gradient(90deg, transparent, rgba(14,90,240,.35), transparent)',
+                },
+              }}>
+                <Box sx={{
+                  '& svg': { display: 'block', height: { xs: 44, md: 54 }, width: 'auto', maxWidth: 220 },
+                }}>
+                  {logo.icon}
+                </Box>
+                <Box sx={{
+                  display: 'inline-flex', alignItems: 'center', gap: .6,
+                  px: 1.2, py: .35,
+                  borderRadius: '999px',
+                  background: 'rgba(14,90,240,.07)',
+                  border: '1px solid rgba(14,90,240,.14)',
+                }}>
+                  <Box sx={{ width: 5, height: 5, borderRadius: '50%', background: '#0e5af0' }}/>
+                  <Typography sx={{
+                    fontFamily: "'Outfit', sans-serif",
+                    fontSize: '.68rem', fontWeight: 600,
+                    color: '#0e5af0', letterSpacing: '.06em',
+                    textTransform: 'uppercase',
+                  }}>
+                    Primary Partner
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
 
-            {/* left fade */}
-            <Box
-              sx={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: { xs: 30, sm: 50, md: 80 },
-                zIndex: 2,
-                pointerEvents: 'none',
-                background:
-                  'linear-gradient(to right, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 100%)',
-              }}
-            />
+          {/* ── Marquee strip ────────────────────────────────── */}
+          <Box className="dev-strip" sx={{
+            position: 'relative',
+            borderRadius: { xs: '20px', md: '26px' },
+            border: '1.5px solid rgba(14,31,64,.08)',
+            background: 'rgba(246,249,255,.92)',
+            backdropFilter: 'blur(14px)',
+            boxShadow: '0 8px 32px rgba(14,31,64,.06)',
+            py: { xs: 2.5, md: 3 },
+            overflow: 'hidden',
+          }}>
+            <div className="fade-l"/>
+            <div className="fade-r"/>
 
-            {/* right fade */}
-            <Box
-              sx={{
-                position: 'absolute',
-                right: 0,
-                top: 0,
-                bottom: 0,
-                width: { xs: 30, sm: 50, md: 80 },
-                zIndex: 2,
-                pointerEvents: 'none',
-                background:
-                  'linear-gradient(to left, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 100%)',
-              }}
-            />
-
-            <Box sx={{ overflow: 'hidden', width: '100%' }}>
-              <Box className="partner-track">
-                {marqueeLogos.map((logo, i) => (
-                  <Box
+            <div
+              className="track-wrap"
+              onMouseEnter={pause}
+              onMouseLeave={play}
+              onTouchStart={pause}
+              onTouchEnd={play}
+            >
+              <div
+                ref={trackRef}
+                className={`logo-track${paused ? ' paused' : ''}`}
+              >
+                {track.map((logo, i) => (
+                  <div
                     key={`${logo.name}-${i}`}
-                    className="logo-card"
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      mx: { xs: 0.9, sm: 1.1, md: 1.35 },
-                      px: { xs: 2.4, sm: 3.2, md: 3.8 },
-                      py: { xs: 1.35, sm: 1.6, md: 1.8 },
-                      minWidth: { xs: 150, sm: 170, md: 200 },
-                      minHeight: { xs: 68, sm: 78, md: 88 },
-                      borderRadius: { xs: '16px', md: '18px' },
-                      border: '1px solid rgba(15,23,42,0.08)',
-                      background:
-                        'linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.94) 100%)',
-                      backdropFilter: 'blur(10px)',
-                      boxShadow: '0 4px 18px rgba(2,6,23,0.04)',
-                      animationDelay: `${i * 0.03}s`,
-                    }}
+                    className={`lcard${logo.featured ? ' featured' : ''}`}
                   >
-                    <Box
-                      className="logo-shell"
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        '& svg': {
-                          display: 'block',
-                          height: { xs: 28, sm: 32, md: 38 },
-                          width: 'auto',
-                          maxWidth: { xs: 120, sm: 145, md: 180 },
-                        },
-                      }}
-                    >
+                    <Box sx={{
+                      '& svg': {
+                        display: 'block',
+                        height: { xs: 34, sm: 40, md: 46 },
+                        width: 'auto',
+                        maxWidth: { xs: 130, md: 190 },
+                      },
+                    }}>
                       {logo.icon}
                     </Box>
-                  </Box>
+                  </div>
                 ))}
-              </Box>
-            </Box>
+              </div>
+            </div>
 
-            <Typography
-              sx={{
-                fontFamily: "'DM Sans', sans-serif",
-                textAlign: 'center',
-                mt: { xs: 2, md: 2.4 },
-                fontSize: { xs: '0.72rem', md: '0.78rem' },
-                color: 'rgba(15,23,42,0.38)',
-                letterSpacing: '0.04em',
-              }}
-            >
-              Trusted by businesses using leading platforms
+            <Typography sx={{
+              fontFamily: "'Outfit', sans-serif",
+              textAlign: 'center', mt: 1.8,
+              fontSize: '.74rem', color: 'rgba(11,24,54,.4)',
+              letterSpacing: '.05em',
+            }}>
+              Hover to pause · Trusted by businesses on leading platforms
             </Typography>
           </Box>
+
+          {/* ── Stat chips ───────────────────────────────────── */}
+          <Box sx={{
+            display: 'flex', gap: { xs: 1.5, md: 2.5 },
+            justifyContent: 'center', mt: { xs: 4, md: 5 },
+            flexWrap: 'wrap',
+          }}>
+            {stats.map((s, i) => (
+              <Box
+                key={s.label}
+                className="stat-chip"
+                sx={{ animationDelay: `${.28 + i * .07}s` }}
+              >
+                <Typography sx={{
+                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontWeight: 800, fontSize: { xs: '1.4rem', md: '1.75rem' },
+                  color: '#0e5af0', lineHeight: 1,
+                }}>
+                  {s.value}
+                </Typography>
+                <Typography sx={{
+                  fontFamily: "'Outfit', sans-serif",
+                  fontWeight: 400, fontSize: '.78rem',
+                  color: 'rgba(11,24,54,.52)', mt: .5,
+                  letterSpacing: '.03em',
+                }}>
+                  {s.label}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+
         </Container>
       </Box>
     </>

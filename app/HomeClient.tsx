@@ -11,8 +11,12 @@ import Hero from "@/components/Hero";
 const Developer = lazy(() => import("@/components/Developer"));
 const Business = lazy(() => import("@/components/Business"));
 const About = lazy(() => import("@/components/About"));
+const Testimonial = lazy(() => import("@/components/Testimonial"));
 const OurWork = lazy(() => import("@/components/OurWork"));
+const Expertise = lazy(() => import("@/components/Expertise"));
+
 const Footer = lazy(() => import("@/components/Footer"));
+
 
 // Loading Skeleton
 const SectionLoader = () => (
@@ -65,8 +69,16 @@ export default function HomeClient() {
         <About />
       </Suspense>
 
+       <Suspense fallback={<SectionLoader />}>
+        <Testimonial />
+      </Suspense>
+
       <Suspense fallback={<SectionLoader />}>
         <OurWork />
+      </Suspense>
+
+      <Suspense fallback={<SectionLoader />}>
+        <Expertise />
       </Suspense>
 
       <Suspense fallback={<SectionLoader />}>

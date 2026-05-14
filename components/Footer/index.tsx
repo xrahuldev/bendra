@@ -186,7 +186,6 @@ const footerLinks = [
       { label: 'Website Development', href: '/expertise/website-development' },
       { label: 'Social Media Marketing', href: '/expertise/social-media-marketing' },
       { label: 'Website UI/UX Design', href: '/expertise/ui-ux-design' },
-      { label: 'Email Marketing', href: '/expertise/email-marketing' },
       { label: 'SEO', href: '/expertise/seo' },
     ],
   },
