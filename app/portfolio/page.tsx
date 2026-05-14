@@ -10,13 +10,11 @@ import {
   IconButton,
   Dialog,
   DialogContent,
-  Modal,
 } from '@mui/material';
 import {
   ArrowForward,
   Close,
   OpenInNew,
-  GitHub,
   CalendarMonth,
   Person,
   Visibility,
@@ -63,261 +61,974 @@ export default function PortfolioPage() {
 
   const categories: string[] = [
     'All',
-    'CRM',
-    'Web Apps',
-    'Mobile Apps',
-    'SaaS',
+    'WordPress',
+    'LinkedIn',
+    'Podcast',
+    'Marketing',
     'E-Commerce',
-    'Automation',
+    'Application',
   ];
 
   const projects: Project[] = [
     {
       id: 1,
-      title: 'Real Estate CRM Platform',
-      subtitle: 'Zoho CRM Customization',
+      title: 'Exizenly: Your Trusted Partner in Acquiring Your Business',
+      subtitle: 'WordPress & LinkedIn Marketing',
       description:
-        'Complete CRM solution for a leading real estate company with automated lead management and property tracking.',
+        'Are you a motivated seller looking for a partner you can truly trust? Exizenly is here to be that partner for you.',
       fullDescription:
-        'We built a comprehensive CRM solution on Zoho platform for one of Dubai\'s leading real estate companies. The system handles 10,000+ leads monthly with automated scoring, property matching, and follow-up sequences. Integration with WhatsApp, email marketing, and property portals made it a central hub for all operations.',
-      category: 'CRM',
-      tags: ['Zoho', 'Real Estate', 'Automation', 'API Integration'],
+        'We provided comprehensive support for Exizenly including WordPress website development and LinkedIn marketing strategy. The project involved creating a professional web presence, optimizing content distribution, and building a strong LinkedIn brand that attracts motivated sellers and buyers in the business acquisition space.',
+      category: 'WordPress',
+      tags: ['WordPress', 'LinkedIn Marketing', 'Hosted Website', 'Video Testimonial'],
       image:
         'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      client: 'Dubai Properties Group',
-      duration: '3 Months',
+      client: 'Exizenly',
+      duration: '2 Months',
       year: '2024',
       liveUrl: '#',
       features: [
-        'Automated Lead Scoring & Distribution',
-        'Property Matching Algorithm',
-        'WhatsApp & Email Integration',
-        'Custom Reporting Dashboard',
-        'Mobile-friendly Agent Portal',
-        'Commission Tracking System',
+        'WordPress Website Development',
+        'LinkedIn Marketing Strategy',
+        'Content Distribution Optimization',
+        'Brand Visibility Enhancement',
+        'Lead Generation System',
+        'Video Testimonial Production',
       ],
       results: [
-        '60% increase in lead conversion',
-        '45% reduction in response time',
-        '10,000+ leads managed monthly',
-        '3x improvement in agent productivity',
+        'Increased brand visibility by 150%',
+        'Generated quality leads consistently',
+        'Strong LinkedIn engagement growth',
+        'Professional web presence established',
       ],
     },
     {
       id: 2,
-      title: 'Learning Management System',
-      subtitle: 'Full-Stack Web Application',
+      title: 'Consult Clarity',
+      subtitle: 'Enterprise Support',
       description:
-        'Modern LMS platform with live classes, quizzes, progress tracking, and certificate generation for an EdTech startup.',
+        'We provided comprehensive support across website management, LinkedIn strategy, and various tools. For the website, we optimized content distribution and ensured a seamless user experience.',
       fullDescription:
-        'A complete Learning Management System built with Next.js and Node.js for a rapidly growing EdTech company. Features include live video classes, interactive quizzes, progress analytics, automated certificate generation, and a marketplace for course creators. The platform serves 50,000+ students.',
-      category: 'Web Apps',
-      tags: ['Next.js', 'Node.js', 'EdTech', 'Video Streaming'],
+        'Consult Clarity received comprehensive enterprise-level support from Bendra. Our team managed their website, developed LinkedIn strategy, and implemented various digital tools. We focused on optimizing content distribution across platforms, ensuring seamless user experience, and driving meaningful engagement with their target audience.',
+      category: 'WordPress',
+      tags: ['Enterprise Support', 'Website Management', 'LinkedIn Strategy', 'Hosted Website'],
       image:
         'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      client: 'EduTech Solutions',
-      duration: '5 Months',
+      client: 'Consult Clarity',
+      duration: '4 Months',
       year: '2024',
       liveUrl: '#',
       features: [
-        'Live Video Classes with Chat',
-        'Interactive Quiz Engine',
-        'Progress Tracking Dashboard',
-        'Automated Certificate Generation',
-        'Course Marketplace',
-        'Mobile Responsive Design',
+        'Website Management & Optimization',
+        'LinkedIn Strategy Development',
+        'Content Distribution System',
+        'User Experience Enhancement',
+        'Digital Tools Implementation',
+        'Performance Analytics Setup',
       ],
       results: [
-        '50,000+ active students',
-        '200+ courses published',
-        '95% student satisfaction',
-        '40% increase in course completion',
+        'Seamless user experience achieved',
+        'Optimized content distribution',
+        'Enhanced online presence',
+        'Improved client engagement metrics',
       ],
     },
     {
       id: 3,
-      title: 'Healthcare Appointment App',
-      subtitle: 'Cross-Platform Mobile App',
+      title: 'Dr. Robert Hernandez',
+      subtitle: 'LinkedIn, Social Media & Podcast',
       description:
-        'Patient appointment booking and health records management app with telemedicine features for a hospital chain.',
+        'Thrilled to have supported Dr. Robert Hernandez in LinkedIn, social media, and podcast management. Boosted presence, engagement, and brand visibility.',
       fullDescription:
-        'A cross-platform mobile application built with React Native for a network of 15+ hospitals. Patients can book appointments, access medical records, have video consultations, and receive medication reminders. The app integrates with the hospital\'s existing EHR system.',
-      category: 'Mobile Apps',
-      tags: ['React Native', 'Healthcare', 'Telemedicine', 'HIPAA'],
+        'We provided multi-channel digital support for Dr. Robert Hernandez, covering LinkedIn optimization, social media management, and podcast production. Our team boosted his online presence significantly, increased engagement rates across all platforms, and enhanced his brand visibility as a thought leader in his field.',
+      category: 'LinkedIn',
+      tags: ['LinkedIn', 'Social Media', 'Podcast', 'Video Testimonial'],
       image:
         'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      client: 'MedCare Hospitals',
+      client: 'Dr. Robert Hernandez',
       duration: '6 Months',
       year: '2024',
       liveUrl: '#',
       features: [
-        'Smart Appointment Booking',
-        'Video Consultation (Telemedicine)',
-        'Digital Health Records',
-        'Medication Reminders',
-        'Lab Reports Access',
-        'Insurance Integration',
+        'LinkedIn Profile Optimization',
+        'Social Media Content Strategy',
+        'Podcast Production & Management',
+        'Brand Visibility Enhancement',
+        'Engagement Growth Strategy',
+        'Thought Leadership Positioning',
       ],
       results: [
-        '100,000+ app downloads',
-        '70% reduction in no-shows',
-        '15 hospitals integrated',
-        '4.8★ rating on App Store',
+        'Significant LinkedIn presence boost',
+        'High engagement across platforms',
+        'Strong brand visibility established',
+        'Podcast audience growth achieved',
       ],
     },
     {
       id: 4,
-      title: 'Multi-Vendor E-Commerce Platform',
-      subtitle: 'Scalable Marketplace Solution',
+      title: 'The Purposeco',
+      subtitle: 'LinkedIn Prospecting',
       description:
-        'Feature-rich e-commerce marketplace with vendor management, real-time inventory, and AI-powered recommendations.',
+        'We provided essential support to our client\'s LinkedIn strategy, optimizing their online presence for increased visibility and engagement on the platform.',
       fullDescription:
-        'Built a scalable multi-vendor e-commerce platform handling 500+ vendors and 50,000+ products. Features include AI-powered product recommendations, real-time inventory sync, multi-currency support, and advanced analytics dashboard. The platform processes 2000+ orders daily.',
-      category: 'E-Commerce',
-      tags: ['React', 'Node.js', 'AI/ML', 'Payment Gateway'],
+        'For The Purposeco, we delivered strategic LinkedIn prospecting services that transformed their online presence. Our expertise ensured strategic content distribution for increased visibility and engagement. We developed a comprehensive LinkedIn strategy that positioned them as industry leaders and generated quality business connections.',
+      category: 'LinkedIn',
+      tags: ['LinkedIn Prospecting', 'Content Strategy', 'Hosted Website', 'Video Testimonial'],
       image:
         'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      client: 'MarketHub UAE',
-      duration: '4 Months',
+      client: 'The Purposeco',
+      duration: '3 Months',
       year: '2023',
       liveUrl: '#',
       features: [
-        'Multi-Vendor Dashboard',
-        'AI Product Recommendations',
-        'Real-time Inventory Management',
-        'Multi-Currency & Multi-Language',
-        'Advanced Analytics',
-        'Multiple Payment Gateways',
+        'LinkedIn Strategy Optimization',
+        'Strategic Content Distribution',
+        'Online Presence Enhancement',
+        'Visibility & Engagement Growth',
+        'Connection Building',
+        'Brand Positioning',
       ],
       results: [
-        '500+ active vendors',
-        '2000+ daily orders',
-        '35% increase in average order value',
-        '$2M+ monthly GMV',
+        'Increased LinkedIn visibility by 200%',
+        'Higher engagement rates achieved',
+        'Quality connections generated',
+        'Strong online presence established',
       ],
     },
     {
       id: 5,
-      title: 'HR & Payroll SaaS Platform',
-      subtitle: 'Cloud-Based HR Solution',
+      title: 'Solomon Matzner',
+      subtitle: 'LinkedIn Prospecting',
       description:
-        'Complete HR management platform with payroll, attendance, leave management, and performance tracking.',
+        'We played a pivotal role in supporting our client\'s social media strategy with optimal LinkedIn presence through strategic content distribution.',
       fullDescription:
-        'An enterprise-grade HR and Payroll SaaS platform serving 200+ companies across the Middle East. Features include automated payroll processing, biometric attendance integration, leave management, performance reviews, and WPS compliance for UAE businesses.',
-      category: 'SaaS',
-      tags: ['React', 'Python', 'AWS', 'Microservices'],
+        'We provided comprehensive LinkedIn prospecting support for Solomon Matzner, ensuring optimal presence through strategic content distribution. Our team enhanced visibility and engagement, seamlessly coordinated and managed connections, fostering meaningful interactions and network growth across the platform.',
+      category: 'LinkedIn',
+      tags: ['LinkedIn Prospecting', 'Social Media', 'Hosted Website', 'Video Testimonial'],
       image:
         'https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      client: 'PeopleFirst HR',
-      duration: '8 Months',
+      client: 'Solomon Matzner',
+      duration: '3 Months',
       year: '2023',
       liveUrl: '#',
       features: [
-        'Automated Payroll Processing',
-        'Biometric Attendance Integration',
-        'Leave Management System',
-        'Performance Review Module',
-        'WPS Compliance (UAE)',
-        'Employee Self-Service Portal',
+        'LinkedIn Presence Optimization',
+        'Strategic Content Distribution',
+        'Connection Management',
+        'Meaningful Interaction Building',
+        'Network Growth Strategy',
+        'Engagement Enhancement',
       ],
       results: [
-        '200+ companies onboarded',
-        '50,000+ employees managed',
-        '99.9% payroll accuracy',
-        '80% reduction in HR workload',
+        'Optimal LinkedIn presence achieved',
+        'Meaningful interactions fostered',
+        'Network growth significantly boosted',
+        'Enhanced visibility and engagement',
       ],
     },
     {
       id: 6,
-      title: 'Sales Pipeline Automation',
-      subtitle: 'Salesforce Implementation',
+      title: 'Kenneth Hellem',
+      subtitle: 'Podcast Management',
       description:
-        'Salesforce customization with automated pipeline management, forecasting, and team performance analytics.',
+        'We took the reins of a dynamic Podcast Management project, providing comprehensive support across major platforms like Apple Podcasts, Spotify, and Google Podcasts.',
       fullDescription:
-        'Complete Salesforce implementation and customization for a B2B technology company. We automated the entire sales pipeline from lead capture to deal closure, built custom forecasting models, and created a comprehensive analytics dashboard for sales leadership.',
-      category: 'Automation',
-      tags: ['Salesforce', 'Apex', 'Lightning', 'Analytics'],
+        'We managed Kenneth Hellem\'s complete podcast operations, providing comprehensive support. Our expertise in streamlining content distribution ensured a seamless presence across major platforms like Apple Podcasts, Spotify, and Google Podcasts. We handled everything from production to distribution and audience growth.',
+      category: 'Podcast',
+      tags: ['Podcast Management', 'Content Distribution', 'Hosted Website', 'Video Testimonial'],
       image:
         'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      client: 'TechVentures Inc',
-      duration: '3 Months',
-      year: '2024',
-      liveUrl: '#',
-      features: [
-        'Automated Lead-to-Deal Pipeline',
-        'Custom Forecasting Models',
-        'Sales Team Leaderboard',
-        'Email Sequence Automation',
-        'Territory Management',
-        'Revenue Analytics Dashboard',
-      ],
-      results: [
-        '40% faster deal closure',
-        '55% improvement in forecast accuracy',
-        '$5M+ pipeline managed quarterly',
-        '90% sales team adoption rate',
-      ],
-    },
-    {
-      id: 7,
-      title: 'Logistics Tracking Dashboard',
-      subtitle: 'Real-Time Fleet Management',
-      description:
-        'Real-time fleet tracking and logistics management platform with route optimization and delivery analytics.',
-      fullDescription:
-        'Built a comprehensive logistics management platform with real-time GPS tracking, route optimization using ML algorithms, delivery scheduling, and driver management. The system handles 500+ vehicles and 5000+ daily deliveries across the UAE.',
-      category: 'Web Apps',
-      tags: ['React', 'Python', 'Google Maps API', 'WebSocket'],
-      image:
-        'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      client: 'FastTrack Logistics',
-      duration: '5 Months',
-      year: '2023',
-      liveUrl: '#',
-      features: [
-        'Real-Time GPS Fleet Tracking',
-        'ML-Powered Route Optimization',
-        'Delivery Scheduling System',
-        'Driver Performance Analytics',
-        'Customer Notification System',
-        'Fuel & Maintenance Tracking',
-      ],
-      results: [
-        '500+ vehicles tracked',
-        '30% reduction in fuel costs',
-        '5000+ daily deliveries',
-        '25% faster delivery times',
-      ],
-    },
-    {
-      id: 8,
-      title: 'Restaurant Ordering App',
-      subtitle: 'iOS & Android Application',
-      description:
-        'Multi-restaurant food ordering app with real-time tracking, in-app payments, and loyalty rewards system.',
-      fullDescription:
-        'A comprehensive food ordering and delivery app serving 100+ restaurants. Features include real-time order tracking with live map, multiple payment options, AI-powered food recommendations, loyalty rewards system, and a separate restaurant management portal.',
-      category: 'Mobile Apps',
-      tags: ['Flutter', 'Firebase', 'Stripe', 'Google Maps'],
-      image:
-        'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      client: 'FoodieHub',
+      client: 'Kenneth Hellem',
       duration: '4 Months',
       year: '2024',
       liveUrl: '#',
       features: [
-        'Real-Time Order Tracking',
-        'AI Food Recommendations',
-        'Loyalty Rewards System',
-        'Multiple Payment Methods',
-        'Restaurant Management Portal',
-        'Push Notifications',
+        'Podcast Production & Editing',
+        'Multi-Platform Distribution',
+        'Apple Podcasts Management',
+        'Spotify Optimization',
+        'Google Podcasts Setup',
+        'Audience Growth Strategy',
       ],
       results: [
-        '100+ restaurant partners',
-        '75,000+ app downloads',
-        '1500+ daily orders',
-        '4.7★ average rating',
+        'Seamless multi-platform presence',
+        'Streamlined content distribution',
+        'Audience growth across platforms',
+        'Professional podcast production',
+      ],
+    },
+    {
+      id: 7,
+      title: 'Digital Procurement Made Simple',
+      subtitle: 'WordPress Development',
+      description:
+        'Find procurement software that matches your own unique requirements, in just a few clicks. 100% FREE. No pay-to-play listings. No misleading reviews.',
+      fullDescription:
+        'We developed a comprehensive WordPress platform for a digital procurement solution. The website helps users find procurement software matching their unique requirements in just a few clicks. Features include solution maps, multi-criteria search and filter, and module-based listings — all 100% free with no pay-to-play listings or misleading reviews.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Web Development', 'Hosted Website', 'Video Testimonial'],
+      image:
+        'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Digital Procurement',
+      duration: '3 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Website Development',
+        'Advanced Search & Filter System',
+        'Solution Maps Integration',
+        'Multi-Module Software Listings',
+        'User-Friendly Interface',
+        'SEO Optimization',
+      ],
+      results: [
+        'User-friendly procurement platform launched',
+        'Advanced search functionality implemented',
+        'Free platform with honest reviews',
+        'Strong organic traffic growth',
+      ],
+    },
+    {
+      id: 8,
+      title: 'MoiLeon',
+      subtitle: 'WordPress Development',
+      description:
+        'We are a group of expertise in special sectors to find solutions and give answers to some requests, enhancing the quality of different markets.',
+      fullDescription:
+        'MoiLeon is a group of experts in special sectors focused on finding solutions and answering complex market requests. We built their WordPress website to showcase their expertise, cope with current market issues, and enhance the quality of different markets they serve. The site features professional design and optimized user experience.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Web Design', 'Hosted Website', 'Video Testimonial'],
+      image:
+        'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'MoiLeon',
+      duration: '2 Months',
+      year: '2024',
+      liveUrl: '#',
+      features: [
+        'WordPress Website Development',
+        'Professional Design & Branding',
+        'Content Management System',
+        'Responsive Mobile Design',
+        'SEO Optimization',
+        'Performance Optimization',
+      ],
+      results: [
+        'Professional online presence established',
+        'Enhanced market positioning',
+        'Improved client engagement',
+        'Mobile-friendly experience delivered',
+      ],
+    },
+    {
+      id: 9,
+      title: 'Love In Covid Time',
+      subtitle: 'WordPress Development',
+      description:
+        'A Romance that entertains with the history of two lovers who find themselves in the midst of the COVID-19 pandemic.',
+      fullDescription:
+        'Love in COVID Time is a Romance that entertains with the history of two lovers, Enrique and Nicole, who find themselves in the midst of the COVID-19 pandemic. We built a compelling WordPress website that captures the essence of the story, featuring engaging design, book preview sections, and purchase integration.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Web Design', 'Video Testimonial'],
+      image:
+        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Love In Covid Time',
+      duration: '1.5 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Website Development',
+        'Book Showcase Design',
+        'Purchase Integration',
+        'Author Profile Section',
+        'Responsive Design',
+        'Social Media Integration',
+      ],
+      results: [
+        'Engaging book promotion website launched',
+        'Increased book visibility online',
+        'Smooth purchase experience for readers',
+        'Strong social media presence built',
+      ],
+    },
+    {
+      id: 10,
+      title: 'Leadership Expose',
+      subtitle: 'WordPress Development',
+      description:
+        'Your Leadership Story Is Your Message To Millions. Enabling leaders across the globe to share their story and build visibility.',
+      fullDescription:
+        'Leadership Expose is a platform enabling leaders across the globe to share their story, their journey, build visibility and impart wisdom to other leaders and businesses. We built their WordPress website to connect and grow more leaders, developing infinite potential leaders and sharing valuable leadership insights worldwide.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Leadership', 'Hosted Website', 'Video Testimonial'],
+      image:
+        'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Leadership Expose',
+      duration: '2 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Website Development',
+        'Leader Profile Showcases',
+        'Story Sharing Platform',
+        'Content Management System',
+        'Community Building Features',
+        'SEO & Visibility Optimization',
+      ],
+      results: [
+        'Global leadership platform launched',
+        'Leaders sharing stories worldwide',
+        'Strong community engagement',
+        'Increased visibility for leaders',
+      ],
+    },
+    {
+      id: 11,
+      title: 'Meet John Doolittle',
+      subtitle: 'WordPress Development',
+      description:
+        'As a retired Navy SEAL captain, speaking to organizations about overcoming adversity in life with leadership, trust, and resilience.',
+      fullDescription:
+        'We built a professional WordPress website for John Doolittle, a retired Navy SEAL captain who travels the country speaking to organizations about overcoming adversity in life. After 25 years in the Teams, his message focuses on leadership, trust, and resilience as key essentials to the success of any Team.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Personal Branding', 'Hosted Website', 'Video Testimonial'],
+      image:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'John Doolittle',
+      duration: '2 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Website Development',
+        'Speaker Portfolio Showcase',
+        'Event Booking Integration',
+        'Testimonials Section',
+        'Media Kit Download',
+        'Contact & Inquiry Forms',
+      ],
+      results: [
+        'Professional speaker website launched',
+        'Increased speaking engagement inquiries',
+        'Strong personal brand online',
+        'Streamlined booking process',
+      ],
+    },
+    {
+      id: 12,
+      title: 'Philippe Renan, Entrepreneur',
+      subtitle: 'Marketing',
+      description:
+        'After having his fingers burnt at the age of 17 by an unsettling foray into the music business, Philippe decided to study business and marketing.',
+      fullDescription:
+        'We provided comprehensive marketing support for Philippe Renan, an entrepreneur who pivoted from the music business to business and marketing. Our team developed his digital marketing strategy, built his online presence, and created campaigns that positioned him as a successful entrepreneur and business leader.',
+      category: 'Marketing',
+      tags: ['Marketing', 'Personal Branding', 'Hosted Website', 'Video Testimonial'],
+      image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Philippe Renan',
+      duration: '3 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'Digital Marketing Strategy',
+        'Personal Brand Development',
+        'Content Marketing',
+        'Social Media Management',
+        'Website Optimization',
+        'Campaign Management',
+      ],
+      results: [
+        'Strong entrepreneurial brand built',
+        'Increased online visibility',
+        'Effective marketing campaigns launched',
+        'Growing audience engagement',
+      ],
+    },
+    {
+      id: 13,
+      title: 'About Phoenix',
+      subtitle: 'Marketing & Podcast Management',
+      description:
+        'Utilizing research on organizational change & brain science, techniques for personal growth, going well beyond standard team-building exercises.',
+      fullDescription:
+        'Phoenix specializes in organizational change using brain science and personal growth techniques. We provided marketing and podcast management support, going well beyond standard team-building exercises and coaching sessions. Our team helped them reach a wider audience through strategic marketing and professional podcast production.',
+      category: 'Marketing',
+      tags: ['Marketing', 'Podcast Management', 'Hosted Website', 'Video Testimonial'],
+      image:
+        'https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Phoenix',
+      duration: '4 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'Marketing Strategy Development',
+        'Podcast Production & Management',
+        'Content Distribution',
+        'Brand Positioning',
+        'Audience Growth Strategy',
+        'Multi-Platform Presence',
+      ],
+      results: [
+        'Expanded audience reach significantly',
+        'Professional podcast series launched',
+        'Enhanced brand positioning',
+        'Strong engagement metrics achieved',
+      ],
+    },
+    {
+      id: 14,
+      title: 'Garden, Home & Swimming Pool Maintenance',
+      subtitle: 'PHP Laravel Development',
+      description:
+        'Garden, Home and Swimming Pool Maintenance Services in Dubai. Custom designed solutions to suit client\'s lifestyle.',
+      fullDescription:
+        'We developed a comprehensive PHP Laravel website for a Dubai-based maintenance services company offering garden, home, and swimming pool maintenance. The platform features custom-designed solutions to suit client lifestyles in Dubai, committed to creating and maintaining beautiful outdoor recreation spaces for discerning clientele.',
+      category: 'E-Commerce',
+      tags: ['PHP', 'Laravel', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Dubai Maintenance Services',
+      duration: '3 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'PHP Laravel Backend Development',
+        'Service Booking System',
+        'Custom Solution Designer',
+        'Client Portal',
+        'Payment Integration',
+        'Admin Dashboard',
+      ],
+      results: [
+        'Streamlined service booking process',
+        'Increased client satisfaction',
+        'Efficient service management',
+        'Growing customer base in Dubai',
+      ],
+    },
+    {
+      id: 15,
+      title: 'La Hacienda Tile',
+      subtitle: 'Magento E-Commerce',
+      description:
+        'Specializing in Mexican tile, copper sinks, farmhouse sinks, copper tubs, Mexican pottery and ceramic at the best possible price.',
+      fullDescription:
+        'We built a Magento e-commerce platform for La Hacienda Tile, specializing in Mexican tile, copper sinks, farmhouse sinks, copper tubs, Mexican pottery, and ceramic. The best quality products are brought to customers at the best possible price through a beautifully designed online store.',
+      category: 'E-Commerce',
+      tags: ['Magento', 'E-Commerce', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'La Hacienda Tile',
+      duration: '3 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'Magento E-Commerce Development',
+        'Product Catalog Management',
+        'Payment Gateway Integration',
+        'Shipping & Inventory Management',
+        'Customer Account Management',
+        'Mobile Responsive Design',
+      ],
+      results: [
+        'Full e-commerce platform launched',
+        'Increased online sales significantly',
+        'Streamlined product management',
+        'Enhanced customer shopping experience',
+      ],
+    },
+    {
+      id: 16,
+      title: 'Luxury Homes - Real Estate Discovery',
+      subtitle: 'WordPress Development',
+      description:
+        'Luxury Homes is ready to welcome you home in Mumbai. A Mumbai brokerage with a global mindset for exciting developments and investment properties.',
+      fullDescription:
+        'We developed a WordPress real estate discovery website for Luxury Homes, a Mumbai-based brokerage with a global mindset. The platform brings together exciting developments and investment properties under one roof, helping clients find their dream luxury homes in one of the world\'s most dynamic cities.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Real Estate', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Luxury Homes Mumbai',
+      duration: '2.5 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Property Listing Platform',
+        'Advanced Property Search & Filter',
+        'Property Detail Pages',
+        'Agent Contact System',
+        'Virtual Tour Integration',
+        'SEO Optimization',
+      ],
+      results: [
+        'Luxury real estate platform launched',
+        'Increased property inquiries',
+        'Strong organic search visibility',
+        'Enhanced user experience for buyers',
+      ],
+    },
+    {
+      id: 17,
+      title: 'UNIK SEO Agency In Portugal',
+      subtitle: 'SEO & Links Building',
+      description:
+        'UniK SEO is an SEO Agency based in Portugal highly specialized in increasing organic and paid traffic in major search engines.',
+      fullDescription:
+        'We provided SEO and link building services for UniK SEO, an agency based in Portugal specialized in increasing organic and paid traffic on Google, Bing, and Yahoo. The client wanted to rank higher in Google searches for major selective business-related keywords, and our strategy delivered significant ranking improvements.',
+      category: 'Marketing',
+      tags: ['SEO', 'Links Building', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'UniK SEO Portugal',
+      duration: '4 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'On-Page SEO Optimization',
+        'Quality Link Building',
+        'Keyword Research & Strategy',
+        'Technical SEO Audit',
+        'Content Optimization',
+        'Monthly Reporting & Analytics',
+      ],
+      results: [
+        'Higher Google rankings achieved',
+        'Increased organic traffic significantly',
+        'Quality backlink profile built',
+        'Improved domain authority',
+      ],
+    },
+    {
+      id: 18,
+      title: 'Acasa - Real Estate Website',
+      subtitle: 'PHP Laravel Development',
+      description:
+        'Acasa is all set to help you find a dream home in Dubai, one of the world\'s most dynamic hotspots for luxury estate.',
+      fullDescription:
+        'We built a PHP Laravel real estate platform for Acasa, helping clients find dream homes in Dubai. As premier Luxury Estate Brokers based in Dubai with a truly global outlook, the platform showcases premium properties with advanced search, virtual tours, and seamless agent communication.',
+      category: 'E-Commerce',
+      tags: ['PHP', 'Laravel', 'Real Estate', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Acasa Dubai',
+      duration: '3.5 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'PHP Laravel Development',
+        'Property Listing System',
+        'Advanced Search & Filters',
+        'Agent Communication Portal',
+        'Virtual Tour Integration',
+        'Multi-Currency Support',
+      ],
+      results: [
+        'Premium real estate platform launched',
+        'Streamlined property discovery',
+        'Increased client inquiries',
+        'Professional Dubai presence established',
+      ],
+    },
+    {
+      id: 19,
+      title: 'Savannah Tours - Discover Tanzania',
+      subtitle: 'WordPress Development',
+      description:
+        'A privately owned family company in its 42nd year of operation in the Tanzanian tourism industry with personalized tailor-made safaris.',
+      fullDescription:
+        'We built a WordPress website for Savannah Tours, a privately owned and managed family company now in its 42nd year of operation in the Tanzanian tourism industry. Being an owner-managed company existing in Tanzania for about 50 years, they\'ve consistently personalized many tailor-made safari experiences for travelers worldwide.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Tourism', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1516426122078-c23e76b4934d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Savannah Tours',
+      duration: '2 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Website Development',
+        'Safari Package Showcases',
+        'Booking Inquiry System',
+        'Photo Gallery & Tours',
+        'Customer Testimonials',
+        'Mobile Responsive Design',
+      ],
+      results: [
+        'Tourism website successfully launched',
+        'Increased international bookings',
+        'Enhanced online safari showcase',
+        'Better customer engagement',
+      ],
+    },
+    {
+      id: 20,
+      title: 'MMUSA - Muscle Building Supplement Store',
+      subtitle: 'WordPress E-Commerce',
+      description:
+        'Known as one of the best muscle building supplement stores with the formula about creatine serum for fitness goals.',
+      fullDescription:
+        'We developed a WordPress e-commerce website for MMUSA, known as one of the best muscle building supplement stores. As a supplement company with the proprietary creatine serum formula, the platform helps customers reach their fitness goals — whether getting fit, losing weight, improving training, or improving life.',
+      category: 'E-Commerce',
+      tags: ['WordPress', 'E-Commerce', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'MMUSA',
+      duration: '2.5 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress E-Commerce Setup',
+        'Product Catalog Management',
+        'Secure Payment Integration',
+        'Supplement Information Pages',
+        'Customer Reviews System',
+        'Shipping & Order Tracking',
+      ],
+      results: [
+        'Online supplement store launched',
+        'Increased online sales channels',
+        'Improved customer purchase experience',
+        'Strong product presentation',
+      ],
+    },
+    {
+      id: 21,
+      title: 'Shekhleela - Designer Clothes',
+      subtitle: 'WordPress E-Commerce',
+      description:
+        'Buy designer clothes for men and women. Online shopping for Indian outfits including Bundi, kurta, lehenga, and jackets.',
+      fullDescription:
+        'We built a WordPress e-commerce platform for Shekhleela, offering designer clothes for men and women. The online shopping experience features Indian outfits for men including Bundi and kurta, and designer Indian dresses, lehenga, and jackets for women. The platform showcases traditional Indian fashion with a modern shopping experience.',
+      category: 'E-Commerce',
+      tags: ['WordPress', 'E-Commerce', 'Fashion'],
+      image:
+        'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Shekhleela',
+      duration: '2 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress E-Commerce Development',
+        'Fashion Product Catalog',
+        'Size Guide Integration',
+        'Secure Payment Gateway',
+        'Wishlist & Cart Features',
+        'Mobile-Optimized Shopping',
+      ],
+      results: [
+        'Designer fashion store launched online',
+        'Enhanced shopping experience for customers',
+        'Increased reach for Indian fashion',
+        'Streamlined order management',
+      ],
+    },
+    {
+      id: 22,
+      title: 'GR Convent School',
+      subtitle: 'WordPress Development',
+      description:
+        'Education for all & Excellence in Education. The dream of Founder Chairman materialized in the form of a school since 2006.',
+      fullDescription:
+        'We developed a WordPress website for G.R. Convent School, Indirapuram, established in 2006. The school embodies the vision of "Education for all & Excellence in Education" — the long-cherished dream of Mr. Mahendra Singh Tyagi, Founder Chairman. The website showcases academic programs, facilities, and admissions information.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Education', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'GR Convent School',
+      duration: '1.5 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress School Website',
+        'Academic Programs Showcase',
+        'Admissions Portal',
+        'Photo Gallery',
+        'Faculty Profiles',
+        'Contact & Inquiry Forms',
+      ],
+      results: [
+        'Professional school website launched',
+        'Streamlined admissions process',
+        'Enhanced school visibility online',
+        'Better parent-school communication',
+      ],
+    },
+    {
+      id: 23,
+      title: 'Biosoluble Curcumin Supplement',
+      subtitle: 'WordPress Development',
+      description:
+        'The world\'s first biosoluble curcumin supplement with a team of over 200 combined years of experience from multi-billion dollar companies.',
+      fullDescription:
+        'We built a WordPress website for the world\'s first biosoluble curcumin supplement brand. Their team has over 200 combined years of experience from multi-billion dollar multinational companies, actively applying that track record of success to create ground-breaking health products for the entire world.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Health', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Curcumin Supplement Brand',
+      duration: '2 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Product Website',
+        'Scientific Research Showcase',
+        'E-Commerce Integration',
+        'Team & Expertise Profiles',
+        'Blog & Health Resources',
+        'Mobile Responsive Design',
+      ],
+      results: [
+        'Product website successfully launched',
+        'Enhanced brand credibility online',
+        'Increased product awareness',
+        'Strong health community engagement',
+      ],
+    },
+    {
+      id: 24,
+      title: 'Digital Creative Agency',
+      subtitle: 'WordPress Development',
+      description:
+        'Dedicated team delivering innovative and customized Digital Solutions focusing on the big picture with impactful experiences.',
+      fullDescription:
+        'We developed a WordPress website for a digital creative agency whose dedicated team takes pride in delivering innovative and customized digital solutions. Focusing on the big picture, the website showcases their ability to curate impactful experiences and connect with target audiences across different platforms.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Agency', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Digital Creative Agency',
+      duration: '2 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Agency Website',
+        'Portfolio Showcase',
+        'Service Pages',
+        'Client Testimonials',
+        'Contact & Quote Forms',
+        'SEO Optimization',
+      ],
+      results: [
+        'Professional agency website launched',
+        'Improved client acquisition',
+        'Enhanced portfolio presentation',
+        'Better online brand presence',
+      ],
+    },
+    {
+      id: 25,
+      title: 'Luxiador - Source the Best Villa',
+      subtitle: 'PHP Laravel Development',
+      description:
+        'Happy to help you find a dream home in Mumbai. Luxury Apartments, Villas, Penthouses, Plot — only the most extraordinary projects.',
+      fullDescription:
+        'We built a PHP Laravel platform for Luxiador to help clients find dream homes in Mumbai. The platform lists only the most extraordinary projects personally handpicked by their real estate brokers — including Luxury Apartments, Villas, Penthouses, and Plots.',
+      category: 'E-Commerce',
+      tags: ['PHP', 'Laravel', 'Real Estate', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Luxiador',
+      duration: '3 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'PHP Laravel Platform',
+        'Luxury Property Listings',
+        'Advanced Property Search',
+        'Broker Dashboard',
+        'Inquiry Management System',
+        'Virtual Tour Integration',
+      ],
+      results: [
+        'Premium real estate platform launched',
+        'Curated luxury property listings',
+        'Increased property inquiries',
+        'Enhanced Mumbai real estate presence',
+      ],
+    },
+    {
+      id: 26,
+      title: 'Saudi Arabia Sotheby\'s International Realty',
+      subtitle: 'PHP Laravel Development',
+      description:
+        'For those who seek the exceptional. No other luxury real estate company offers the same breadth of knowledge, reach and experience.',
+      fullDescription:
+        'We developed a PHP Laravel platform for Saudi Arabia Sotheby\'s International Realty. This dynamic global brand comes with decades of expertise in living an exceptional life. No other luxury real estate company offers the same breadth of knowledge, reach, and experience in the luxury property market.',
+      category: 'E-Commerce',
+      tags: ['PHP', 'Laravel', 'Luxury Real Estate', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Sotheby\'s Saudi Arabia',
+      duration: '4 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'PHP Laravel Enterprise Platform',
+        'Luxury Property Showcase',
+        'Global Property Search',
+        'Agent Management System',
+        'Multi-Language Support',
+        'Premium Design & UX',
+      ],
+      results: [
+        'World-class real estate platform launched',
+        'Global luxury property visibility',
+        'Enhanced brand digital presence',
+        'Streamlined property management',
+      ],
+    },
+    {
+      id: 27,
+      title: 'Global Engineering & Trading Ltd',
+      subtitle: 'WordPress Development',
+      description:
+        'Engineering & Construction Services Since 1995. Quality, Cost and Delivery Time Advantages for construction & engineering projects.',
+      fullDescription:
+        'We built a WordPress website for Global Engineering & Trading Ltd (GET), founded by Dr. Ali Kemal Pekkendir. Established in 1995, GET provides engineering and construction services with a focus on Quality, Cost, and Delivery Time Advantages for construction and engineering projects worldwide.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Engineering', 'Construction'],
+      image:
+        'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Global Engineering & Trading',
+      duration: '2 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Corporate Website',
+        'Project Portfolio Showcase',
+        'Service Pages',
+        'Team & Leadership Profiles',
+        'Contact & RFQ Forms',
+        'Mobile Responsive Design',
+      ],
+      results: [
+        'Professional engineering website launched',
+        'Enhanced corporate credibility',
+        'Improved project inquiry process',
+        'Better global visibility',
+      ],
+    },
+    {
+      id: 28,
+      title: 'Eureka Conveying Growth',
+      subtitle: 'WordPress Development',
+      description:
+        'Striving to maintain top-notch position in the competitive market with plans for expanding the business and developing manufacturing.',
+      fullDescription:
+        'We developed a WordPress website for Eureka, a company striving to maintain its top-notch position in today\'s fiercely competitive market. Their expansion plans include significant investment for further developing the manufacturing capabilities and growing their market presence.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Manufacturing', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Eureka',
+      duration: '2 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Corporate Website',
+        'Product Catalog',
+        'Manufacturing Showcase',
+        'Company Profile',
+        'Contact Integration',
+        'SEO Optimization',
+      ],
+      results: [
+        'Professional web presence established',
+        'Enhanced market positioning',
+        'Improved client outreach',
+        'Better product visibility online',
+      ],
+    },
+    {
+      id: 29,
+      title: 'BENDA Solutions',
+      subtitle: 'WordPress Development',
+      description:
+        'A Canadian Management Consulting company providing business plan writing services for immigration and commercial purposes.',
+      fullDescription:
+        'We built a WordPress website for BENDA Solutions, a Canadian Management Consulting company that provides business plan writing services for both immigration and commercial purposes. They also provide business launching services to assist entrepreneurs and businesses in establishing and growing their ventures.',
+      category: 'WordPress',
+      tags: ['WordPress', 'Consulting', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'BENDA Solutions',
+      duration: '1.5 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'WordPress Consulting Website',
+        'Service Showcase',
+        'Client Inquiry System',
+        'Testimonials Section',
+        'Blog & Resources',
+        'Mobile Responsive Design',
+      ],
+      results: [
+        'Consulting platform launched successfully',
+        'Increased client inquiries',
+        'Professional online presence',
+        'Enhanced service visibility',
+      ],
+    },
+    {
+      id: 30,
+      title: 'SpeakUp - Women Safety App',
+      subtitle: 'Mobile Application',
+      description:
+        'A free application highly recommended for women in Ajmer range launched by Rajasthan Police for safety and emergency response.',
+      fullDescription:
+        'We developed SpeakUp, a free mobile application launched by Rajasthan Police, highly recommended for women in the Ajmer range. Users register in the app after downloading from the store, receive a registration key (OTP) to complete the process, and can then access emergency safety features for women\'s protection.',
+      category: 'Application',
+      tags: ['Application', 'Women Safety', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Rajasthan Police',
+      duration: '4 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'Mobile App Development',
+        'OTP Registration System',
+        'Emergency Alert System',
+        'GPS Location Tracking',
+        'Quick Dial Emergency',
+        'Safety Resources Section',
+      ],
+      results: [
+        'Women safety app launched successfully',
+        'Adopted by Rajasthan Police officially',
+        'Serving women across Ajmer range',
+        'Quick emergency response enabled',
+      ],
+    },
+    {
+      id: 31,
+      title: 'Surplus Lot Deal',
+      subtitle: 'Marketplace Application',
+      description:
+        'A marketplace for sellers to post dead, surplus, and unwanted stocks for buyers to discover and directly contact sellers.',
+      fullDescription:
+        'We developed Surplus Lot Deal, a marketplace application where sellers post their dead, surplus, and unwanted stocks. Buyers can see the ads in all deal options and directly contact sellers through calling details. The platform promotes stocks on various social channels and digital marketing channels.',
+      category: 'Application',
+      tags: ['Application', 'Marketplace', 'Hosted Website'],
+      image:
+        'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      client: 'Surplus Lot Deal',
+      duration: '3 Months',
+      year: '2023',
+      liveUrl: '#',
+      features: [
+        'Marketplace App Development',
+        'Seller Listing Portal',
+        'Buyer Discovery System',
+        'Direct Contact Integration',
+        'Social Media Promotion',
+        'Stock Category Management',
+      ],
+      results: [
+        'Marketplace platform launched',
+        'Connecting sellers with buyers effectively',
+        'Surplus stock visibility increased',
+        'Growing user base steadily',
       ],
     },
   ];
@@ -330,63 +1041,62 @@ export default function PortfolioPage() {
   ];
 
   const technologies = [
+    { name: 'WordPress', icon: 'https://cdn.simpleicons.org/wordpress/21759B' },
     { name: 'React', icon: 'https://cdn.simpleicons.org/react/61DAFB' },
     { name: 'Next.js', icon: 'https://cdn.simpleicons.org/nextdotjs/ffffff' },
     { name: 'Node.js', icon: 'https://cdn.simpleicons.org/nodedotjs/339933' },
-    { name: 'Python', icon: 'https://cdn.simpleicons.org/python/3776AB' },
+    { name: 'PHP', icon: 'https://cdn.simpleicons.org/php/777BB4' },
+    { name: 'Laravel', icon: 'https://cdn.simpleicons.org/laravel/FF2D20' },
     { name: 'Flutter', icon: 'https://cdn.simpleicons.org/flutter/02569B' },
+    { name: 'Magento', icon: 'https://cdn.simpleicons.org/magento/EE672F' },
+    { name: 'Python', icon: 'https://cdn.simpleicons.org/python/3776AB' },
     { name: 'AWS', icon: 'https://cdn.simpleicons.org/amazonaws/FF9900' },
-    { name: 'Zoho', icon: 'https://cdn.simpleicons.org/zoho/E42527' },
-    { name: 'Salesforce', icon: 'https://cdn.simpleicons.org/salesforce/00A1E0' },
     { name: 'Firebase', icon: 'https://cdn.simpleicons.org/firebase/FFCA28' },
-    { name: 'Docker', icon: 'https://cdn.simpleicons.org/docker/2496ED' },
-    { name: 'TypeScript', icon: 'https://cdn.simpleicons.org/typescript/3178C6' },
     { name: 'MongoDB', icon: 'https://cdn.simpleicons.org/mongodb/47A248' },
   ];
 
   const testimonials: Testimonial[] = [
     {
-      name: 'Mohammed Al Rashid',
-      role: 'CEO',
-      company: 'Dubai Properties Group',
-      text: 'Bendra transformed our entire sales process with their CRM solution. Our team productivity increased by 3x and we never miss a lead anymore. Highly recommended!',
+      name: 'Exizenly Team',
+      role: 'Founder',
+      company: 'Exizenly',
+      text: 'Bendra transformed our entire online presence with their WordPress and LinkedIn marketing expertise. Our lead generation increased significantly and we now have a professional platform that truly represents our brand.',
       avatar:
         'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
       rating: 5,
     },
     {
-      name: 'Sarah Johnson',
-      role: 'CTO',
-      company: 'EduTech Solutions',
-      text: 'The LMS platform Bendra built for us exceeded all expectations. 50,000 students are now learning seamlessly. Their technical expertise is unmatched.',
+      name: 'Dr. Robert Hernandez',
+      role: 'Thought Leader',
+      company: 'Personal Brand',
+      text: 'The LinkedIn, social media, and podcast management by Bendra exceeded all expectations. My online presence grew tremendously and I\'m now reaching audiences I never thought possible.',
       avatar:
         'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
       rating: 5,
     },
     {
-      name: 'Ahmed Hassan',
-      role: 'Operations Director',
-      company: 'FastTrack Logistics',
-      text: 'The logistics dashboard saved us 30% in fuel costs and improved delivery times significantly. Bendra&apos;s team understood our needs perfectly from day one.',
+      name: 'Kenneth Hellem',
+      role: 'Podcaster',
+      company: 'Podcast Creator',
+      text: 'Bendra\'s podcast management was outstanding. They streamlined distribution across Apple Podcasts, Spotify, and Google Podcasts, making my content reach a much wider audience effortlessly.',
       avatar:
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
       rating: 5,
     },
   ];
 
-  // Filter
   const filteredProjects = projects.filter(
     (p) => activeCategory === 'All' || p.category === activeCategory
   );
 
   const getCategoryColor = (category: string): string => {
     const colors: { [key: string]: string } = {
-      CRM: '#3b82f6',
-      'Web Apps': '#10b981',
-      'Mobile Apps': '#a855f7',
-      SaaS: '#f59e0b',
+      WordPress: '#21759B',
+      LinkedIn: '#0A66C2',
+      Podcast: '#a855f7',
+      Marketing: '#f59e0b',
       'E-Commerce': '#ec4899',
-      Automation: '#06b6d4',
+      Application: '#10b981',
     };
     return colors[category] || '#3b82f6';
   };
@@ -495,7 +1205,7 @@ export default function PortfolioPage() {
                   mb: 2,
                 }}
               >
-                Projects that{' '}
+                Explore Our{' '}
                 <Box
                   component="span"
                   sx={{
@@ -505,7 +1215,7 @@ export default function PortfolioPage() {
                     backgroundClip: 'text',
                   }}
                 >
-                  speak results
+                  Handcrafted Masterpieces
                 </Box>
               </Typography>
               <Typography
@@ -518,9 +1228,7 @@ export default function PortfolioPage() {
                   lineHeight: 1.7,
                 }}
               >
-                Explore our portfolio of successful projects across CRM, web
-                development, mobile apps, and business automation that have
-                delivered measurable results.
+                Explore our portfolio of handcrafted masterpiece projects that stand out — across WordPress, LinkedIn marketing, podcast management, and business solutions that deliver measurable results.
               </Typography>
             </Box>
 
@@ -1051,7 +1759,6 @@ export default function PortfolioPage() {
                   overflow: 'hidden',
                 }}
               >
-                {/* Glow */}
                 <Box
                   sx={{
                     position: 'absolute',
@@ -1092,14 +1799,12 @@ export default function PortfolioPage() {
                   &ldquo;{testimonials[testimonialIndex].text}&rdquo;
                 </Typography>
 
-                {/* Stars */}
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5, mb: 2.5 }}>
                   {Array.from({ length: testimonials[testimonialIndex].rating }).map((_, i) => (
                     <Star key={i} sx={{ color: '#f59e0b', fontSize: 22 }} />
                   ))}
                 </Box>
 
-                {/* Avatar + Name */}
                 <Box
                   component="img"
                   src={testimonials[testimonialIndex].avatar}
@@ -1140,7 +1845,6 @@ export default function PortfolioPage() {
                 </Typography>
               </Box>
 
-              {/* Navigation Arrows */}
               <IconButton
                 onClick={prevTestimonial}
                 sx={{
@@ -1172,7 +1876,6 @@ export default function PortfolioPage() {
                 <ChevronRight />
               </IconButton>
 
-              {/* Dots */}
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 3 }}>
                 {testimonials.map((_, i) => (
                   <Box
@@ -1314,27 +2017,26 @@ export default function PortfolioPage() {
       </Box>
 
       {/* ===== PROJECT DETAIL MODAL ===== */}
-    <Dialog
-  open={modalOpen}
-  onClose={handleCloseModal}
-  maxWidth="md"
-  fullWidth
-  slotProps={{
-    paper: {
-      sx: {
-        backgroundColor: '#0a1628',
-        backgroundImage: 'none',
-        borderRadius: '20px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        maxHeight: '90vh',
-      },
-    },
-  }}
->
+      <Dialog
+        open={modalOpen}
+        onClose={handleCloseModal}
+        maxWidth="md"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: '#0a1628',
+              backgroundImage: 'none',
+              borderRadius: '20px',
+              border: '1px solid rgba(255,255,255,0.1)',
+              maxHeight: '90vh',
+            },
+          },
+        }}
+      >
         <DialogContent sx={{ p: 0 }}>
           {selectedProject && (
             <Box>
-              {/* Close Button */}
               <IconButton
                 onClick={handleCloseModal}
                 sx={{
@@ -1351,7 +2053,6 @@ export default function PortfolioPage() {
                 <Close />
               </IconButton>
 
-              {/* Image */}
               <Box
                 sx={{
                   height: { xs: '200px', md: '300px' },
@@ -1394,9 +2095,7 @@ export default function PortfolioPage() {
                 </Box>
               </Box>
 
-              {/* Content */}
               <Box sx={{ p: { xs: 3, md: 4 } }}>
-                {/* Meta */}
                 <Box
                   sx={{
                     display: 'flex',
@@ -1426,7 +2125,6 @@ export default function PortfolioPage() {
                   ))}
                 </Box>
 
-                {/* Description */}
                 <Typography
                   sx={{
                     fontFamily: "'Poppins', sans-serif",
@@ -1439,7 +2137,6 @@ export default function PortfolioPage() {
                   {selectedProject.fullDescription}
                 </Typography>
 
-                {/* Features + Results Grid */}
                 <Box
                   sx={{
                     display: 'grid',
@@ -1448,7 +2145,6 @@ export default function PortfolioPage() {
                     mb: 3,
                   }}
                 >
-                  {/* Features */}
                   <Box
                     sx={{
                       background: 'rgba(255,255,255,0.03)',
@@ -1478,7 +2174,6 @@ export default function PortfolioPage() {
                     ))}
                   </Box>
 
-                  {/* Results */}
                   <Box
                     sx={{
                       background: 'rgba(16,185,129,0.05)',
@@ -1509,7 +2204,6 @@ export default function PortfolioPage() {
                   </Box>
                 </Box>
 
-                {/* Tags */}
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
                   {selectedProject.tags.map((tag) => (
                     <Chip
@@ -1529,7 +2223,6 @@ export default function PortfolioPage() {
                   ))}
                 </Box>
 
-                {/* Action Buttons */}
                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                   <Button
                     variant="contained"
