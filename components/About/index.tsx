@@ -6,9 +6,8 @@ import {
   Button,
   Container,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import {
   GroupOutlined,
   VerifiedOutlined,
@@ -18,227 +17,276 @@ import {
 } from '@mui/icons-material';
 import Link from 'next/link';
 
-/* ─── Styles ──────────────────────────────────────────────── */
-const AboutStyles = () => (
+/* ────────────────────────────────────────────────────────── */
+/* Styles */
+/* ────────────────────────────────────────────────────────── */
+const AboutStyles = React.memo(() => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes shimmer {
-      0%   { transform: translateX(-120%) skewX(-18deg); }
-      100% { transform: translateX(340%)  skewX(-18deg); }
-    }
-
-    @keyframes glowPulse {
-      0%, 100% { opacity: .45; transform: scale(1); }
-      50%       { opacity: .8;  transform: scale(1.06); }
-    }
-
-    @keyframes imgZoom {
-      0%, 100% { transform: scale(1); }
-      50%       { transform: scale(1.04); }
-    }
-
-    @keyframes chipIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .ab-left  { animation: fadeUp .75s cubic-bezier(.16,1,.3,1) .06s both; }
-    .ab-right { animation: fadeUp .75s cubic-bezier(.16,1,.3,1) .16s both; }
-    .ab-chip  { animation: chipIn .55s cubic-bezier(.16,1,.3,1) both; }
-
-    .ab-glow  { animation: glowPulse 5s ease-in-out infinite; }
-    .ab-img   { animation: imgZoom 12s ease-in-out infinite; }
-
-    /* ── Stat card ── */
-    .sc2 {
-      position: relative;
-      overflow: hidden;
-      border-radius: 20px;
-      background: #ffffff;
-      border: 1.5px solid rgba(14,31,64,.08);
-      box-shadow: 0 2px 14px rgba(14,31,64,.05);
-      transition: transform .32s cubic-bezier(.34,1.4,.64,1),
-                  box-shadow .32s ease,
-                  border-color .28s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .sc2::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 36%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
-      transform: translateX(-120%) skewX(-18deg);
-      pointer-events: none;
-      z-index: 9;
-    }
-
-    .sc2-bar   { transition: height .28s ease; }
-    .sc2-icon  { transition: transform .32s cubic-bezier(.34,1.4,.64,1), box-shadow .32s ease; }
-    .sc2-num   { transition: color .25s ease, transform .25s ease; }
-    .sc2-arrow { transition: opacity .25s ease, gap .28s ease, transform .25s ease; }
-    .sc2-glow  { transition: opacity .35s ease; }
-
-    @media (hover: hover) {
-      .sc2:hover {
-        transform: translateY(-7px) scale(1.015);
-        border-color: var(--sc2-border) !important;
-        box-shadow: 0 18px 40px var(--sc2-shadow) !important;
+    @keyframes aboutFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(26px);
       }
-      .sc2:hover::after { animation: shimmer .65s ease-out forwards; }
-      .sc2:hover .sc2-bar   { height: 4px !important; }
-      .sc2:hover .sc2-icon  { transform: scale(1.1) rotate(-5deg); box-shadow: 0 10px 26px var(--sc2-shadow) !important; }
-      .sc2:hover .sc2-num   { transform: scale(1.06); }
-      .sc2:hover .sc2-arrow { opacity: 1 !important; gap: 10px !important; }
-      .sc2:hover .sc2-glow  { opacity: 1; }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    @media (hover: none) { .sc2:active { transform: scale(.97); } }
-
-    /* ── CTA button ── */
-    .ab-btn {
-      transition: transform .28s cubic-bezier(.34,1.4,.64,1),
-                  background .25s ease,
-                  box-shadow .25s ease !important;
-      -webkit-tap-highlight-color: transparent;
+    .about-fade {
+      animation: aboutFadeUp 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-    .ab-btn:hover {
-      transform: translateY(-2px) !important;
-      background: rgba(255,255,255,.12) !important;
-      box-shadow: 0 8px 24px rgba(14,90,240,.2) !important;
-    }
-    .ab-btn:hover .ab-btn-arrow { transform: translateX(3px) translateY(-3px); }
-    .ab-btn-arrow { transition: transform .28s cubic-bezier(.34,1.4,.64,1); }
 
     @media (prefers-reduced-motion: reduce) {
-      .ab-left,.ab-right,.ab-chip,.sc2,.sc2-icon,.sc2-bar,
-      .sc2-num,.sc2-arrow,.sc2-glow,.ab-btn,.ab-glow,.ab-img {
-        animation: none !important; transition: none !important;
+      .about-fade {
+        animation: none !important;
       }
     }
   `}</style>
-);
+));
+AboutStyles.displayName = 'AboutStyles';
 
-/* ─── Stats ─────────────────────────────────────────────── */
-const stats = [
+/* ────────────────────────────────────────────────────────── */
+/* Data */
+/* ────────────────────────────────────────────────────────── */
+type StatItem = {
+  value: string;
+  title: string;
+  desc: string;
+  accent: string;
+  icon: React.ElementType;
+};
+
+const stats: StatItem[] = [
   {
-    icon: <GroupOutlined />,
-    num: '120+', title: 'Happy Clients',
-    desc: 'Businesses worldwide trust our solutions.',
-    accent: '#0e5af0', border: 'rgba(14,90,240,.22)',
-    shadow: 'rgba(14,90,240,.13)',
-    iconBg: 'linear-gradient(135deg, #dbeafe, #bfdbfe)',
-    iconColor: '#0e5af0',
-    bar: 'linear-gradient(90deg, #0e5af0, #60a5fa)',
+    icon: GroupOutlined,
+    value: '120+',
+    title: 'Happy Clients',
+    desc: 'Trusted by growing businesses across industries.',
+    accent: '#2563eb',
   },
   {
-    icon: <VerifiedOutlined />,
-    num: '250+', title: 'Projects Delivered',
-    desc: 'Successful delivery across multiple industries.',
-    accent: '#0d9488', border: 'rgba(13,148,136,.22)',
-    shadow: 'rgba(13,148,136,.13)',
-    iconBg: 'linear-gradient(135deg, #ccfbf1, #99f6e4)',
-    iconColor: '#0d9488',
-    bar: 'linear-gradient(90deg, #0d9488, #5eead4)',
+    icon: VerifiedOutlined,
+    value: '250+',
+    title: 'Projects Delivered',
+    desc: 'Execution across CRM, web, automation, and SaaS.',
+    accent: '#0f766e',
   },
   {
-    icon: <AccessTimeOutlined />,
-    num: '8+', title: 'Years Experience',
-    desc: 'Consistent technology execution with impact.',
-    accent: '#7c3aed', border: 'rgba(124,58,237,.22)',
-    shadow: 'rgba(124,58,237,.13)',
-    iconBg: 'linear-gradient(135deg, #ede9fe, #ddd6fe)',
-    iconColor: '#7c3aed',
-    bar: 'linear-gradient(90deg, #7c3aed, #c4b5fd)',
+    icon: AccessTimeOutlined,
+    value: '8+',
+    title: 'Years of Experience',
+    desc: 'Consistent delivery with practical business insight.',
+    accent: '#7c3aed',
   },
   {
-    icon: <StarOutlineOutlined />,
-    num: '98%', title: 'Client Satisfaction',
-    desc: 'A strong reputation built on trust and results.',
-    accent: '#d97706', border: 'rgba(217,119,6,.22)',
-    shadow: 'rgba(217,119,6,.13)',
-    iconBg: 'linear-gradient(135deg, #fef3c7, #fde68a)',
-    iconColor: '#d97706',
-    bar: 'linear-gradient(90deg, #d97706, #fde68a)',
+    icon: StarOutlineOutlined,
+    value: '98%',
+    title: 'Client Satisfaction',
+    desc: 'Relationships built on clarity, reliability, and outcomes.',
+    accent: '#d97706',
   },
 ];
 
-const chips = ['Scalable systems', 'Business-first approach', 'Long-term support'];
+const chips = [
+  'Scalable systems',
+  'Business-first delivery',
+  'Long-term support',
+];
 
-/* ─── Component ─────────────────────────────────────────── */
+const principles = [
+  {
+    label: 'Strategy-led',
+    text: 'We align technology decisions with business outcomes.',
+  },
+  {
+    label: 'Execution-focused',
+    text: 'Fast, reliable implementation without unnecessary complexity.',
+  },
+  {
+    label: 'Built to scale',
+    text: 'Systems designed for growth, visibility, and control.',
+  },
+];
+
+/* ────────────────────────────────────────────────────────── */
+/* Stat Card */
+/* ────────────────────────────────────────────────────────── */
+const StatCard = React.memo(
+  ({ item, index }: { item: StatItem; index: number }) => {
+    const Icon = item.icon;
+    const accentSoft = alpha(item.accent, 0.08);
+    const accentBorder = alpha(item.accent, 0.16);
+    const accentShadow = alpha(item.accent, 0.16);
+
+    return (
+      <Box
+        className="about-fade"
+        sx={{
+          position: 'relative',
+          borderRadius: '20px',
+          border: `1px solid ${alpha('#0f172a', 0.08)}`,
+          background: 'linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)',
+          boxShadow: '0 8px 24px rgba(15,23,42,0.04)',
+          p: { xs: 2.3, md: 2.6 },
+          overflow: 'hidden',
+          transition: 'transform .25s ease, box-shadow .25s ease, border-color .25s ease',
+          animationDelay: `${0.18 + index * 0.07}s`,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            background: `linear-gradient(90deg, ${item.accent}, ${alpha(item.accent, 0.45)})`,
+          },
+          '&:hover': {
+            transform: 'translateY(-5px)',
+            borderColor: accentBorder,
+            boxShadow: `0 16px 32px ${accentShadow}`,
+          },
+          '&:hover .about-stat-icon': {
+            transform: 'translateY(-2px) scale(1.04)',
+          },
+        }}
+      >
+        <Box
+          className="about-stat-icon"
+          sx={{
+            width: 48,
+            height: 48,
+            borderRadius: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: accentSoft,
+            border: `1px solid ${accentBorder}`,
+            color: item.accent,
+            mb: 1.7,
+            transition: 'transform .25s ease',
+            '& .MuiSvgIcon-root': {
+              fontSize: 22,
+            },
+          }}
+        >
+          <Icon />
+        </Box>
+
+        <Typography
+          sx={{
+            fontFamily: '"Inter", sans-serif',
+            fontWeight: 800,
+            fontSize: { xs: '1.8rem', md: '2rem' },
+            lineHeight: 1,
+            letterSpacing: '-0.03em',
+            color: item.accent,
+            mb: 0.7,
+          }}
+        >
+          {item.value}
+        </Typography>
+
+        <Typography
+          sx={{
+            fontFamily: '"Inter", sans-serif',
+            fontWeight: 700,
+            fontSize: { xs: '0.96rem', md: '1rem' },
+            color: '#0f172a',
+            letterSpacing: '-0.015em',
+            mb: 0.75,
+          }}
+        >
+          {item.title}
+        </Typography>
+
+        <Typography
+          sx={{
+            fontFamily: '"Inter", sans-serif',
+            fontWeight: 400,
+            fontSize: '0.88rem',
+            lineHeight: 1.7,
+            color: '#64748b',
+          }}
+        >
+          {item.desc}
+        </Typography>
+      </Box>
+    );
+  }
+);
+StatCard.displayName = 'StatCard';
+
+/* ────────────────────────────────────────────────────────── */
+/* Component */
+/* ────────────────────────────────────────────────────────── */
 const About: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isSmall = useMediaQuery('(max-width:360px)');
-
   return (
     <>
       <AboutStyles />
 
       <Box
+        component="section"
         sx={{
           position: 'relative',
-          py: { xs: 7, md: 10 },
-          background:
-            'linear-gradient(170deg, #f0f5ff 0%, #f6f9ff 35%, #ffffff 100%)',
+          py: { xs: 8, md: 12, lg: 13 },
+          background: '#ffffff',
           overflow: 'hidden',
-          borderTop: '1px solid rgba(14,31,64,.06)',
-          borderBottom: '1px solid rgba(14,31,64,.06)',
         }}
       >
-        {/* Dot grid */}
+        {/* Background grid */}
         <Box
           sx={{
             position: 'absolute',
             inset: 0,
+            opacity: 0.42,
+            backgroundImage: `
+              linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '46px 46px',
             pointerEvents: 'none',
-            zIndex: 0,
-            backgroundImage:
-              'radial-gradient(circle, rgba(14,31,64,.042) 1px, transparent 1px)',
-            backgroundSize: '34px 34px',
-            maskImage:
-              'radial-gradient(ellipse 90% 70% at 50% 50%, black 20%, transparent 100%)',
           }}
         />
 
-        {/* Blobs */}
+        {/* Top glow */}
         <Box
-          className="ab-glow"
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 380,
+            background: 'radial-gradient(ellipse at top, rgba(59,130,246,0.07), transparent 62%)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Accent blobs */}
+        <Box
           sx={{
             position: 'absolute',
             top: '-8%',
-            left: '-5%',
-            width: { xs: 240, sm: 300, md: 380 },
-            height: { xs: 240, sm: 300, md: 380 },
+            left: '-8%',
+            width: 300,
+            height: 300,
             borderRadius: '50%',
-            background:
-              'radial-gradient(circle, rgba(14,90,240,.08), transparent 68%)',
-            filter: 'blur(55px)',
+            background: 'radial-gradient(circle, rgba(37,99,235,0.06), transparent 72%)',
+            filter: 'blur(42px)',
             pointerEvents: 'none',
-            zIndex: 0,
           }}
         />
         <Box
-          className="ab-glow"
           sx={{
             position: 'absolute',
-            bottom: '-6%',
-            right: '-5%',
-            width: { xs: 200, sm: 260, md: 320 },
-            height: { xs: 200, sm: 260, md: 320 },
+            bottom: '-8%',
+            right: '-8%',
+            width: 280,
+            height: 280,
             borderRadius: '50%',
-            background:
-              'radial-gradient(circle, rgba(0,161,224,.07), transparent 68%)',
-            filter: 'blur(50px)',
+            background: 'radial-gradient(circle, rgba(14,165,233,0.06), transparent 72%)',
+            filter: 'blur(40px)',
             pointerEvents: 'none',
-            zIndex: 0,
-            animationDelay: '1.6s',
           }}
         />
 
@@ -247,523 +295,418 @@ const About: React.FC = () => {
           sx={{
             position: 'relative',
             zIndex: 2,
-            px: { xs: 2, sm: 3, md: 5 },
+            px: { xs: 2, sm: 3, md: 4, lg: 5 },
           }}
         >
           <Box
             sx={{
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-              gap: { xs: 3, md: 3.5, lg: 4 },
-              alignItems: 'stretch',
+              gridTemplateColumns: {
+                xs: '1fr',
+                lg: 'minmax(0, 5fr) minmax(0, 7fr)',
+              },
+              gap: { xs: 4, md: 4.5, lg: 5 },
+              alignItems: 'start',
             }}
           >
-            {/* ── LEFT: Brand panel ───────────────────── */}
+            {/* Left content */}
             <Box
-              className="ab-left"
               sx={{
-                position: 'relative',
-                borderRadius: { xs: '22px', md: '26px' },
-                overflow: 'hidden',
-                background: '#060f25',
-                minHeight: { xs: 400, sm: 420, md: 'auto' },
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                border: '1px solid rgba(255,255,255,.06)',
-                boxShadow: '0 24px 60px rgba(6,15,37,.2)',
-                textAlign: { xs: 'center', md: 'left' },
+                maxWidth: { xs: '100%', lg: 540 },
               }}
             >
-              {/* ── Background image ── */}
               <Box
-                className="ab-img"
+                className="about-fade"
                 sx={{
-                  position: 'absolute',
-                  inset: 0,
-                  zIndex: 0,
-                  backgroundImage:
-                    'url(https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  filter: 'brightness(.45) saturate(1.2)',
-                }}
-              />
-
-              {/* Dark gradient overlay — keeps text readable */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  inset: 0,
-                  zIndex: 1,
-                  background: `
-                    linear-gradient(180deg,
-                      rgba(6,15,37,.88) 0%,
-                      rgba(6,15,37,.72) 40%,
-                      rgba(6,15,37,.85) 100%
-                    )
-                  `,
-                }}
-              />
-
-              {/* Side accent glow — still visible over image */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: '-18%',
-                  right: '-8%',
-                  width: { xs: 220, sm: 280, md: 320 },
-                  height: { xs: 220, sm: 280, md: 320 },
-                  borderRadius: '50%',
-                  background:
-                    'radial-gradient(circle, rgba(14,90,240,.22), transparent 68%)',
-                  filter: 'blur(45px)',
-                  zIndex: 1,
-                  pointerEvents: 'none',
-                }}
-              />
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '-12%',
-                  left: '-6%',
-                  width: { xs: 180, sm: 220, md: 260 },
-                  height: { xs: 180, sm: 220, md: 260 },
-                  borderRadius: '50%',
-                  background:
-                    'radial-gradient(circle, rgba(0,161,224,.12), transparent 68%)',
-                  filter: 'blur(40px)',
-                  zIndex: 1,
-                  pointerEvents: 'none',
-                }}
-              />
-
-              {/* Content */}
-              <Box
-                sx={{
-                  position: 'relative',
-                  zIndex: 2,
-                  p: { xs: 3, sm: 4, md: 4.5, lg: 5 },
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  px: 2,
+                  py: 0.75,
+                  mb: 2.4,
+                  borderRadius: '999px',
+                  border: '1px solid rgba(59,130,246,0.18)',
+                  background: 'rgba(59,130,246,0.05)',
                 }}
               >
-                {/* Pill */}
                 <Box
                   sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 1,
-                    mb: { xs: 2.5, md: 3 },
-                    px: 1.8,
-                    py: 0.7,
-                    borderRadius: '999px',
-                    border: '1px solid rgba(99,179,237,.22)',
-                    background: 'rgba(14,90,240,.1)',
-                    backdropFilter: 'blur(8px)',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 7,
-                      height: 7,
-                      borderRadius: '50%',
-                      background: '#63b3ed',
-                      boxShadow: '0 0 10px rgba(99,179,237,.9)',
-                    }}
-                  />
-                  <Typography
-                    sx={{
-                      fontFamily: "'Bricolage Grotesque', sans-serif",
-                      fontWeight: 700,
-                      fontSize: '.7rem',
-                      color: '#90cdf4',
-                      textTransform: 'uppercase',
-                      letterSpacing: '.15em',
-                    }}
-                  >
-                    About Bendra
-                  </Typography>
-                </Box>
-
-                {/* Heading */}
-                <Typography
-                  component="h2"
-                  sx={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
-                    fontWeight: 800,
-                    fontSize: {
-                      xs: isSmall ? '1.55rem' : '1.75rem',
-                      sm: '2rem',
-                      md: '2.1rem',
-                      lg: '2.5rem',
-                    },
-                    lineHeight: 1.13,
-                    letterSpacing: '-.032em',
-                    color: '#fff',
-                    mb: 2,
-                  }}
-                >
-                  Your growth is
-                  <br />
-                  our mission
-                  <Box
-                    component="span"
-                    sx={{
-                      background:
-                        'linear-gradient(90deg, #0e5af0, #63b3ed)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                  >
-                    .
-                  </Box>
-                </Typography>
-
-                {/* Divider */}
-                <Box
-                  sx={{
-                    width: 48,
-                    height: 2,
-                    borderRadius: 99,
-                    background: 'linear-gradient(90deg, #0e5af0, #90cdf4)',
-                    mb: 2.4,
-                    mx: { xs: 'auto', md: 0 },
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: '#3b82f6',
+                    boxShadow: '0 0 0 4px rgba(59,130,246,0.14)',
                   }}
                 />
-
-                {/* Body */}
                 <Typography
                   sx={{
-                    fontFamily: "'Outfit', sans-serif",
-                    fontWeight: 400,
-                    fontSize: { xs: '.88rem', sm: '.92rem', md: '.96rem' },
-                    color: 'rgba(255,255,255,.65)',
-                    lineHeight: 1.82,
-                    mb: 3,
-                    maxWidth: 520,
-                    mx: { xs: 'auto', md: 0 },
+                    fontFamily: '"Inter", sans-serif',
+                    fontWeight: 600,
+                    fontSize: '0.74rem',
+                    color: '#2563eb',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.12em',
                   }}
                 >
-                  Bendra is a team of passionate technologists, problem solvers,
-                  and business thinkers. We partner with organisations of all sizes
-                  to build digital systems that create value, drive efficiency, and
-                  accelerate sustainable growth.
+                  About Bendra
                 </Typography>
+              </Box>
 
-                {/* Chips */}
+              <Typography
+                className="about-fade"
+                component="h2"
+                sx={{
+                  fontFamily: '"Inter", sans-serif',
+                  fontWeight: 800,
+                  fontSize: {
+                    xs: '2rem',
+                    sm: '2.45rem',
+                    md: '2.85rem',
+                    lg: '3.15rem',
+                  },
+                  color: '#0f172a',
+                  lineHeight: 1.14,
+                  letterSpacing: '-0.03em',
+                  mb: 2,
+                  animationDelay: '.08s',
+                }}
+              >
+                We build digital systems
                 <Box
+                  component="span"
                   sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: 1,
-                    mb: 3.5,
-                    justifyContent: { xs: 'center', md: 'flex-start' },
+                    display: 'block',
+                    background: 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
                   }}
                 >
-                  {chips.map((c, i) => (
-                    <Box
-                      key={c}
-                      className="ab-chip"
+                  around business clarity
+                </Box>
+              </Typography>
+
+              <Typography
+                className="about-fade"
+                sx={{
+                  fontFamily: '"Inter", sans-serif',
+                  fontWeight: 400,
+                  fontSize: { xs: '0.98rem', md: '1.05rem' },
+                  lineHeight: 1.85,
+                  color: '#64748b',
+                  mb: 2.6,
+                  maxWidth: 520,
+                  animationDelay: '.16s',
+                }}
+              >
+                Bendra is a technology partner focused on practical execution.
+                We help organisations simplify operations, improve visibility,
+                and scale confidently through CRM, custom software, automation,
+                and connected digital systems.
+              </Typography>
+
+              {/* Chips */}
+              <Box
+                className="about-fade"
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                  mb: 3,
+                  animationDelay: '.22s',
+                }}
+              >
+                {chips.map((chip) => (
+                  <Box
+                    key={chip}
+                    sx={{
+                      px: 1.35,
+                      py: 0.7,
+                      borderRadius: '999px',
+                      background: '#f8fbff',
+                      border: '1px solid rgba(15,23,42,0.08)',
+                    }}
+                  >
+                    <Typography
                       sx={{
-                        animationDelay: `${0.28 + i * 0.08}s`,
-                        px: 1.5,
-                        py: 0.7,
-                        borderRadius: '999px',
-                        background: 'rgba(255,255,255,.06)',
-                        border: '1px solid rgba(255,255,255,.1)',
-                        backdropFilter: 'blur(8px)',
+                        fontFamily: '"Inter", sans-serif',
+                        fontWeight: 500,
+                        fontSize: '0.8rem',
+                        color: '#475569',
+                        lineHeight: 1,
                       }}
                     >
+                      {chip}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+
+              {/* Principles */}
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 1.3,
+                  mb: 3.2,
+                }}
+              >
+                {principles.map((item, index) => (
+                  <Box
+                    key={item.label}
+                    className="about-fade"
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 1.2,
+                      borderRadius: '16px',
+                      border: '1px solid rgba(15,23,42,0.07)',
+                      background: 'linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)',
+                      px: 1.4,
+                      py: 1.3,
+                      animationDelay: `${0.22 + index * 0.07}s`,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 9,
+                        height: 9,
+                        mt: '7px',
+                        borderRadius: '50%',
+                        flexShrink: 0,
+                        background: '#3b82f6',
+                        boxShadow: '0 0 0 4px rgba(59,130,246,0.1)',
+                      }}
+                    />
+                    <Box>
                       <Typography
                         sx={{
-                          fontFamily: "'Outfit', sans-serif",
-                          fontWeight: 500,
-                          fontSize: '.78rem',
-                          color: 'rgba(255,255,255,.78)',
-                          lineHeight: 1,
+                          fontFamily: '"Inter", sans-serif',
+                          fontWeight: 700,
+                          fontSize: '0.92rem',
+                          color: '#0f172a',
+                          mb: 0.35,
                         }}
                       >
-                        {c}
+                        {item.label}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontFamily: '"Inter", sans-serif',
+                          fontSize: '0.88rem',
+                          lineHeight: 1.65,
+                          color: '#64748b',
+                        }}
+                      >
+                        {item.text}
                       </Typography>
                     </Box>
-                  ))}
-                </Box>
+                  </Box>
+                ))}
+              </Box>
 
-                {/* CTA */}
+              {/* CTA */}
+              <Box
+                className="about-fade"
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  gap: 1.25,
+                  animationDelay: '.34s',
+                }}
+              >
                 <Link href="/about" style={{ textDecoration: 'none' }}>
                   <Button
-                    variant="outlined"
-                    fullWidth={isMobile}
-                    endIcon={
-                      <NorthEast
-                        className="ab-btn-arrow"
-                        sx={{ fontSize: '1rem !important' }}
-                      />
-                    }
-                    className="ab-btn"
+                    variant="contained"
+                    endIcon={<NorthEast sx={{ fontSize: '1rem !important' }} />}
                     sx={{
-                      fontFamily: "'Bricolage Grotesque', sans-serif",
+                      fontFamily: '"Inter", sans-serif',
                       fontWeight: 700,
-                      fontSize: { xs: '.84rem', md: '.88rem' },
-                      color: '#fff',
-                      borderColor: 'rgba(255,255,255,.22)',
+                      fontSize: '0.9rem',
                       textTransform: 'none',
-                      letterSpacing: '.02em',
-                      px: { xs: 2.8, md: 3.2 },
-                      py: { xs: 1.15, md: 1.2 },
+                      px: 2.6,
+                      py: 1.2,
                       borderRadius: '12px',
-                      backdropFilter: 'blur(8px)',
-                      background: 'rgba(255,255,255,.08)',
-                      maxWidth: { xs: '100%', sm: 'fit-content' },
+                      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                      boxShadow: '0 10px 24px rgba(37,99,235,0.24)',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                        boxShadow: '0 14px 28px rgba(37,99,235,0.3)',
+                      },
                     }}
                   >
                     Learn More About Us
                   </Button>
                 </Link>
+
+                <Typography
+                  sx={{
+                    fontFamily: '"Inter", sans-serif',
+                    fontSize: '0.86rem',
+                    color: '#64748b',
+                  }}
+                >
+                  Long-term thinking. Real execution. Measurable value.
+                </Typography>
               </Box>
             </Box>
 
-            {/* ── RIGHT: Stats ────────────────────────── */}
+            {/* Right content */}
             <Box
-              className="ab-right"
               sx={{
-                background: 'rgba(255,255,255,.85)',
-                backdropFilter: 'blur(12px)',
-                borderRadius: { xs: '22px', md: '26px' },
-                p: { xs: 2.5, sm: 3, md: 3.5, lg: 4 },
-                border: '1.5px solid rgba(14,31,64,.08)',
-                boxShadow: '0 8px 32px rgba(14,31,64,.06)',
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'relative',
-                overflow: 'hidden',
+                display: 'grid',
+                gap: 2.3,
               }}
             >
-              {/* Faint dot texture */}
+              {/* Feature panel */}
               <Box
-                sx={{
-                  position: 'absolute',
-                  inset: 0,
-                  pointerEvents: 'none',
-                  zIndex: 0,
-                  backgroundImage:
-                    'radial-gradient(circle, rgba(14,31,64,.035) 1px, transparent 1px)',
-                  backgroundSize: '28px 28px',
-                }}
-              />
-
-              {/* Right header */}
-              <Box
+                className="about-fade"
                 sx={{
                   position: 'relative',
-                  zIndex: 1,
-                  mb: { xs: 2.5, md: 3 },
-                  textAlign: { xs: 'center', md: 'left' },
+                  overflow: 'hidden',
+                  borderRadius: '24px',
+                  background:
+                    'linear-gradient(135deg, #0f172a 0%, #111827 58%, #1d4ed8 140%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: '0 18px 40px rgba(15,23,42,0.14)',
+                  p: { xs: 2.6, md: 3.2 },
+                  animationDelay: '.12s',
                 }}
               >
-                <Typography
+                <Box
                   sx={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
-                    fontWeight: 800,
-                    fontSize: {
-                      xs: '1.2rem',
-                      sm: '1.35rem',
-                      md: '1.5rem',
-                      lg: '1.65rem',
-                    },
-                    letterSpacing: '-.022em',
-                    color: '#0b1836',
-                    mb: 1,
+                    position: 'absolute',
+                    top: -50,
+                    right: -30,
+                    width: 220,
+                    height: 220,
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(96,165,250,0.28), transparent 70%)',
+                    filter: 'blur(20px)',
+                    pointerEvents: 'none',
                   }}
-                >
-                  Trusted outcomes.{' '}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: -40,
+                    left: -20,
+                    width: 180,
+                    height: 180,
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(14,165,233,0.18), transparent 70%)',
+                    filter: 'blur(18px)',
+                    pointerEvents: 'none',
+                  }}
+                />
+
+                <Box sx={{ position: 'relative', zIndex: 1 }}>
                   <Box
-                    component="span"
                     sx={{
-                      background:
-                        'linear-gradient(90deg, #0e5af0, #00a1e0)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      px: 1.2,
+                      py: 0.5,
+                      borderRadius: '999px',
+                      mb: 2,
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.1)',
                     }}
                   >
-                    Measurable impact.
+                    <Typography
+                      sx={{
+                        fontFamily: '"Inter", sans-serif',
+                        fontWeight: 600,
+                        fontSize: '0.72rem',
+                        color: 'rgba(255,255,255,0.84)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                      }}
+                    >
+                      Business-first technology partner
+                    </Typography>
                   </Box>
-                </Typography>
-                <Typography
-                  sx={{
-                    fontFamily: "'Outfit', sans-serif",
-                    fontWeight: 400,
-                    fontSize: { xs: '.86rem', md: '.94rem' },
-                    color: 'rgba(11,24,54,.52)',
-                    lineHeight: 1.78,
-                    maxWidth: 520,
-                    mx: { xs: 'auto', md: 0 },
-                  }}
-                >
-                  Long-term relationships, quality delivery, and practical
-                  solutions that help businesses move faster with confidence.
-                </Typography>
-              </Box>
 
-              {/* Stat cards grid */}
-              <Box
-                sx={{
-                  position: 'relative',
-                  zIndex: 1,
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
-                  gap: { xs: 1.8, sm: 2 },
-                  flex: 1,
-                }}
-              >
-                {stats.map((s, i) => (
-                  <Box
-                    key={i}
-                    className="sc2"
+                  <Typography
                     sx={{
-                      '--sc2-border': s.border,
-                      '--sc2-shadow': s.shadow,
-                      p: { xs: 2.2, md: 2.6 },
-                      display: 'flex',
-                      flexDirection: 'column',
-                      animation: `fadeUp .65s cubic-bezier(.16,1,.3,1) ${0.2 + i * 0.07}s both`,
+                      fontFamily: '"Inter", sans-serif',
+                      fontWeight: 800,
+                      fontSize: { xs: '1.35rem', md: '1.7rem' },
+                      lineHeight: 1.25,
+                      letterSpacing: '-0.025em',
+                      color: '#ffffff',
+                      mb: 1.2,
+                      maxWidth: 580,
                     }}
                   >
-                    {/* Top accent bar */}
-                    <Box
-                      className="sc2-bar"
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: '3px',
-                        background: s.bar,
-                        borderRadius: '20px 20px 0 0',
-                        zIndex: 2,
-                      }}
-                    />
+                    We combine strategy, systems, and execution into one delivery model.
+                  </Typography>
 
-                    {/* Hover glow */}
-                    <Box
-                      className="sc2-glow"
-                      sx={{
-                        position: 'absolute',
-                        top: '-20%',
-                        left: '15%',
-                        right: '15%',
-                        height: '50%',
-                        borderRadius: '50%',
-                        background: `radial-gradient(ellipse, ${s.accent}0b, transparent 70%)`,
-                        filter: 'blur(24px)',
-                        opacity: 0,
-                        pointerEvents: 'none',
-                        zIndex: 0,
-                      }}
-                    />
+                  <Typography
+                    sx={{
+                      fontFamily: '"Inter", sans-serif',
+                      fontSize: { xs: '0.92rem', md: '0.96rem' },
+                      lineHeight: 1.75,
+                      color: 'rgba(255,255,255,0.72)',
+                      maxWidth: 620,
+                      mb: 2.4,
+                    }}
+                  >
+                    Instead of disconnected tools and fragmented workflows, we help
+                    businesses build unified digital operations that improve speed,
+                    visibility, and decision-making.
+                  </Typography>
 
-                    {/* Icon */}
-                    <Box
-                      className="sc2-icon"
-                      sx={{
-                        width: { xs: 46, md: 50 },
-                        height: { xs: 46, md: 50 },
-                        borderRadius: '13px',
-                        background: s.iconBg,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        mb: 1.8,
-                        mt: 0.6,
-                        boxShadow: `0 5px 16px ${s.shadow}`,
-                        position: 'relative',
-                        zIndex: 1,
-                        '& .MuiSvgIcon-root': {
-                          fontSize: { xs: 21, md: 23 },
-                          color: s.iconColor,
-                        },
-                      }}
-                    >
-                      {s.icon}
-                    </Box>
-
-                    {/* Number */}
-                    <Typography
-                      className="sc2-num"
-                      sx={{
-                        fontFamily: "'Bricolage Grotesque', sans-serif",
-                        fontWeight: 800,
-                        fontSize: { xs: '1.75rem', md: '2rem' },
-                        lineHeight: 1,
-                        letterSpacing: '-.03em',
-                        color: s.accent,
-                        mb: 0.6,
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    >
-                      {s.num}
-                    </Typography>
-
-                    {/* Title */}
-                    <Typography
-                      sx={{
-                        fontFamily: "'Bricolage Grotesque', sans-serif",
-                        fontWeight: 700,
-                        fontSize: { xs: '.92rem', md: '.98rem' },
-                        letterSpacing: '-.012em',
-                        color: '#0b1836',
-                        mb: 0.7,
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    >
-                      {s.title}
-                    </Typography>
-
-                    {/* Desc */}
-                    <Typography
-                      sx={{
-                        fontFamily: "'Outfit', sans-serif",
-                        fontWeight: 400,
-                        fontSize: { xs: '.8rem', md: '.84rem' },
-                        color: 'rgba(11,24,54,.48)',
-                        lineHeight: 1.65,
-                        flex: 1,
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    >
-                      {s.desc}
-                    </Typography>
-
-                    {/* Arrow */}
-                    <Box
-                      className="sc2-arrow"
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        mt: 1.8,
-                        opacity: 0.3,
-                        color: s.accent,
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    >
-                      <Typography
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
+                      gap: 1.4,
+                    }}
+                  >
+                    {[
+                      'CRM & Process Design',
+                      'Automation & Integration',
+                      'Long-term Support',
+                    ].map((item) => (
+                      <Box
+                        key={item}
                         sx={{
-                          fontFamily: "'Outfit', sans-serif",
-                          fontWeight: 600,
-                          fontSize: '.78rem',
-                          letterSpacing: '.03em',
-                          color: 'inherit',
+                          borderRadius: '16px',
+                          px: 1.4,
+                          py: 1.2,
+                          background: 'rgba(255,255,255,0.06)',
+                          border: '1px solid rgba(255,255,255,0.08)',
+                          backdropFilter: 'blur(8px)',
                         }}
                       >
-                        Trusted metric
-                      </Typography>
-                      <NorthEast sx={{ fontSize: 13, color: 'inherit' }} />
-                    </Box>
+                        <Typography
+                          sx={{
+                            fontFamily: '"Inter", sans-serif',
+                            fontWeight: 600,
+                            fontSize: '0.84rem',
+                            color: 'rgba(255,255,255,0.88)',
+                            lineHeight: 1.4,
+                          }}
+                        >
+                          {item}
+                        </Typography>
+                      </Box>
+                    ))}
                   </Box>
+                </Box>
+              </Box>
+
+              {/* Stats grid */}
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+                  gap: 2,
+                }}
+              >
+                {stats.map((item, index) => (
+                  <StatCard key={item.title} item={item} index={index} />
                 ))}
               </Box>
             </Box>

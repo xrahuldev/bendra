@@ -1,154 +1,76 @@
 'use client';
 
-import React from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import {
-  ArrowForwardRounded,
-  NorthEast,
-} from '@mui/icons-material';
+import React, { memo } from 'react';
+import { Box, Container, Typography } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+import { ArrowForwardRounded, NorthEast } from '@mui/icons-material';
 import Link from 'next/link';
 
-/* ─── Styles ──────────────────────────────────────────────── */
-const OurWorkStyles = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
-
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes textIn {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes shimmer {
-      0%   { transform: translateX(-120%) skewX(-18deg); }
-      100% { transform: translateX(340%)  skewX(-18deg); }
-    }
-
-    @keyframes glowPulse {
-      0%, 100% { opacity: .45; transform: scale(1); }
-      50%       { opacity: .8;  transform: scale(1.05); }
-    }
-
-    .ow-pill { animation: textIn .55s cubic-bezier(.16,1,.3,1) both; }
-    .ow-h2   { animation: textIn .7s  cubic-bezier(.16,1,.3,1) .08s both; }
-    .ow-sub  { animation: textIn .7s  cubic-bezier(.16,1,.3,1) .16s both; }
-    .ow-glow { animation: glowPulse 5s ease-in-out infinite; }
-
-    /* ── Card ── */
-    .owc {
-      position: relative;
-      overflow: hidden;
-      border-radius: 22px;
-      background: #ffffff;
-      border: 1.5px solid rgba(14,31,64,.08);
-      box-shadow: 0 2px 14px rgba(14,31,64,.055);
-      transition: transform .32s cubic-bezier(.34,1.4,.64,1),
-                  box-shadow .32s ease,
-                  border-color .28s ease;
-      -webkit-tap-highlight-color: transparent;
-      cursor: pointer;
-      display: block;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .owc::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 38%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
-      transform: translateX(-120%) skewX(-18deg);
-      pointer-events: none;
-      z-index: 9;
-    }
-
-    .owc-img {
-      transition: transform .55s ease, filter .4s ease;
-    }
-
-    .owc-bar { transition: height .28s ease; }
-    .owc-num { transition: color .25s ease, transform .25s ease; }
-    .owc-title { transition: color .25s ease; }
-    .owc-tag {
-      transition: background .28s ease, transform .28s ease;
-    }
-    .owc-arrow {
-      transition: opacity .25s ease, gap .25s ease, transform .25s ease;
-    }
-
-    @media (hover: hover) {
-      .owc:hover {
-        transform: translateY(-8px) scale(1.015);
-        border-color: var(--ow-accent-border) !important;
-        box-shadow: 0 20px 44px var(--ow-shadow-strong) !important;
+/* ────────────────────────────────────────────────────────── */
+/* Styles */
+/* ────────────────────────────────────────────────────────── */
+const OurWorkStyles = memo(function OurWorkStyles() {
+  return (
+    <style>{`
+      @keyframes ourWorkFadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
-      .owc:hover::after { animation: shimmer .65s ease-out forwards; }
-      .owc:hover .owc-img { transform: scale(1.06); filter: brightness(.92); }
-      .owc:hover .owc-bar { height: 4px !important; }
-      .owc:hover .owc-num { color: var(--ow-accent) !important; transform: scale(1.08); }
-      .owc:hover .owc-title { color: var(--ow-accent) !important; }
-      .owc:hover .owc-tag { background: var(--ow-accent-soft) !important; transform: translateY(-1px); }
-      .owc:hover .owc-arrow { opacity: 1 !important; gap: 10px !important; }
-      .owc:hover .owc-glow { opacity: 1; }
-      .owc:hover .owc-overlay { opacity: .35; }
-    }
 
-    @media (hover: none) {
-      .owc:active { transform: scale(.97); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ow-pill,.ow-h2,.ow-sub,.ow-glow,
-      .owc,.owc-img,.owc-bar,.owc-num,.owc-title,
-      .owc-tag,.owc-arrow,.owc-overlay {
-        animation: none !important; transition: none !important;
+      .ow-fade {
+        animation: ourWorkFadeUp 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
-    }
-  `}</style>
-);
 
-/* ─── Projects data ─────────────────────────────────────── */
-const projects = [
+      @media (prefers-reduced-motion: reduce) {
+        .ow-fade {
+          animation: none !important;
+        }
+      }
+    `}</style>
+  );
+});
+
+/* ────────────────────────────────────────────────────────── */
+/* Data */
+/* ────────────────────────────────────────────────────────── */
+type ProjectItem = {
+  num: string;
+  title: string;
+  industry: string;
+  description: string;
+  image: string;
+  href: string;
+  accent: string;
+};
+
+const projects: ProjectItem[] = [
   {
     num: '01',
     title: 'CRM Solution for Real Estate',
     industry: 'Real Estate',
     description:
       'Custom Zoho CRM implementation with automated lead tracking and property management.',
-    bgImage:
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80',
     href: '/portfolio',
     accent: '#7c3aed',
-    accentBorder: 'rgba(124,58,237,.2)',
-    accentSoft: 'rgba(124,58,237,.08)',
-    shadowStrong: 'rgba(124,58,237,.14)',
-    bar: 'linear-gradient(90deg, #7c3aed, #c4b5fd)',
   },
   {
     num: '02',
     title: 'Learning Management System',
     industry: 'EdTech',
     description:
-      'Full-stack LMS with real-time analytics, course builder and student engagement tools.',
-    bgImage:
-      'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      'Full-stack LMS with real-time analytics, course builder, and student engagement tools.',
+    image:
+      'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80',
     href: '/portfolio',
     accent: '#3b82f6',
-    accentBorder: 'rgba(59,130,246,.2)',
-    accentSoft: 'rgba(59,130,246,.08)',
-    shadowStrong: 'rgba(59,130,246,.14)',
-    bar: 'linear-gradient(90deg, #3b82f6, #93c5fd)',
   },
   {
     num: '03',
@@ -156,98 +78,352 @@ const projects = [
     industry: 'Retail',
     description:
       'End-to-end sales pipeline automation with inventory sync and POS integration.',
-    bgImage:
-      'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80',
     href: '/portfolio',
     accent: '#06b6d4',
-    accentBorder: 'rgba(6,182,212,.2)',
-    accentSoft: 'rgba(6,182,212,.08)',
-    shadowStrong: 'rgba(6,182,212,.14)',
-    bar: 'linear-gradient(90deg, #06b6d4, #67e8f9)',
   },
   {
     num: '04',
     title: 'Healthcare CRM Platform',
     industry: 'Healthcare',
     description:
-      'HIPAA-compliant CRM with patient management, scheduling and automated follow-ups.',
-    bgImage:
-      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      'HIPAA-compliant CRM with patient management, scheduling, and automated follow-ups.',
+    image:
+      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80',
     href: '/portfolio',
     accent: '#10b981',
-    accentBorder: 'rgba(16,185,129,.2)',
-    accentSoft: 'rgba(16,185,129,.08)',
-    shadowStrong: 'rgba(16,185,129,.14)',
-    bar: 'linear-gradient(90deg, #10b981, #6ee7b7)',
   },
 ];
 
-/* ─── Component ─────────────────────────────────────────── */
-const OurWork: React.FC = () => {
-  const theme = useTheme();
-  const isSmall = useMediaQuery('(max-width:380px)');
+/* ────────────────────────────────────────────────────────── */
+/* Card */
+/* ────────────────────────────────────────────────────────── */
+const ProjectCard = memo(function ProjectCard({
+  project,
+  index,
+}: {
+  project: ProjectItem;
+  index: number;
+}) {
+  const accentSoft = alpha(project.accent, 0.08);
+  const accentBorder = alpha(project.accent, 0.16);
+  const accentShadow = alpha(project.accent, 0.14);
 
+  return (
+    <Link
+      href={project.href}
+      aria-label={`View project: ${project.title}`}
+      style={{
+        textDecoration: 'none',
+        display: 'block',
+        height: '100%',
+      }}
+    >
+      <Box
+        className="ow-fade"
+        sx={{
+          position: 'relative',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          borderRadius: '22px',
+          overflow: 'hidden',
+          background: '#fff',
+          border: `1px solid ${alpha('#0f172a', 0.08)}`,
+          boxShadow: '0 8px 24px rgba(15,23,42,0.04)',
+          transition: 'transform .28s ease, box-shadow .28s ease, border-color .28s ease',
+          animationDelay: `${0.08 + index * 0.06}s`,
+          contentVisibility: 'auto',
+          containIntrinsicSize: '380px',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            background: `radial-gradient(circle at top right, ${alpha(project.accent, 0.08)}, transparent 35%)`,
+            opacity: 0,
+            transition: 'opacity .28s ease',
+            zIndex: 1,
+          },
+          '&:hover': {
+            transform: 'translateY(-8px)',
+            borderColor: accentBorder,
+            boxShadow: `0 20px 42px ${accentShadow}`,
+          },
+          '&:hover::before': {
+            opacity: 1,
+          },
+          '&:hover .ow-card-image': {
+            transform: 'scale(1.045)',
+          },
+          '&:hover .ow-card-title': {
+            color: project.accent,
+          },
+          '&:hover .ow-card-arrow': {
+            transform: 'translateX(4px)',
+            opacity: 1,
+          },
+          '&:hover .ow-card-tag': {
+            background: alpha(project.accent, 0.12),
+          },
+        }}
+      >
+        {/* Top Accent Bar */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            background: `linear-gradient(90deg, ${project.accent}, ${alpha(project.accent, 0.4)})`,
+            zIndex: 3,
+          }}
+        />
+
+        {/* Image */}
+        <Box
+          sx={{
+            position: 'relative',
+            aspectRatio: '16/10',
+            overflow: 'hidden',
+            background: '#0f172a',
+          }}
+        >
+          <Box
+            component="img"
+            className="ow-card-image"
+            src={project.image}
+            alt={project.title}
+            loading="lazy"
+            decoding="async"
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+              transition: 'transform .38s ease',
+            }}
+          />
+
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(180deg, rgba(15,23,42,0.08) 0%, rgba(15,23,42,0.28) 100%)',
+            }}
+          />
+
+          <Typography
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 14,
+              fontFamily: '"Inter", sans-serif',
+              fontWeight: 800,
+              fontSize: '1.55rem',
+              lineHeight: 1,
+              color: 'rgba(255,255,255,0.16)',
+              letterSpacing: '-0.04em',
+            }}
+          >
+            {project.num}
+          </Typography>
+        </Box>
+
+        {/* Content */}
+        <Box
+          sx={{
+            position: 'relative',
+            zIndex: 2,
+            p: { xs: 2.4, md: 2.7 },
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+          }}
+        >
+          <Box
+            className="ow-card-tag"
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              alignSelf: 'flex-start',
+              gap: 0.7,
+              px: 1.2,
+              py: 0.42,
+              mb: 1.7,
+              borderRadius: '999px',
+              background: accentSoft,
+              border: `1px solid ${accentBorder}`,
+              transition: 'background .25s ease',
+            }}
+          >
+            <Box
+              sx={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: project.accent,
+                boxShadow: `0 0 0 3px ${accentSoft}`,
+              }}
+            />
+            <Typography
+              sx={{
+                fontFamily: '"Inter", sans-serif',
+                fontWeight: 600,
+                fontSize: '0.68rem',
+                color: project.accent,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+              }}
+            >
+              {project.industry}
+            </Typography>
+          </Box>
+
+          <Typography
+            className="ow-card-title"
+            sx={{
+              fontFamily: '"Inter", sans-serif',
+              fontWeight: 700,
+              fontSize: { xs: '1rem', md: '1.08rem' },
+              color: '#0f172a',
+              lineHeight: 1.3,
+              letterSpacing: '-0.02em',
+              mb: 1,
+              transition: 'color .24s ease',
+            }}
+          >
+            {project.title}
+          </Typography>
+
+          <Typography
+            sx={{
+              fontFamily: '"Inter", sans-serif',
+              fontWeight: 400,
+              fontSize: '0.9rem',
+              color: '#64748b',
+              lineHeight: 1.75,
+              flex: 1,
+            }}
+          >
+            {project.description}
+          </Typography>
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: 2.2,
+              pt: 1.8,
+              borderTop: `1px solid ${alpha('#0f172a', 0.06)}`,
+            }}
+          >
+            <Typography
+              sx={{
+                fontFamily: '"Inter", sans-serif',
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                color: 'rgba(15,23,42,0.58)',
+              }}
+            >
+              View Project
+            </Typography>
+
+            <Box
+              className="ow-card-arrow"
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                color: project.accent,
+                opacity: 0.72,
+                transform: 'translateX(0)',
+                transition: 'transform .24s ease, opacity .24s ease',
+              }}
+            >
+              <NorthEast sx={{ fontSize: 18 }} />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Link>
+  );
+});
+
+/* ────────────────────────────────────────────────────────── */
+/* Main Component */
+/* ────────────────────────────────────────────────────────── */
+const OurWork: React.FC = () => {
   return (
     <>
       <OurWorkStyles />
 
       <Box
+        component="section"
         sx={{
           position: 'relative',
-          py: { xs: 7, md: 10 },
+          py: { xs: 8, md: 12, lg: 13 },
           background: '#ffffff',
           overflow: 'hidden',
         }}
       >
-        {/* Subtle dot grid */}
+        {/* Background grid */}
         <Box
           sx={{
             position: 'absolute',
             inset: 0,
+            opacity: 0.42,
+            backgroundImage: `
+              linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '46px 46px',
             pointerEvents: 'none',
-            zIndex: 0,
-            backgroundImage:
-              'radial-gradient(circle, rgba(14,31,64,.045) 1px, transparent 1px)',
-            backgroundSize: '32px 32px',
-            maskImage:
-              'radial-gradient(ellipse 85% 70% at 50% 50%, black 20%, transparent 100%)',
           }}
         />
 
-        {/* Top-right blob */}
+        {/* Top glow */}
         <Box
-          className="ow-glow"
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 380,
+            background:
+              'radial-gradient(ellipse at top, rgba(59,130,246,0.07), transparent 62%)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Accent blobs */}
+        <Box
           sx={{
             position: 'absolute',
             top: '-8%',
-            right: '-6%',
-            width: 400,
-            height: 400,
+            right: '-8%',
+            width: 320,
+            height: 320,
             borderRadius: '50%',
-            background:
-              'radial-gradient(circle, rgba(124,58,237,.06), transparent 68%)',
-            filter: 'blur(55px)',
+            background: 'radial-gradient(circle, rgba(124,58,237,0.06), transparent 72%)',
+            filter: 'blur(42px)',
             pointerEvents: 'none',
-            zIndex: 0,
           }}
         />
-
-        {/* Bottom-left blob */}
         <Box
-          className="ow-glow"
           sx={{
             position: 'absolute',
             bottom: '-8%',
-            left: '-6%',
-            width: 340,
-            height: 340,
+            left: '-8%',
+            width: 280,
+            height: 280,
             borderRadius: '50%',
-            background:
-              'radial-gradient(circle, rgba(59,130,246,.06), transparent 68%)',
-            filter: 'blur(50px)',
+            background: 'radial-gradient(circle, rgba(59,130,246,0.06), transparent 72%)',
+            filter: 'blur(40px)',
             pointerEvents: 'none',
-            zIndex: 0,
-            animationDelay: '1.8s',
           }}
         />
 
@@ -256,392 +432,166 @@ const OurWork: React.FC = () => {
           sx={{
             position: 'relative',
             zIndex: 2,
-            px: { xs: 2, sm: 3, md: 5 },
+            px: { xs: 2, sm: 3, md: 4, lg: 5 },
           }}
         >
-          {/* ── Header ── */}
+          {/* Header */}
           <Box
             sx={{
               textAlign: 'center',
-              mb: { xs: 5, md: 7 },
-              maxWidth: 700,
+              maxWidth: 760,
               mx: 'auto',
+              mb: { xs: 6, md: 8 },
             }}
           >
-            {/* Pill */}
             <Box
-              className="ow-pill"
+              className="ow-fade"
               sx={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 1,
-                px: 1.8,
+                px: 2,
                 py: 0.75,
-                mb: 2.5,
+                mb: 2.4,
                 borderRadius: '999px',
-                border: '1.5px solid rgba(59,130,246,.18)',
-                background: 'rgba(59,130,246,.05)',
+                border: '1px solid rgba(59,130,246,0.18)',
+                background: 'rgba(59,130,246,0.05)',
               }}
             >
               <Box
                 sx={{
-                  width: 7,
-                  height: 7,
+                  width: 8,
+                  height: 8,
                   borderRadius: '50%',
                   background: '#3b82f6',
-                  boxShadow: '0 0 0 3px rgba(59,130,246,.18)',
+                  boxShadow: '0 0 0 4px rgba(59,130,246,0.14)',
                 }}
               />
               <Typography
                 sx={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontWeight: 700,
-                  fontSize: '.7rem',
-                  color: '#3b82f6',
+                  fontFamily: '"Inter", sans-serif',
+                  fontWeight: 600,
+                  fontSize: '0.74rem',
+                  color: '#2563eb',
                   textTransform: 'uppercase',
-                  letterSpacing: '.15em',
+                  letterSpacing: '0.12em',
                 }}
               >
                 Our Work
               </Typography>
             </Box>
 
-            {/* Heading */}
             <Typography
-              className="ow-h2"
+              className="ow-fade"
               component="h2"
               sx={{
-                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontFamily: '"Inter", sans-serif',
                 fontWeight: 800,
                 fontSize: {
-                  xs: isSmall ? '1.5rem' : '1.7rem',
-                  sm: '2.1rem',
-                  md: '2.6rem',
-                  lg: '2.9rem',
+                  xs: '2rem',
+                  sm: '2.45rem',
+                  md: '3rem',
+                  lg: '3.3rem',
                 },
-                lineHeight: 1.15,
-                letterSpacing: '-.032em',
-                color: '#0b1836',
-                mb: 1.8,
+                color: '#0f172a',
+                lineHeight: 1.14,
+                letterSpacing: '-0.03em',
+                mb: 2,
+                animationDelay: '.08s',
               }}
             >
-              Solutions we&apos;re{' '}
+              Solutions we’re
               <Box
                 component="span"
                 sx={{
-                  background:
-                    'linear-gradient(90deg, #3b82f6, #6366f1)',
+                  display: 'block',
+                  background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
                 }}
               >
-                proud of
+                proud to deliver
               </Box>
             </Typography>
 
-            {/* Subtitle */}
             <Typography
-              className="ow-sub"
+              className="ow-fade"
               sx={{
-                fontFamily: "'Outfit', sans-serif",
+                fontFamily: '"Inter", sans-serif',
                 fontWeight: 400,
-                fontSize: { xs: '.9rem', md: '1rem' },
-                color: 'rgba(11,24,54,.55)',
+                fontSize: { xs: '0.98rem', md: '1.05rem' },
+                color: '#64748b',
                 lineHeight: 1.8,
-                maxWidth: 560,
+                maxWidth: 620,
                 mx: 'auto',
+                animationDelay: '.16s',
               }}
             >
-              Real projects, real results — explore how we&apos;ve helped
-              businesses build powerful digital solutions that drive growth.
+              Explore selected projects across CRM, automation, education,
+              healthcare, and digital product delivery — built for real business outcomes.
             </Typography>
           </Box>
 
-          {/* ── Cards Grid ── */}
+          {/* Cards */}
           <Box
             sx={{
               display: 'grid',
               gridTemplateColumns: {
                 xs: '1fr',
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(3, 1fr)',
-                xl: 'repeat(4, 1fr)',
+                sm: 'repeat(2, minmax(0, 1fr))',
+                xl: 'repeat(4, minmax(0, 1fr))',
               },
-              gap: { xs: 2.2, sm: 2.6, md: 2.8 },
+              gap: { xs: 2, md: 2.5, lg: 3 },
             }}
           >
-            {projects.map((proj, i) => (
-              <Link
-                key={proj.num}
-                href={proj.href}
-                className="owc"
-                style={{ textDecoration: 'none', display: 'block' }}
-              >
-                <Box
-                  className="owc"
-                  component="div"
-                  sx={{
-                    '--ow-accent': proj.accent,
-                    '--ow-accent-border': proj.accentBorder,
-                    '--ow-accent-soft': proj.accentSoft,
-                    '--ow-shadow-strong': proj.shadowStrong,
-                    height: '100%',
-                    animation: `cardIn .65s cubic-bezier(.16,1,.3,1) ${.08 + i * .06}s both`,
-                  }}
-                >
-                  {/* Top colour bar */}
-                  <Box
-                    className="owc-bar"
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '3px',
-                      background: proj.bar,
-                      borderRadius: '22px 22px 0 0',
-                      zIndex: 3,
-                    }}
-                  />
-
-                  {/* Image area */}
-                  <Box
-                    sx={{
-                      position: 'relative',
-                      width: '100%',
-                      aspectRatio: '16/10',
-                      overflow: 'hidden',
-                      background: '#060f25',
-                    }}
-                  >
-                    <Box
-                      className="owc-img"
-                      sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        backgroundImage: `url(${proj.bgImage})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
-                    />
-
-                    {/* Overlay on hover */}
-                    <Box
-                      className="owc-overlay"
-                      sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: `linear-gradient(180deg, transparent 40%, ${proj.accent}22 100%)`,
-                        opacity: 0,
-                        transition: 'opacity .35s ease',
-                        zIndex: 1,
-                        pointerEvents: 'none',
-                      }}
-                    />
-
-                    {/* Project number */}
-                    <Typography
-                      className="owc-num"
-                      sx={{
-                        position: 'absolute',
-                        top: 12,
-                        right: 14,
-                        fontFamily: "'Bricolage Grotesque', sans-serif",
-                        fontWeight: 800,
-                        fontSize: '1.6rem',
-                        color: 'rgba(255,255,255,.12)',
-                        lineHeight: 1,
-                        zIndex: 2,
-                        pointerEvents: 'none',
-                        letterSpacing: '-.04em',
-                      }}
-                    >
-                      {proj.num}
-                    </Typography>
-                  </Box>
-
-                  {/* Hover radial glow */}
-                  <Box
-                    className="owc-glow"
-                    sx={{
-                      position: 'absolute',
-                      top: '-25%',
-                      left: '15%',
-                      right: '15%',
-                      height: '55%',
-                      borderRadius: '50%',
-                      background: `radial-gradient(ellipse, ${proj.accent}0a, transparent 70%)`,
-                      filter: 'blur(28px)',
-                      opacity: 0,
-                      transition: 'opacity .35s ease',
-                      pointerEvents: 'none',
-                      zIndex: 0,
-                    }}
-                  />
-
-                  {/* Content */}
-                  <Box
-                    sx={{
-                      p: { xs: 2.6, md: 3 },
-                      display: 'flex',
-                      flexDirection: 'column',
-                      position: 'relative',
-                      zIndex: 1,
-                    }}
-                  >
-                    {/* Industry tag */}
-                    <Box
-                      className="owc-tag"
-                      sx={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        alignSelf: 'flex-start',
-                        gap: 0.7,
-                        px: 1.3,
-                        py: 0.45,
-                        mb: 1.8,
-                        borderRadius: '999px',
-                        background: proj.accentSoft,
-                        border: `1.5px solid ${proj.accentBorder}`,
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: 5,
-                          height: 5,
-                          borderRadius: '50%',
-                          background: proj.accent,
-                          boxShadow: `0 0 0 2.5px ${proj.accentSoft}`,
-                        }}
-                      />
-                      <Typography
-                        sx={{
-                          fontFamily: "'Bricolage Grotesque', sans-serif",
-                          fontWeight: 700,
-                          fontSize: '.62rem',
-                          color: proj.accent,
-                          textTransform: 'uppercase',
-                          letterSpacing: '.12em',
-                        }}
-                      >
-                        {proj.industry}
-                      </Typography>
-                    </Box>
-
-                    {/* Title */}
-                    <Typography
-                      className="owc-title"
-                      sx={{
-                        fontFamily: "'Bricolage Grotesque', sans-serif",
-                        fontWeight: 700,
-                        fontSize: { xs: '1rem', md: '1.07rem' },
-                        color: '#0b1836',
-                        lineHeight: 1.28,
-                        letterSpacing: '-.015em',
-                        mb: 1,
-                      }}
-                    >
-                      {proj.title}
-                    </Typography>
-
-                    {/* Description */}
-                    <Typography
-                      sx={{
-                        fontFamily: "'Outfit', sans-serif",
-                        fontWeight: 400,
-                        fontSize: { xs: '.84rem', md: '.88rem' },
-                        color: 'rgba(11,24,54,.54)',
-                        lineHeight: 1.75,
-                        flex: 1,
-                      }}
-                    >
-                      {proj.description}
-                    </Typography>
-
-                    {/* CTA */}
-                    <Box
-                      className="owc-arrow"
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        mt: 2.4,
-                        opacity: 0.3,
-                        color: proj.accent,
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          fontFamily: "'Outfit', sans-serif",
-                          fontWeight: 600,
-                          fontSize: '.8rem',
-                          letterSpacing: '.03em',
-                          color: 'inherit',
-                        }}
-                      >
-                        View Project
-                      </Typography>
-                      <NorthEast sx={{ fontSize: 14, color: 'inherit' }} />
-                    </Box>
-                  </Box>
-                </Box>
-              </Link>
+            {projects.map((project, index) => (
+              <ProjectCard key={project.num} project={project} index={index} />
             ))}
           </Box>
 
-          {/* ── View All ── */}
+          {/* View all */}
           <Box
+            className="ow-fade"
             sx={{
               display: 'flex',
               justifyContent: 'center',
               mt: { xs: 5, md: 6 },
-              animation:
-                'textIn .7s cubic-bezier(.16,1,.3,1) .5s both',
+              animationDelay: '.34s',
             }}
           >
-            <Link
-              href="/portfolio"
-              style={{ textDecoration: 'none' }}
-            >
+            <Link href="/portfolio" style={{ textDecoration: 'none' }}>
               <Box
                 sx={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 1.2,
-                  px: { xs: 2.8, md: 3.2 },
-                  py: { xs: 1.2, md: 1.4 },
+                  gap: 1.1,
+                  px: { xs: 2.6, md: 3 },
+                  py: { xs: 1.15, md: 1.25 },
                   borderRadius: '14px',
-                  border: '1.5px solid rgba(59,130,246,.2)',
-                  background: 'rgba(59,130,246,.04)',
-                  color: '#3b82f6',
-                  cursor: 'pointer',
-                  transition:
-                    'all .3s cubic-bezier(.34,1.4,.64,1)',
+                  border: '1px solid rgba(59,130,246,0.18)',
+                  background: 'rgba(59,130,246,0.05)',
+                  color: '#2563eb',
+                  transition: 'all .26s ease',
                   '&:hover': {
-                    background: 'rgba(59,130,246,.08)',
-                    borderColor: 'rgba(59,130,246,.35)',
+                    background: 'rgba(59,130,246,0.08)',
+                    borderColor: 'rgba(59,130,246,0.28)',
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 24px rgba(59,130,246,.12)',
-                  },
-                  '&:active': {
-                    transform: 'scale(.97)',
+                    boxShadow: '0 10px 24px rgba(59,130,246,0.12)',
                   },
                 }}
               >
                 <Typography
                   sx={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontFamily: '"Inter", sans-serif',
                     fontWeight: 700,
-                    fontSize: { xs: '.84rem', md: '.9rem' },
+                    fontSize: { xs: '0.86rem', md: '0.9rem' },
                     color: 'inherit',
-                    letterSpacing: '.01em',
                   }}
                 >
                   View All Projects
                 </Typography>
-                <ArrowForwardRounded
-                  sx={{ fontSize: { xs: 18, md: 20 }, color: 'inherit' }}
-                />
+                <ArrowForwardRounded sx={{ fontSize: 19, color: 'inherit' }} />
               </Box>
             </Link>
           </Box>

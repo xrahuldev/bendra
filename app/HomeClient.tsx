@@ -1,22 +1,19 @@
+
+
 "use client";
 
 import React, { Suspense, lazy } from "react";
 import { Box, CircularProgress } from "@mui/material";
 
-// Eager load - Above the fold (turant dikhna chahiye)
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 
-// Lazy load - Below the fold (scroll pe load hoga)
+
 const Developer = lazy(() => import("@/components/Developer"));
 const Business = lazy(() => import("@/components/Business"));
 const About = lazy(() => import("@/components/About"));
 const Testimonial = lazy(() => import("@/components/Testimonial"));
 const OurWork = lazy(() => import("@/components/OurWork"));
 const Expertise = lazy(() => import("@/components/Expertise"));
-
-const Footer = lazy(() => import("@/components/Footer"));
-
 
 // Loading Skeleton
 const SectionLoader = () => (
@@ -52,8 +49,7 @@ export default function HomeClient() {
         overflowX: "hidden",
       }}
     >
-      {/* Always loaded immediately */}
-      <Navbar />
+      {/* Hero - Always loaded immediately */}
       <Hero />
 
       {/* Lazy loaded sections */}
@@ -69,7 +65,7 @@ export default function HomeClient() {
         <About />
       </Suspense>
 
-       <Suspense fallback={<SectionLoader />}>
+      <Suspense fallback={<SectionLoader />}>
         <Testimonial />
       </Suspense>
 
@@ -79,10 +75,6 @@ export default function HomeClient() {
 
       <Suspense fallback={<SectionLoader />}>
         <Expertise />
-      </Suspense>
-
-      <Suspense fallback={<SectionLoader />}>
-        <Footer />
       </Suspense>
     </Box>
   );

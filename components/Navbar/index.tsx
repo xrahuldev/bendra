@@ -1,26 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Box,
-  Button,
-  Typography,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import {
-  KeyboardArrowDown,
-  NorthEast,
-  Menu as MenuIcon,
-  Close as CloseIcon,
-} from '@mui/icons-material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -50,189 +30,379 @@ const navItems: NavItem[] = [
   { label: 'Contact', href: '/contact' },
 ];
 
-/* ─── Global Styles ──────────────────────────────────────── */
-const GlobalStyles = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
+/* ─── CSS ──────────────────────────────────────────────── */
+const css = `
+  @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
 
-    * { box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; }
 
-    @keyframes navIn {
-      from { opacity: 0; transform: translateY(-16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes dropIn {
-      from { opacity: 0; transform: translateY(8px) scale(.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    @keyframes drawerIn {
-      from { opacity: 0; transform: translateX(20px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+  @keyframes nb-in   { from { opacity:0; transform:translateY(-14px) } to { opacity:1; transform:none } }
+  @keyframes nb-drop { from { opacity:0; transform:translateY(6px) scale(.97) } to { opacity:1; transform:none } }
+  @keyframes nb-slide{ from { opacity:0; transform:translateX(18px) } to { opacity:1; transform:none } }
+  @keyframes nb-up   { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
 
-    .nb-drop { animation: dropIn .2s cubic-bezier(.16,1,.3,1) both; transform-origin: top left; }
+  .nb-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1300;
+    background: linear-gradient(180deg,rgba(5,11,26,.98) 0%,rgba(8,18,44,.92) 100%);
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    transition: background .35s ease, border-color .35s ease, box-shadow .35s ease;
+    animation: nb-in .45s cubic-bezier(.16,1,.3,1) both;
+    will-change: background;
+  }
+  .nb-bar.scrolled {
+    background: rgba(5,11,26,.94);
+    backdrop-filter: blur(22px) saturate(170%);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    border-bottom: 1px solid rgba(14,90,240,.14);
+    box-shadow: 0 2px 20px rgba(0,0,0,.3);
+  }
 
-    /* underline on active/hover */
-    .nb-link::after {
-      content: '';
-      position: absolute;
-      bottom: 5px; left: 50%;
-      transform: translateX(-50%);
-      height: 2px; width: 0;
-      border-radius: 99px;
-      background: linear-gradient(90deg, #0e5af0, #60a5fa);
-      transition: width .3s cubic-bezier(.34,1.56,.64,1);
-    }
-    .nb-link:hover::after, .nb-link.nb-active::after { width: 20px; }
+  .nb-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; min-height: 72px; gap: 16px;
+  }
+  @media (max-width:900px) { .nb-toolbar { min-height:66px; padding:0 20px; } }
+  @media (max-width:600px) { .nb-toolbar { min-height:60px; padding:0 14px; } }
 
-    .nb-drawer-item { animation: drawerIn .28s cubic-bezier(.16,1,.3,1) both; }
+  /* Logo */
+  .nb-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; flex-shrink: 0;
+    transition: opacity .2s, transform .22s;
+  }
+  .nb-logo:hover { opacity:.88; transform:scale(1.02); }
+  .nb-logo:active { transform:scale(.97); }
+  .nb-logo img { height:36px; width:auto; display:block; }
+  @media (max-width:900px) { .nb-logo img { height:32px; } }
+  @media (max-width:600px) { .nb-logo img { height:28px; } }
+  .nb-logo-text {
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800; letter-spacing:.12em; font-size:1.22rem;
+    background:linear-gradient(135deg,#fff 35%,#90cdf4 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  @media (max-width:600px) { .nb-logo-text { font-size:1rem; letter-spacing:.08em; } }
+  @media (max-width:900px) { .nb-logo-text { font-size:1.1rem; } }
 
-    /* scrolled state */
-    .nb-scrolled {
-      background: rgba(5,11,26,0.94) !important;
-      backdrop-filter: blur(24px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-      border-bottom: 1px solid rgba(14,90,240,.14) !important;
-    }
+  /* Desktop nav */
+  .nb-links { display:flex; align-items:center; flex:1; justify-content:center; }
+  @media (max-width:900px) { .nb-links { display:none; } }
 
-    .body-lock { overflow: hidden !important; position: fixed !important; width: 100% !important; }
+  .nb-btn {
+    font-family:'Bricolage Grotesque',sans-serif;
+    color:rgba(255,255,255,.88); background:none; border:none;
+    font-size:.875rem; font-weight:500; letter-spacing:.02em;
+    padding:9px 14px; border-radius:10px; cursor:pointer;
+    display:flex; align-items:center; gap:4px;
+    position:relative; white-space:nowrap;
+    transition:color .18s, background .18s;
+    text-decoration:none;
+  }
+  .nb-btn::after {
+    content:''; position:absolute; bottom:5px; left:50%;
+    transform:translateX(-50%); height:2px; width:0; border-radius:99px;
+    background:linear-gradient(90deg,#0e5af0,#60a5fa);
+    transition:width .28s cubic-bezier(.34,1.56,.64,1);
+  }
+  .nb-btn:hover, .nb-btn.active { color:#90cdf4; background:rgba(14,90,240,.08); }
+  .nb-btn:hover::after, .nb-btn.active::after { width:20px; }
 
-    .nb-drawer::-webkit-scrollbar { width: 3px; }
-    .nb-drawer::-webkit-scrollbar-thumb { background: rgba(14,90,240,.25); border-radius: 10px; }
+  .nb-chevron {
+    width:16px; height:16px; color:rgba(255,255,255,.45);
+    transition:transform .28s cubic-bezier(.34,1.56,.64,1), color .18s;
+    flex-shrink:0;
+  }
+  .nb-btn.active .nb-chevron, .nb-btn:hover .nb-chevron { color:#90cdf4; }
+  .nb-chevron.open { transform:rotate(180deg); }
 
-    @media (hover: none) {
-      .nb-touch:active { transform: scale(.98); background: rgba(14,90,240,.1) !important; }
-    }
-  `}</style>
+  /* CTA button */
+  .nb-cta {
+    font-family:'Bricolage Grotesque',sans-serif;
+    display:flex; align-items:center; gap:6px;
+    color:#fff; background:linear-gradient(135deg,#0e5af0 0%,#2d7cf6 100%);
+    border:1px solid rgba(14,90,240,.3); border-radius:10px;
+    font-size:.875rem; font-weight:700; letter-spacing:.04em;
+    padding:10px 22px; text-decoration:none; white-space:nowrap; flex-shrink:0;
+    box-shadow:0 4px 18px rgba(14,90,240,.32); cursor:pointer;
+    transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s, background .2s;
+  }
+  .nb-cta:hover {
+    background:linear-gradient(135deg,#0b48cc 0%,#1a6af2 100%);
+    transform:translateY(-2px) scale(1.03);
+    box-shadow:0 8px 26px rgba(14,90,240,.45);
+  }
+  .nb-cta:active { transform:scale(.97); box-shadow:0 2px 8px rgba(14,90,240,.22); }
+  .nb-cta svg { transition:transform .22s; }
+  .nb-cta:hover svg { transform:translate(2px,-2px); }
+  @media (max-width:900px) { .nb-cta { display:none; } }
+
+  /* Hamburger */
+  .nb-burger {
+    display:none; background:none; border:1px solid rgba(255,255,255,.12);
+    border-radius:10px; padding:8px; cursor:pointer; color:#fff;
+    transition:background .2s, border-color .2s, transform .18s;
+    align-items:center; justify-content:center;
+  }
+  .nb-burger:hover { background:rgba(14,90,240,.12); border-color:rgba(14,90,240,.3); }
+  .nb-burger:active { transform:scale(.92); }
+  @media (max-width:900px) { .nb-burger { display:flex; } }
+
+  /* Dropdown */
+  .nb-drop {
+    position:fixed; z-index:1400;
+    background:linear-gradient(145deg,rgba(5,11,26,.97) 0%,rgba(8,18,44,.97) 100%);
+    border:1px solid rgba(14,90,240,.18); border-radius:16px;
+    min-width:232px; padding:8px;
+    box-shadow:0 20px 56px rgba(0,0,0,.55);
+    backdrop-filter:blur(28px); overflow:hidden;
+    animation:nb-drop .18s cubic-bezier(.16,1,.3,1) both;
+    transform-origin:top left;
+  }
+  .nb-drop-glow {
+    position:absolute; top:0; left:18%; right:18%; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(14,90,240,.5),transparent);
+  }
+  .nb-drop-item {
+    font-family:'Outfit',sans-serif; font-size:.875rem; font-weight:400;
+    color:rgba(255,255,255,.82); padding:10px 14px; border-radius:10px;
+    cursor:pointer; display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+    transition:background .16s, color .16s, transform .16s;
+  }
+  .nb-drop-item:hover { background:rgba(14,90,240,.12); color:#90cdf4; transform:translateX(4px); }
+  .nb-drop-item.active { color:#90cdf4; font-weight:600; }
+  .nb-drop-dot {
+    width:5px; height:5px; border-radius:50%; flex-shrink:0;
+    background:rgba(255,255,255,.2); transition:background .16s;
+  }
+  .nb-drop-item.active .nb-drop-dot { background:#0e5af0; }
+
+  /* Backdrop */
+  .nb-backdrop {
+    position:fixed; inset:0; z-index:1298;
+    background:rgba(0,0,0,.65); backdrop-filter:blur(10px);
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .nb-backdrop.open { opacity:1; pointer-events:all; }
+
+  /* Mobile drawer */
+  .nb-drawer {
+    position:fixed; top:0; right:0; bottom:0; z-index:1299;
+    width:300px; max-width:100vw;
+    background:linear-gradient(160deg,#05091a 0%,#091428 55%,#0c1a36 100%);
+    border-left:1px solid rgba(14,90,240,.12);
+    box-shadow:-20px 0 60px rgba(0,0,0,.65);
+    display:flex; flex-direction:column; overflow-x:hidden;
+    transform:translateX(100%); transition:transform .32s cubic-bezier(.16,1,.3,1);
+    overscroll-behavior:contain;
+  }
+  .nb-drawer.open { transform:translateX(0); }
+  @media (max-width:600px) { .nb-drawer { width:100vw; border-left:none; } }
+  @media (min-width:600px) and (max-width:900px) { .nb-drawer { width:340px; } }
+
+  .nb-drawer-head {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px; border-bottom:1px solid rgba(255,255,255,.06);
+    background:rgba(14,90,240,.04); flex-shrink:0;
+  }
+
+  .nb-close {
+    background:none; border:1px solid rgba(255,255,255,.08); border-radius:8px;
+    padding:7px; cursor:pointer; color:rgba(255,255,255,.55);
+    display:flex; align-items:center; transition:all .18s;
+  }
+  .nb-close:hover { color:#fff; background:rgba(14,90,240,.1); border-color:rgba(14,90,240,.25); }
+  .nb-close:active { transform:scale(.9); }
+
+  .nb-drawer-list { padding:18px 10px; flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  @media (max-width:600px) { .nb-drawer-list { padding:16px 8px; } }
+
+  .nb-drawer-list::-webkit-scrollbar { width:3px; }
+  .nb-drawer-list::-webkit-scrollbar-thumb { background:rgba(14,90,240,.25); border-radius:10px; }
+
+  .nb-ditem {
+    display:flex; align-items:center;
+    padding:12px 16px; border-radius:12px; cursor:pointer;
+    text-decoration:none; position:relative;
+    border:1px solid transparent;
+    transition:background .18s, border-color .18s;
+    margin-bottom:4px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .nb-ditem:hover { background:rgba(14,90,240,.07); border-color:rgba(14,90,240,.15); }
+  .nb-ditem.active { background:rgba(14,90,240,.1); border-color:rgba(14,90,240,.22); }
+
+  .nb-ditem-text {
+    font-family:'Bricolage Grotesque',sans-serif;
+    color:rgba(255,255,255,.9); font-weight:500; font-size:.875rem;
+    letter-spacing:.02em; flex:1;
+  }
+  .nb-ditem.active .nb-ditem-text { color:#90cdf4; font-weight:700; }
+
+  .nb-active-bar {
+    position:absolute; left:0; top:50%; transform:translateY(-50%);
+    width:3px; height:55%; border-radius:0 4px 4px 0;
+    background:linear-gradient(180deg,#0e5af0,#60a5fa);
+  }
+  .nb-active-dot {
+    width:6px; height:6px; border-radius:50%;
+    background:#0e5af0; box-shadow:0 0 8px rgba(14,90,240,.55); flex-shrink:0;
+  }
+
+  /* Sub-menu */
+  .nb-sub { overflow:hidden; transition:max-height .34s cubic-bezier(.16,1,.3,1), opacity .26s ease; }
+  .nb-sub-item {
+    display:flex; align-items:center; gap:10px;
+    padding:9px 16px 9px 20px; border-radius:10px; cursor:pointer;
+    text-decoration:none; margin-bottom:2px;
+    -webkit-tap-highlight-color:transparent;
+    transition:background .16s;
+  }
+  .nb-sub-item:hover { background:rgba(14,90,240,.07); }
+  .nb-sub-dot {
+    width:4px; height:4px; border-radius:50%;
+    background:rgba(255,255,255,.22); flex-shrink:0; transition:all .16s;
+  }
+  .nb-sub-item.active .nb-sub-dot { background:#0e5af0; transform:scale(1.5); }
+  .nb-sub-text {
+    font-family:'Outfit',sans-serif;
+    color:rgba(255,255,255,.58); font-weight:400; font-size:.84rem;
+    letter-spacing:.01em;
+  }
+  .nb-sub-item.active .nb-sub-text { color:#90cdf4; font-weight:600; }
+
+  /* Mobile CTA */
+  .nb-mcta {
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    margin: 12px 2px 0; padding:13px; border-radius:12px;
+    font-family:'Bricolage Grotesque',sans-serif;
+    color:#fff; font-weight:700; font-size:.875rem; letter-spacing:.04em;
+    background:linear-gradient(135deg,#0e5af0 0%,#2d7cf6 100%);
+    border:1px solid rgba(14,90,240,.3);
+    box-shadow:0 4px 18px rgba(14,90,240,.3);
+    text-decoration:none; cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform .18s, box-shadow .18s;
+  }
+  .nb-mcta:active { transform:scale(.97); box-shadow:0 2px 8px rgba(14,90,240,.2); }
+
+  .nb-footer {
+    padding:12px 20px 18px; border-top:1px solid rgba(255,255,255,.05);
+    text-align:center; flex-shrink:0;
+    font-family:'Outfit',sans-serif; font-size:.65rem;
+    color:rgba(255,255,255,.18); letter-spacing:.05em; line-height:1.5;
+  }
+
+  .nb-spacer-72 { height:72px; }
+  @media (max-width:900px) { .nb-spacer-72 { height:66px; } }
+  @media (max-width:600px) { .nb-spacer-72 { height:60px; } }
+
+  .body-lock { overflow:hidden !important; position:fixed !important; width:100% !important; }
+`;
+
+/* ─── SVG Icons ─────────────────────────────────────────── */
+const ChevronDown = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="4 6 8 10 12 6"/>
+  </svg>
+);
+const NorthEast = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="11" x2="11" y2="3"/>
+    <polyline points="5 3 11 3 11 9"/>
+  </svg>
+);
+const MenuIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+    <line x1="2" y1="5" x2="16" y2="5"/>
+    <line x1="2" y1="9" x2="16" y2="9"/>
+    <line x1="2" y1="13" x2="16" y2="13"/>
+  </svg>
+);
+const CloseIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+    <line x1="3" y1="3" x2="13" y2="13"/>
+    <line x1="13" y1="3" x2="3" y2="13"/>
+  </svg>
 );
 
 /* ─── Desktop Dropdown ───────────────────────────────────── */
 const DesktopDropdown: React.FC<{
   items: DropdownItem[];
-  anchorEl: HTMLElement | null;
+  anchor: HTMLElement | null;
   pathname: string;
   onClose: () => void;
-}> = ({ items, anchorEl, pathname, onClose }) => {
+}> = ({ items, anchor, pathname, onClose }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const [style, setStyle] = useState<React.CSSProperties>({ top: 0, left: 0 });
 
   useEffect(() => {
-    const fn = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node) && !anchorEl?.contains(e.target as Node)) onClose();
-    };
-    if (anchorEl) document.addEventListener('mousedown', fn);
-    return () => document.removeEventListener('mousedown', fn);
-  }, [anchorEl, onClose]);
-
-  useEffect(() => {
-    if (!anchorEl) return;
+    if (!anchor) return;
     const update = () => {
-      const r = anchorEl.getBoundingClientRect();
+      const r = anchor.getBoundingClientRect();
       const w = 248;
       let left = r.left;
       if (left + w > window.innerWidth - 16) left = window.innerWidth - w - 16;
       if (left < 16) left = 16;
-      setPos({ top: r.bottom + 8, left });
+      setStyle({ top: r.bottom + 8, left });
     };
     update();
-    window.addEventListener('resize', update);
-    window.addEventListener('scroll', update);
+    window.addEventListener('resize', update, { passive: true });
+    window.addEventListener('scroll', update, { passive: true });
     return () => { window.removeEventListener('resize', update); window.removeEventListener('scroll', update); };
-  }, [anchorEl]);
+  }, [anchor]);
 
-  if (!anchorEl) return null;
+  useEffect(() => {
+    if (!anchor) return;
+    const fn = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node) && !anchor.contains(e.target as Node)) onClose();
+    };
+    document.addEventListener('mousedown', fn);
+    return () => document.removeEventListener('mousedown', fn);
+  }, [anchor, onClose]);
+
+  if (!anchor) return null;
 
   return (
-    <div ref={ref} className="nb-drop" style={{
-      position: 'fixed', top: pos.top, left: pos.left, zIndex: 1400,
-      background: 'linear-gradient(145deg, rgba(5,11,26,.97) 0%, rgba(8,18,44,.97) 100%)',
-      border: '1px solid rgba(14,90,240,.18)',
-      borderRadius: 16, minWidth: 232,
-      boxShadow: '0 20px 56px rgba(0,0,0,.55), 0 1px 0 rgba(14,90,240,.1) inset',
-      backdropFilter: 'blur(28px)', padding: '8px', overflow: 'hidden',
-    }}>
-      {/* top glow line */}
-      <div style={{
-        position: 'absolute', top: 0, left: '18%', right: '18%', height: 1,
-        background: 'linear-gradient(90deg, transparent, rgba(14,90,240,.5), transparent)',
-      }}/>
-
-      {items.map((opt, i) => {
-        const active = pathname === opt.href;
-        return (
-          <Link key={opt.label} href={opt.href} style={{ textDecoration: 'none' }}>
-            <div
-              onClick={onClose}
-              style={{
-                fontFamily: "'Outfit', sans-serif",
-                fontSize: '.875rem', fontWeight: active ? 600 : 400,
-                color: active ? '#90cdf4' : 'rgba(255,255,255,.82)',
-                padding: '10px 14px', borderRadius: 10,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
-                transition: 'background .18s, color .18s, transform .18s',
-                animationDelay: `${i * .04}s`, letterSpacing: '.01em',
-              }}
-              onMouseEnter={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.background = 'rgba(14,90,240,.12)';
-                el.style.color = '#90cdf4';
-                el.style.transform = 'translateX(4px)';
-              }}
-              onMouseLeave={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.background = 'transparent';
-                el.style.color = active ? '#90cdf4' : 'rgba(255,255,255,.82)';
-                el.style.transform = 'translateX(0)';
-              }}
-            >
-              <span style={{
-                width: 5, height: 5, borderRadius: '50%', flexShrink: 0,
-                background: active ? '#0e5af0' : 'rgba(255,255,255,.2)',
-                transition: 'background .18s',
-              }}/>
-              {opt.label}
-            </div>
-          </Link>
-        );
-      })}
+    <div ref={ref} className="nb-drop" style={style}>
+      <div className="nb-drop-glow"/>
+      {items.map(opt => (
+        <Link key={opt.label} href={opt.href} className={`nb-drop-item${pathname === opt.href ? ' active' : ''}`} onClick={onClose}>
+          <span className="nb-drop-dot"/>
+          {opt.label}
+        </Link>
+      ))}
     </div>
   );
 };
 
 /* ─── Navbar ─────────────────────────────────────────────── */
 const Navbar: React.FC = () => {
-  const [anchorEl, setAnchorEl]         = useState<HTMLElement | null>(null);
-  const [currentDrop, setCurrentDrop]   = useState('');
-  const [mobileOpen, setMobileOpen]     = useState(false);
-  const [mobileExp, setMobileExp]       = useState('');
-  const [scrolled, setScrolled]         = useState(false);
-  const [mounted, setMounted]           = useState(false);
+  const [anchor, setAnchor]       = useState<HTMLElement | null>(null);
+  const [openDrop, setOpenDrop]   = useState('');
+  const [drawerOpen, setDrawer]   = useState(false);
+  const [expanded, setExpanded]   = useState('');
+  const [scrolled, setScrolled]   = useState(false);
+  const pathname                  = usePathname();
 
-  const theme      = useTheme();
-  const isMobile   = useMediaQuery(theme.breakpoints.down('md'));
-  const isTablet   = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-  const isSmallMob = useMediaQuery('(max-width:360px)');
-  const pathname   = usePathname();
-
+  /* scroll listener */
   useEffect(() => {
-    setMounted(true);
     const fn = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
   }, []);
 
+  /* body lock */
   useEffect(() => {
-    document.body.classList.toggle('body-lock', mobileOpen);
+    document.body.classList.toggle('body-lock', drawerOpen);
     return () => document.body.classList.remove('body-lock');
-  }, [mobileOpen]);
+  }, [drawerOpen]);
 
+  /* close everything on route change */
   useEffect(() => {
-    setAnchorEl(null); setCurrentDrop('');
-    setMobileOpen(false); setMobileExp('');
+    setAnchor(null); setOpenDrop('');
+    setDrawer(false); setExpanded('');
   }, [pathname]);
 
   const isActive = useCallback((item: NavItem) => {
@@ -241,384 +411,136 @@ const Navbar: React.FC = () => {
     return false;
   }, [pathname]);
 
-  const openDrop = (e: React.MouseEvent<HTMLElement>, label: string) => {
-    if (currentDrop === label) { setAnchorEl(null); setCurrentDrop(''); }
-    else { setAnchorEl(e.currentTarget); setCurrentDrop(label); }
+  const toggleDrop = (e: React.MouseEvent<HTMLElement>, label: string) => {
+    if (openDrop === label) { setAnchor(null); setOpenDrop(''); }
+    else { setAnchor(e.currentTarget); setOpenDrop(label); }
   };
-  const closeDrop = () => { setAnchorEl(null); setCurrentDrop(''); };
+  const closeDrop = useCallback(() => { setAnchor(null); setOpenDrop(''); }, []);
+  const closeDrawer = useCallback(() => setDrawer(false), []);
 
-  const currentItem = navItems.find(i => i.label === currentDrop);
-  const drawerWidth = isSmallMob ? '100vw' : isTablet ? 340 : 300;
-
-  /* shared nav button style */
-  const navBtnSx = (active: boolean, isOpen?: boolean) => ({
-    fontFamily: "'Bricolage Grotesque', sans-serif",
-    color: active || isOpen ? '#90cdf4' : 'rgba(255,255,255,.88)',
-    textTransform: 'none' as const,
-    fontSize: { md: '.8rem', lg: '.875rem' },
-    fontWeight: active ? 700 : 500,
-    letterSpacing: '.02em',
-    px: { md: 1.2, lg: 1.75 }, py: 1.1,
-    borderRadius: '10px',
-    position: 'relative' as const,
-    transition: 'color .2s, background .2s',
-    whiteSpace: 'nowrap' as const, minWidth: 'auto',
-    '&:hover': { backgroundColor: 'rgba(14,90,240,.08)', color: '#90cdf4' },
-  });
+  const currentItem = navItems.find(i => i.label === openDrop);
 
   return (
     <>
-      <GlobalStyles />
+      <style>{css}</style>
 
-      <AppBar
-        position="fixed" elevation={0}
-        className={scrolled ? 'nb-scrolled' : ''}
-        sx={{
-          background: scrolled
-            ? 'transparent'
-            : 'linear-gradient(180deg, rgba(5,11,26,.98) 0%, rgba(8,18,44,.92) 100%)',
-          borderBottom: scrolled ? 'none' : '1px solid rgba(255,255,255,.04)',
-          transition: 'background .4s ease, border-color .4s ease, box-shadow .4s ease',
-          zIndex: 1300,
-          animation: mounted ? 'navIn .5s cubic-bezier(.16,1,.3,1) both' : 'none',
-        }}
-      >
-        <Toolbar sx={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          px: { xs: 1.5, sm: 2.5, md: 4, lg: 6 }, py: 0,
-          minHeight: { xs: 60, sm: 66, md: 72 }, gap: { xs: 1, md: 2 },
-        }}>
+      {/* ── AppBar ── */}
+      <nav className={`nb-bar${scrolled ? ' scrolled' : ''}`}>
+        <div className="nb-toolbar">
 
-          {/* ── Logo ── */}
-          <Link href="/" style={{ textDecoration: 'none', flexShrink: 0 }}>
-            <Box sx={{
-              display: 'flex', alignItems: 'center', gap: { xs: .8, sm: 1, md: 1.2 },
-              transition: 'opacity .2s, transform .25s',
-              '&:hover': { opacity: .88, transform: 'scale(1.02)' },
-              '&:active': { transform: 'scale(.97)' },
-            }}>
-              <Box component="img" src="/logo.png" alt="Bendra"
-                sx={{ height: { xs: 28, sm: 32, md: 36 }, width: 'auto' }}/>
-              <Typography sx={{
-                fontFamily: "'Bricolage Grotesque', sans-serif",
-                fontWeight: 800, letterSpacing: { xs: '.08em', md: '.12em' },
-                fontSize: { xs: '1rem', sm: '1.1rem', md: '1.22rem', lg: '1.32rem' },
-                background: 'linear-gradient(135deg, #fff 35%, #90cdf4 100%)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              }}>BENDRA</Typography>
-            </Box>
+          {/* Logo */}
+          <Link href="/" className="nb-logo">
+            <img src="/logo.png" alt="Bendra"/>
+            <span className="nb-logo-text">BENDRA</span>
           </Link>
 
-          {/* ── Desktop Nav Links ── */}
-          {!isMobile && (
-            <Box sx={{
-              display: 'flex', alignItems: 'center',
-              gap: { md: 0, lg: .15 }, flex: '1 1 auto', justifyContent: 'center',
-            }}>
-              {navItems.map(item => {
-                const active = isActive(item);
-                const isOpen = currentDrop === item.label;
-                return (
-                  <Box key={item.label} sx={{ position: 'relative' }}>
-                    {item.hasDropdown ? (
-                      <Button
-                        className={`nb-link${active ? ' nb-active' : ''}`}
-                        onClick={e => openDrop(e, item.label)}
-                        endIcon={
-                          <KeyboardArrowDown sx={{
-                            fontSize: { md: '.9rem', lg: '1rem' },
-                            color: active || isOpen ? '#90cdf4' : 'rgba(255,255,255,.45)',
-                            transition: 'transform .32s cubic-bezier(.34,1.56,.64,1), color .2s',
-                            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                          }}/>
-                        }
-                        sx={navBtnSx(active, isOpen)}
-                      >{item.label}</Button>
-                    ) : (
-                      <Link href={item.href || '/'} style={{ textDecoration: 'none' }}>
-                        <Button
-                          className={`nb-link${active ? ' nb-active' : ''}`}
-                          sx={navBtnSx(active)}
-                        >{item.label}</Button>
-                      </Link>
-                    )}
-                  </Box>
-                );
-              })}
-            </Box>
-          )}
+          {/* Desktop links */}
+          <div className="nb-links">
+            {navItems.map(item => {
+              const active = isActive(item);
+              const isOpen = openDrop === item.label;
+              return item.hasDropdown ? (
+                <button
+                  key={item.label}
+                  className={`nb-btn${active || isOpen ? ' active' : ''}`}
+                  onClick={e => toggleDrop(e, item.label)}
+                >
+                  {item.label}
+                  <ChevronDown className={`nb-chevron${isOpen ? ' open' : ''}`}/>
+                </button>
+              ) : (
+                <Link key={item.label} href={item.href!} className={`nb-btn${active ? ' active' : ''}`}>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
 
-          {/* ── Desktop CTA ── */}
-          {!isMobile && (
-            <Link href="/contact" style={{ textDecoration: 'none', flexShrink: 0 }}>
-              <Button
-                variant="contained"
-                endIcon={<NorthEast sx={{ fontSize: '.95rem !important', transition: 'transform .25s' }}/>}
-                sx={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
-                  color: '#fff', textTransform: 'none',
-                  fontWeight: 700, fontSize: { md: '.8rem', lg: '.875rem' },
-                  letterSpacing: '.04em',
-                  px: { md: 2.2, lg: 2.8 }, py: { md: 1, lg: 1.15 },
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #0e5af0 0%, #2d7cf6 100%)',
-                  border: '1px solid rgba(14,90,240,.3)',
-                  boxShadow: '0 4px 18px rgba(14,90,240,.32)',
-                  whiteSpace: 'nowrap',
-                  transition: 'transform .28s cubic-bezier(.34,1.56,.64,1), box-shadow .28s',
-                  '&:hover': {
-                    background: 'linear-gradient(135deg, #0b48cc 0%, #1a6af2 100%)',
-                    transform: 'translateY(-2px) scale(1.03)',
-                    boxShadow: '0 8px 26px rgba(14,90,240,.45)',
-                    '& .MuiButton-endIcon': { transform: 'translate(2px,-2px)' },
-                  },
-                  '&:active': { transform: 'scale(.97)', boxShadow: '0 2px 8px rgba(14,90,240,.22)' },
-                }}
-              >Get Quote</Button>
-            </Link>
-          )}
+          {/* Desktop CTA */}
+          <Link href="/contact" className="nb-cta">
+            Get Quote <NorthEast/>
+          </Link>
 
-          {/* ── Mobile Hamburger ── */}
-          {isMobile && (
-            <IconButton
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Open menu"
-              sx={{
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,.12)',
-                borderRadius: '10px', p: { xs: .7, sm: .9 },
-                transition: 'all .22s',
-                '&:hover': { background: 'rgba(14,90,240,.12)', borderColor: 'rgba(14,90,240,.3)' },
-                '&:active': { transform: 'scale(.92)' },
-              }}
-            >
-              <MenuIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.3rem' } }}/>
-            </IconButton>
-          )}
-        </Toolbar>
-      </AppBar>
+          {/* Hamburger */}
+          <button className="nb-burger" onClick={() => setDrawer(true)} aria-label="Open menu">
+            <MenuIcon/>
+          </button>
+        </div>
+      </nav>
 
-      {/* ── Desktop Dropdown ── */}
-      {!isMobile && (
-        <DesktopDropdown
-          items={currentItem?.dropdownItems || []}
-          anchorEl={anchorEl}
-          pathname={pathname}
-          onClose={closeDrop}
-        />
-      )}
+      {/* Desktop dropdown */}
+      <DesktopDropdown
+        items={currentItem?.dropdownItems || []}
+        anchor={anchor}
+        pathname={pathname}
+        onClose={closeDrop}
+      />
 
       {/* ── Mobile Drawer ── */}
-      <Drawer
-        anchor="right" open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        ModalProps={{ keepMounted: true }}
-        slotProps={{
-          backdrop: { sx: { background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(10px)' } },
-          paper: {
-            className: 'nb-drawer',
-            sx: {
-              background: 'linear-gradient(160deg, #05091a 0%, #091428 55%, #0c1a36 100%)',
-              color: '#fff',
-              width: drawerWidth, maxWidth: '100vw',
-              borderLeft: isSmallMob ? 'none' : '1px solid rgba(14,90,240,.12)',
-              boxShadow: '-20px 0 60px rgba(0,0,0,.65)',
-              display: 'flex', flexDirection: 'column', overflowX: 'hidden',
-            },
-          },
-        }}
-      >
-        {/* Drawer header */}
-        <Box sx={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          p: { xs: 2, sm: 2.5 },
-          borderBottom: '1px solid rgba(255,255,255,.06)',
-          background: 'rgba(14,90,240,.04)', flexShrink: 0,
-        }}>
-          <Link href="/" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
-              <Box component="img" src="/logo.png" alt="Bendra" sx={{ height: { xs: 26, sm: 30 }, width: 'auto' }}/>
-              <Typography sx={{
-                fontFamily: "'Bricolage Grotesque', sans-serif",
-                fontWeight: 800, letterSpacing: '.12em',
-                fontSize: { xs: '.9rem', sm: '1rem' },
-                background: 'linear-gradient(135deg, #fff 35%, #90cdf4 100%)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              }}>BENDRA</Typography>
-            </Box>
-          </Link>
-          <IconButton
-            onClick={() => setMobileOpen(false)} aria-label="Close menu"
-            sx={{
-              color: 'rgba(255,255,255,.55)',
-              border: '1px solid rgba(255,255,255,.08)',
-              borderRadius: '8px', p: .7, transition: 'all .2s',
-              '&:hover': { color: '#fff', background: 'rgba(14,90,240,.1)', borderColor: 'rgba(14,90,240,.25)' },
-              '&:active': { transform: 'scale(.9)' },
-            }}
-          >
-            <CloseIcon sx={{ fontSize: '1.1rem' }}/>
-          </IconButton>
-        </Box>
+      <div className={`nb-backdrop${drawerOpen ? ' open' : ''}`} onClick={closeDrawer}/>
 
-        {/* Nav items */}
-        <List sx={{ px: { xs: 1, sm: 1.5 }, py: { xs: 2, sm: 2.5 }, flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-          {navItems.map((item, idx) => {
+      <div className={`nb-drawer${drawerOpen ? ' open' : ''}`} role="dialog" aria-modal="true">
+        {/* Header */}
+        <div className="nb-drawer-head">
+          <Link href="/" className="nb-logo" onClick={closeDrawer}>
+            <img src="/logo.png" alt="Bendra"/>
+            <span className="nb-logo-text">BENDRA</span>
+          </Link>
+          <button className="nb-close" onClick={closeDrawer} aria-label="Close menu">
+            <CloseIcon/>
+          </button>
+        </div>
+
+        {/* Nav list */}
+        <div className="nb-drawer-list">
+          {navItems.map(item => {
             const active = isActive(item);
+            const isExp  = expanded === item.label;
             return (
-              <Box key={item.label} className="nb-drawer-item" sx={{ animationDelay: `${idx * .055}s`, mb: .5 }}>
+              <div key={item.label}>
                 {item.hasDropdown ? (
                   <>
-                    <ListItem
-                      onClick={() => setMobileExp(mobileExp === item.label ? '' : item.label)}
-                      className="nb-touch"
-                      sx={{
-                        cursor: 'pointer', borderRadius: '12px',
-                        py: { xs: 1.2, sm: 1.3 }, px: { xs: 1.5, sm: 2 },
-                        background: active ? 'rgba(14,90,240,.1)' : 'transparent',
-                        border: active ? '1px solid rgba(14,90,240,.22)' : '1px solid transparent',
-                        transition: 'all .22s', WebkitTapHighlightColor: 'transparent',
-                        '&:hover': { background: 'rgba(14,90,240,.07)', borderColor: 'rgba(14,90,240,.15)' },
-                      }}
+                    <div
+                      className={`nb-ditem${active ? ' active' : ''}`}
+                      onClick={() => setExpanded(isExp ? '' : item.label)}
                     >
-                      <ListItemText primary={item.label} sx={{ '& .MuiTypography-root': {
-                        fontFamily: "'Bricolage Grotesque', sans-serif",
-                        color: active ? '#90cdf4' : 'rgba(255,255,255,.9)',
-                        fontWeight: active ? 700 : 500,
-                        fontSize: { xs: '.85rem', sm: '.9rem' }, letterSpacing: '.02em',
-                      }}}/>
-                      <KeyboardArrowDown sx={{
-                        fontSize: '1.1rem',
-                        color: active ? '#90cdf4' : 'rgba(255,255,255,.3)',
-                        transition: 'transform .32s cubic-bezier(.34,1.56,.64,1)',
-                        transform: mobileExp === item.label ? 'rotate(180deg)' : 'rotate(0deg)',
-                      }}/>
-                    </ListItem>
-
-                    <Box sx={{
-                      maxHeight: mobileExp === item.label ? '400px' : '0px',
-                      overflow: 'hidden',
-                      transition: 'max-height .38s cubic-bezier(.16,1,.3,1), opacity .28s ease',
-                      opacity: mobileExp === item.label ? 1 : 0,
-                      pl: { xs: .5, sm: 1 }, mt: mobileExp === item.label ? .5 : 0,
-                    }}>
-                      {item.dropdownItems?.map((sub, si) => {
-                        const subActive = pathname === sub.href;
-                        return (
-                          <Link key={sub.label} href={sub.href} style={{ textDecoration: 'none' }}>
-                            <ListItem
-                              onClick={() => setMobileOpen(false)}
-                              className="nb-touch"
-                              sx={{
-                                cursor: 'pointer', borderRadius: '10px',
-                                py: { xs: .9, sm: 1 }, px: { xs: 1.5, sm: 2 }, mb: .25,
-                                transition: 'all .18s', WebkitTapHighlightColor: 'transparent',
-                                animation: mobileExp === item.label
-                                  ? `fadeUp .28s cubic-bezier(.16,1,.3,1) ${si * .04}s both` : 'none',
-                                '&:hover': { background: 'rgba(14,90,240,.07)' },
-                              }}
-                            >
-                              <Box sx={{
-                                width: 4, height: 4, borderRadius: '50%', mr: 1.5, flexShrink: 0,
-                                background: subActive ? '#0e5af0' : 'rgba(255,255,255,.22)',
-                                transform: subActive ? 'scale(1.5)' : 'scale(1)',
-                                transition: 'all .18s',
-                              }}/>
-                              <ListItemText primary={sub.label} sx={{ '& .MuiTypography-root': {
-                                fontFamily: "'Outfit', sans-serif",
-                                color: subActive ? '#90cdf4' : 'rgba(255,255,255,.58)',
-                                fontWeight: subActive ? 600 : 400,
-                                fontSize: { xs: '.82rem', sm: '.855rem' }, letterSpacing: '.01em',
-                              }}}/>
-                            </ListItem>
-                          </Link>
-                        );
-                      })}
-                    </Box>
+                      <span className="nb-ditem-text">{item.label}</span>
+                      <ChevronDown className={`nb-chevron${isExp ? ' open' : ''}`}/>
+                    </div>
+                    <div className="nb-sub" style={{ maxHeight: isExp ? '400px' : '0', opacity: isExp ? 1 : 0, paddingLeft: 4, marginTop: isExp ? 2 : 0 }}>
+                      {item.dropdownItems?.map(sub => (
+                        <Link key={sub.label} href={sub.href} className={`nb-sub-item${pathname === sub.href ? ' active' : ''}`} onClick={closeDrawer}>
+                          <span className="nb-sub-dot"/>
+                          <span className="nb-sub-text">{sub.label}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </>
                 ) : (
-                  <Link href={item.href || '/'} style={{ textDecoration: 'none' }}>
-                    <ListItem
-                      onClick={() => setMobileOpen(false)}
-                      className="nb-touch"
-                      sx={{
-                        cursor: 'pointer', borderRadius: '12px',
-                        py: { xs: 1.2, sm: 1.3 }, px: { xs: 1.5, sm: 2 },
-                        background: active ? 'rgba(14,90,240,.1)' : 'transparent',
-                        border: active ? '1px solid rgba(14,90,240,.22)' : '1px solid transparent',
-                        transition: 'all .22s', WebkitTapHighlightColor: 'transparent',
-                        '&:hover': { background: 'rgba(14,90,240,.07)', borderColor: 'rgba(14,90,240,.15)' },
-                      }}
-                    >
-                      {active && (
-                        <Box sx={{
-                          position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)',
-                          width: 3, height: '55%', borderRadius: '0 4px 4px 0',
-                          background: 'linear-gradient(180deg, #0e5af0, #60a5fa)',
-                        }}/>
-                      )}
-                      <ListItemText primary={item.label} sx={{ '& .MuiTypography-root': {
-                        fontFamily: "'Bricolage Grotesque', sans-serif",
-                        color: active ? '#90cdf4' : 'rgba(255,255,255,.9)',
-                        fontWeight: active ? 700 : 500,
-                        fontSize: { xs: '.85rem', sm: '.9rem' }, letterSpacing: '.02em',
-                      }}}/>
-                      {active && (
-                        <Box sx={{
-                          width: 6, height: 6, borderRadius: '50%',
-                          background: '#0e5af0', boxShadow: '0 0 8px rgba(14,90,240,.55)', flexShrink: 0,
-                        }}/>
-                      )}
-                    </ListItem>
+                  <Link href={item.href!} className={`nb-ditem${active ? ' active' : ''}`} onClick={closeDrawer}>
+                    {active && <span className="nb-active-bar"/>}
+                    <span className="nb-ditem-text">{item.label}</span>
+                    {active && <span className="nb-active-dot"/>}
                   </Link>
                 )}
-              </Box>
+              </div>
             );
           })}
 
           {/* Mobile CTA */}
-          <Box sx={{ mt: 3, px: { xs: .25, sm: .5 } }}>
-            <Link href="/contact" style={{ textDecoration: 'none', display: 'block' }}>
-              <Button
-                fullWidth variant="contained"
-                endIcon={<NorthEast sx={{ fontSize: '1rem !important' }}/>}
-                onClick={() => setMobileOpen(false)}
-                sx={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
-                  color: '#fff', textTransform: 'none',
-                  fontWeight: 700, fontSize: { xs: '.85rem', sm: '.9rem' },
-                  letterSpacing: '.04em',
-                  py: { xs: 1.3, sm: 1.5 }, borderRadius: '12px',
-                  background: 'linear-gradient(135deg, #0e5af0 0%, #2d7cf6 100%)',
-                  border: '1px solid rgba(14,90,240,.3)',
-                  boxShadow: '0 4px 18px rgba(14,90,240,.3)',
-                  WebkitTapHighlightColor: 'transparent',
-                  transition: 'transform .2s, box-shadow .2s',
-                  '&:active': { transform: 'scale(.97)', boxShadow: '0 2px 8px rgba(14,90,240,.2)' },
-                }}
-              >Get Quote</Button>
-            </Link>
-          </Box>
-        </List>
+          <Link href="/contact" className="nb-mcta" onClick={closeDrawer}>
+            Get Quote <NorthEast/>
+          </Link>
+        </div>
 
-        {/* Drawer footer */}
-        <Box sx={{
-          p: { xs: 2, sm: 2.5 }, pt: 1,
-          borderTop: '1px solid rgba(255,255,255,.05)',
-          textAlign: 'center', flexShrink: 0,
-        }}>
-          <Typography sx={{
-            fontFamily: "'Outfit', sans-serif",
-            fontSize: { xs: '.62rem', sm: '.7rem' },
-            color: 'rgba(255,255,255,.18)', letterSpacing: '.05em', lineHeight: 1.5,
-          }}>
-            © Copyright 2025 DEM Technologies Private Limited.<br/>All Rights Reserved
-          </Typography>
-        </Box>
-      </Drawer>
+        {/* Footer */}
+        <div className="nb-footer">
+          © Copyright 2025 DEM Technologies Private Limited.<br/>All Rights Reserved
+        </div>
+      </div>
 
       {/* Spacer */}
-      <Box sx={{ height: { xs: 60, sm: 66, md: 72 } }}/>
+      <div className="nb-spacer-72"/>
     </>
   );
 };
